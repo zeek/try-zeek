@@ -23,6 +23,12 @@
 
 </form>
 
+<h2 ng-show="stderr">Stderr</h2>
+<pre ng-bind="stderr" ng-show="stderr" class="alert alert-warning">
+</pre>
+
+<h2 ng-show="files">Files</h2>
+
 <ul class="nav nav-tabs">
     <li ng-repeat="(f, txt) in files" ng-class="{active: f==file}" ng-click="show_file(f)"><a ng-bind="f"></a></li>
 </ul>

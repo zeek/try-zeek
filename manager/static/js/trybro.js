@@ -41,7 +41,10 @@ function CodeCtrl($scope, $http, $timeout) {
     };
     $scope.load_files = function() {
         $http.get("/files/" + $scope.job).then(function(response) {
-            $scope.files = response.data.files;
+            var files = response.data.files;
+            $scope.stderr = files["stderr.log"];
+            delete(files["stderr.log"]);
+            $scope.files = files;
         });
     };
 
