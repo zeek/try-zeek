@@ -13,6 +13,21 @@ import bro_ascii_reader
 
 r = Redis()
 
+def queue_remove_container(container):
+    q = Queue(connection=r)
+    job = q.enqueue(remove_container, container)
+    return job
+
+def remove_container(container):
+    with r.lock("docker", 5) as lck:
+        c = docker.Client()
+        for x in range(5):
+            try :
+                c.remove_container(container)
+                return "removed %r" % container
+            except:
+                time.sleep(1)
+
 def queue_run_code(code, pcap):
     q = Queue(connection=r)
     job = q.enqueue(run_code, code, pcap)
@@ -59,8 +74,7 @@ def run_code(code, pcap=None):
     c.wait(container)
 
     print "Removing Container"
-    with r.lock("docker", 5) as lck:
-        c.remove_container(container)
+    queue_remove_container(container)
 
     stdout = ''
     files_key = 'files:%s' % job.id

@@ -14,13 +14,13 @@ RUN sed -i "s/daemonize yes/daemonize no/" /etc/redis/redis.conf
 RUN apt-get -y install supervisor
 RUN mkdir -p /var/log/supervisor
 RUN mkdir /brostuff
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 ADD requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-ADD . /src
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+ADD . /src
 WORKDIR /src
 
 EXPOSE  8000
