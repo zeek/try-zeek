@@ -1,13 +1,20 @@
 function CodeCtrl($scope, $http, $timeout) {
+    $scope.examples = ["hello.bro", "log.bro"];
     $scope.pcaps = ["--", "ssh.pcap","http.pcap"];
     $scope.pcap = "--";
     $scope.files = [];
     $scope.mode = "text";
     $scope.visible = "Ready...";
-    $scope.code = ' \
-event bro_init() { \n\
-    print "Hello, World!"; \n\
-}';
+
+    $scope.load_example = function () {
+        $http.get("/static/examples/" + $scope.example_name).then(function(response) {
+            $scope.code = response.data;
+        });
+    }
+    $scope.$watch("example_name", function (newValue) {
+        $scope.load_example(newValue);
+    });
+    $scope.example_name = "hello.bro";
 
     $scope.run_code = function() {
         $scope.mode = "text";

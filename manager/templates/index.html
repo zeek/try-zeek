@@ -6,6 +6,11 @@
 
 <h1>Code</h1>
 <form method="POST" ng-submit="run_code()">
+
+<label>Load example </label>
+<select ng-model="example_name" ng-options="e for e in examples">
+</select>
+
 <textarea class="form-control" rows="10" ng-model="code">
 </textarea>
 
