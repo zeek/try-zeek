@@ -30,7 +30,8 @@
 <pre ng-bind="visible" ng-show="mode=='text'">
 </pre>
 
-<table class="table" ng-show="mode=='table'" >
+<div class="table-responsive">
+<table class="table table-striped table-condensed" ng-show="mode=='table'" >
 <thead>
     <tr>
         <th ng-repeat="f in visible.header" ng-bind="f"></th>
