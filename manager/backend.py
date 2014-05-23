@@ -41,7 +41,6 @@ def run_code(code, pcap=None):
     print "Connecting to docker...."
     with r.lock("docker", 5) as lck:
         c = docker.Client()
-        print c.info()
 
         print "Creating container.."
         volumes = {work_dir: {}}
