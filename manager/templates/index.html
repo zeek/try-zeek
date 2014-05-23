@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Code</h1>
+<form method="POST" action="run">
+<textarea class="form-control" rows="10" name="code">
+{{ code }}
+</textarea>
+
+<br>
+<button type="run" class="btn btn-primary">Run <span class="glyphicon glyphicon-play"></span> </button>
+
+</form>
+{% endblock %}

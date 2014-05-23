@@ -1,0 +1,5 @@
+docker-py
+flask
+gunicorn
+redis
+rq
