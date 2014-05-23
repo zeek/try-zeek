@@ -19,7 +19,7 @@ def run():
 @app.route("/stdout/<job>")
 def stdout(job):
     txt = backend.get_stdout(job)
-    if not txt:
+    if txt is None:
         return 'wait', 202
     return txt
 

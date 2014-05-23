@@ -7,6 +7,8 @@ import os
 import time
 import sys
 
+import bro_ascii_reader
+
 r = Redis()
 
 def queue_run_code(code):
@@ -71,4 +73,12 @@ def get_stdout(job):
 
 def get_files(job):
     files_key = 'files:%s' % job
-    return r.hgetall(files_key)
+    files = r.hgetall(files_key)
+    return parse_tables(files)
+
+def parse_tables(files):
+    for fn, contents in files.items():
+        if contents.startswith("#sep"):
+            files[fn] = bro_ascii_reader.reader(contents.splitlines())
+    return files
+

@@ -36,6 +36,11 @@ event bro_init() { \n\
 
     $scope.show_file = function(fn) {
         $scope.visible = $scope.files[fn];
+        if($scope.visible.header) {
+            $scope.mode = "table";
+        } else {
+            $scope.mode = "text";
+        }
         $scope.file = fn;
     };
 

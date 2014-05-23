@@ -21,10 +21,17 @@
 <pre ng-bind="visible" ng-show="mode=='text'">
 </pre>
 
-<table ng-show="mode=='table'">
-<tr>
-<th>Hi</th>
-</tr>
+<table class="table" ng-show="mode=='table'" >
+<thead>
+    <tr>
+        <th ng-repeat="f in visible.header" ng-bind="f"></th>
+    </tr>
+</thead>
+<tbody>
+    <tr ng-repeat="row in visible.rows">
+        <td ng-repeat="col in row" ng-bind="col"></th>
+    </tr>
+</tbody>
 </table>
 
 {% endblock %}
