@@ -10,7 +10,7 @@ event bro_init() { \n\
 }';
 
     $scope.run_code = function() {
-        $scope.stdout = "Running..."
+        $scope.visible = "Running..."
         $http.post("/run", { "code": $scope.code, "pcap": $scope.pcap }).then(function(response) {
             $scope.job = response.data.job;
             $scope.wait();
