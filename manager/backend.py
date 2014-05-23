@@ -92,7 +92,11 @@ def run_code(code, pcap=None):
     return stdout
 
 def get_stdout(job):
-    j = Job.fetch(job, connection=r)
+    for x in range(10):
+        j = Job.fetch(job, connection=r)
+        if j.result:
+            return j.result
+        time.sleep(.1)
     return j.result
 
 def get_files(job):
