@@ -37,27 +37,29 @@ def run_code(code, pcap=None):
     #docker run -v /brostuff/tmpWh0k1x:/brostuff/ -n --rm -t -i  bro_test1 /bro/bin/bro /brostuff/code.bro
 
     print "Connecting to docker...."
-    c = docker.Client()
-    print c.info()
+    with r.lock("docker", 5) as lck:
+        c = docker.Client()
+        print c.info()
 
-    print "Creating container.."
-    volumes = {work_dir: {}}
-    container = c.create_container('bro_test1',
-        command="/runbro",
-        volumes=volumes,
-        mem_limit="128m",
-        network_disabled=True,
-    )
-    print "Starting container.."
-    c.start(container, binds={
-        work_dir: work_dir,
-    })
+        print "Creating container.."
+        volumes = {work_dir: {}}
+        container = c.create_container('bro_test1',
+            command="/runbro",
+            volumes=volumes,
+            mem_limit="128m",
+            network_disabled=True,
+        )
+        print "Starting container.."
+        c.start(container, binds={
+            work_dir: work_dir,
+        })
 
     print "Waiting.."
     c.wait(container)
 
     print "Removing Container"
-    c.remove_container(container)
+    with r.lock("docker", 5) as lck:
+        c.remove_container(container)
 
     stdout = ''
     files_key = 'files:%s' % job.id
