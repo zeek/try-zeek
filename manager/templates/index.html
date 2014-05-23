@@ -33,7 +33,7 @@
 </thead>
 <tbody>
     <tr ng-repeat="row in visible.rows">
-        <td ng-repeat="col in row" ng-bind="col"></th>
+        <td ng-repeat="col in row track by $index" ng-bind="col"></th>
     </tr>
 </tbody>
 </table>

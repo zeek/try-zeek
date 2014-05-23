@@ -1,5 +1,5 @@
 function CodeCtrl($scope, $http, $timeout) {
-    $scope.pcaps = ["--", "ssh.pcap"];
+    $scope.pcaps = ["--", "ssh.pcap","http.pcap"];
     $scope.pcap = "--";
     $scope.files = [];
     $scope.mode = "text";
