@@ -7,7 +7,7 @@ event bro_init() { \n\
 }';
 
     $scope.run_code = function() {
-        $scope.stdout = $scope.code;
+        $scope.stdout = "Running..."
         $http.post("/run", { "code": $scope.code }).then(function(response) {
             $scope.job = response.data.job;
             $scope.wait();
