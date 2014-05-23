@@ -10,3 +10,7 @@ fi
 
 
 /usr/bin/timeout -k 2 30 /bro/bin/bro -C $opts ./code.bro > stdout.log 2> stderr.log
+
+#remove harmless message, grep also exits 1 here
+grep -v 'problem initializing NB-DNS' > tmp.log || true
+mv tmp.log stderr.log
