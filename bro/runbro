@@ -1,3 +1,9 @@
 #!/bin/sh -e 
 cd /brostuff/*/
-/usr/bin/timeout -k 2 30 /bro/bin/bro ./code.bro > stdout.log 2> stderr.log
+opts=""
+
+if [ -e file.pcap ]; then
+    opts="-r file.pcap"
+fi
+
+/usr/bin/timeout -k 2 30 /bro/bin/bro -C $opts ./code.bro > stdout.log 2> stderr.log

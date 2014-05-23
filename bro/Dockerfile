@@ -11,4 +11,5 @@ RUN apt-get -y install build-essential git bison flex cmake swig libssl-dev libg
 RUN git clone --recursive git://git.bro.org/bro
 RUN cd bro && ./configure --prefix=/bro && make && make install
 
+ADD pcaps /pcaps
 ADD runbro ./runbro

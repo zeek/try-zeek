@@ -1,4 +1,6 @@
 function CodeCtrl($scope, $http, $timeout) {
+    $scope.pcaps = ["--", "ssh.pcap"];
+    $scope.pcap = "--";
     $scope.files = [];
     $scope.mode = "text";
     $scope.visible = "Ready...";
@@ -9,7 +11,7 @@ event bro_init() { \n\
 
     $scope.run_code = function() {
         $scope.stdout = "Running..."
-        $http.post("/run", { "code": $scope.code }).then(function(response) {
+        $http.post("/run", { "code": $scope.code, "pcap": $scope.pcap }).then(function(response) {
             $scope.job = response.data.job;
             $scope.wait();
         });
@@ -20,7 +22,7 @@ event bro_init() { \n\
             console.log(response);
             if(response.status != 202) {
                 $scope.mode = 'text';
-                $scope.visible = response.data;
+                $scope.visible = response.data.txt;
                 $scope.file = "stdout.log";
                 $scope.load_files();
             } else {

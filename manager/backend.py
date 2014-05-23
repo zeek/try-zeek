@@ -11,16 +11,16 @@ import bro_ascii_reader
 
 r = Redis()
 
-def queue_run_code(code):
+def queue_run_code(code, pcap):
     q = Queue(connection=r)
-    job = q.enqueue(run_code, code)
+    job = q.enqueue(run_code, code, pcap)
     return job
 
 def read_fn(fn):
     with open(fn) as f:
         return f.read()
 
-def run_code(code):
+def run_code(code, pcap=None):
     sys.stdout = sys.stderr
     code = code.replace("\r\n", "\n") + "\n"
     job = get_current_job()
@@ -28,6 +28,11 @@ def run_code(code):
     code_fn = os.path.join(work_dir,"code.bro")
     with open(code_fn, 'w') as f:
         f.write(code)
+
+    if pcap:
+        src = os.path.join("/pcaps", pcap)
+        dst = os.path.join(work_dir, "file.pcap")
+        os.symlink(src, dst)
     
     #docker run -v /brostuff/tmpWh0k1x:/brostuff/ -n --rm -t -i  bro_test1 /bro/bin/bro /brostuff/code.bro
 

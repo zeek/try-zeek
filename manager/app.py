@@ -11,8 +11,11 @@ def index():
 @app.route("/run", methods=['POST'])
 def run():
     code = request.json.get('code', '')
+    pcap = request.json.get('pcap', '')
+    if '--' in pcap:
+        pcap = None
 
-    job = backend.queue_run_code(code)
+    job = backend.queue_run_code(code, pcap)
 
     return jsonify(job=job.id)
 
@@ -21,7 +24,7 @@ def stdout(job):
     txt = backend.get_stdout(job)
     if txt is None:
         return 'wait', 202
-    return txt
+    return jsonify(txt=txt)
 
 @app.route("/files/<job>")
 def files(job):
