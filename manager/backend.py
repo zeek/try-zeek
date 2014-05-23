@@ -7,8 +7,10 @@ import os
 import time
 import sys
 
+r = Redis()
+
 def queue_run_code(code):
-    q = Queue(connection=Redis())
+    q = Queue(connection=r)
     job = q.enqueue(run_code, code)
     return job
 
@@ -51,7 +53,6 @@ def run_code(code):
     c.remove_container(container)
 
     stdout = ''
-    r = Redis()
     files_key = 'files:%s' % job.id
 
     for f in os.listdir(work_dir):
@@ -65,5 +66,9 @@ def run_code(code):
     return stdout
 
 def get_stdout(job):
-    j = Job.fetch(job, connection=Redis())
+    j = Job.fetch(job, connection=r)
     return j.result
+
+def get_files(job):
+    files_key = 'files:%s' % job
+    return r.hgetall(files_key)

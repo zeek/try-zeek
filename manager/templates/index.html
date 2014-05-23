@@ -14,7 +14,17 @@
 
 </form>
 
-<pre ng-bind="stdout">
+<ul class="nav nav-tabs">
+    <li ng-repeat="(f, txt) in files" ng-class="{active: f==file}" ng-click="show_file(f)"><a ng-bind="f"></a></li>
+</ul>
+
+<pre ng-bind="visible" ng-show="mode=='text'">
 </pre>
+
+<table ng-show="mode=='table'">
+<tr>
+<th>Hi</th>
+</tr>
+</table>
 
 {% endblock %}

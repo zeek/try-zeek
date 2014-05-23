@@ -23,5 +23,10 @@ def stdout(job):
         return 'wait', 202
     return txt
 
+@app.route("/files/<job>")
+def files(job):
+    files = backend.get_files(job)
+    return jsonify(files=files)
+
 if __name__ == "__main__":
     app.run(debug=True)
