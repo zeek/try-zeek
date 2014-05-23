@@ -1,11 +1,13 @@
+import os
+import sys
+import shutil
+import tempfile
+import time
+
+import docker
 from redis import Redis
 from rq import Queue, get_current_job
 from rq.job import Job
-import docker
-import tempfile
-import os
-import time
-import sys
 
 import bro_ascii_reader
 
@@ -68,10 +70,12 @@ def run_code(code, pcap=None):
         if not f.endswith(".log"): continue
         full = os.path.join(work_dir, f)
         txt = read_fn(full)
-        print "Setting", f, txt
+        #print "Setting", f, txt
         r.hset(files_key, f, txt)
         if f == 'stdout.log':
             stdout = txt
+    r.expire(files_key, 30*1000)
+    shutil.rmtree(work_dir)
     return stdout
 
 def get_stdout(job):
