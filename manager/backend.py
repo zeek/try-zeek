@@ -1,5 +1,6 @@
 from redis import Redis
 from rq import Queue, get_current_job
+from rq.job import Job
 import docker
 import tempfile
 import os
@@ -62,3 +63,7 @@ def run_code(code):
         if f == 'stdout.log':
             stdout = txt
     return stdout
+
+def get_stdout(job):
+    j = Job.fetch(job, connection=Redis())
+    return j.result

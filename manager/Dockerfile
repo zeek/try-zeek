@@ -16,10 +16,12 @@ RUN mkdir -p /var/log/supervisor
 RUN mkdir /brostuff
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+ADD requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+
 ADD . /src
 
 WORKDIR /src
-RUN pip install -r requirements.txt
 
 EXPOSE  8000
 CMD ["/usr/bin/supervisord"]

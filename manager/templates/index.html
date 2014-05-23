@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<div ng-controller="CodeCtrl">
+
 <h1>Code</h1>
-<form method="POST" action="run">
-<textarea class="form-control" rows="10" name="code">
-{{ code }}
+<form method="POST" ng-submit="run_code()">
+<textarea class="form-control" rows="10" ng-model="code">
 </textarea>
 
 <br>
 <button type="run" class="btn btn-primary">Run <span class="glyphicon glyphicon-play"></span> </button>
 
 </form>
+
+<pre ng-bind="stdout">
+</pre>
+
 {% endblock %}

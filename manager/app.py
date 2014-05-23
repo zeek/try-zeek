@@ -5,16 +5,23 @@ import backend
 app = Flask(__name__)
 
 @app.route("/")
-def hello():
+def index():
     return render_template('index.html')
 
 @app.route("/run", methods=['POST'])
 def run():
-    code = request.form.get('code', '')
+    code = request.json.get('code', '')
 
     job = backend.queue_run_code(code)
 
     return jsonify(job=job.id)
+
+@app.route("/stdout/<job>")
+def stdout(job):
+    txt = backend.get_stdout(job)
+    if not txt:
+        return 'wait', 202
+    return txt
 
 if __name__ == "__main__":
     app.run(debug=True)
