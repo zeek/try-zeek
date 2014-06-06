@@ -51,7 +51,7 @@ def run_code(code, pcap=None):
         dst = os.path.join(work_dir, "file.pcap")
         os.symlink(src, dst)
     
-    #docker run -v /brostuff/tmpWh0k1x:/brostuff/ -n --rm -t -i  bro_test1 /bro/bin/bro /brostuff/code.bro
+    #docker run -v /brostuff/tmpWh0k1x:/brostuff/ -n --rm -t -i  bro_worker /bro/bin/bro /brostuff/code.bro
 
     print "Connecting to docker...."
     with r.lock("docker", 5) as lck:
@@ -59,7 +59,7 @@ def run_code(code, pcap=None):
 
         print "Creating container.."
         volumes = {work_dir: {}}
-        container = c.create_container('bro_test1',
+        container = c.create_container('bro_worker',
             command="/runbro",
             volumes=volumes,
             mem_limit="128m",

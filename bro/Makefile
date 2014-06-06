@@ -1,2 +1,2 @@
 all:
-	docker build -t bro_test1 ./
+	docker build -t bro_worker ./
