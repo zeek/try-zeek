@@ -1,7 +1,7 @@
-#!/bin/sh -e 
+#!/bin/sh
 export BRO_DNS_FAKE=1
 
-cd /brostuff/*/
+cd /brostuff/*/ || exit 1
 opts=""
 
 if [ -e file.pcap ]; then
@@ -11,6 +11,6 @@ fi
 
 /usr/bin/timeout -k 2 30 /bro/bin/bro -C $opts ./code.bro > stdout.log 2> stderr.log
 
-#remove harmless message, grep also exits 1 here
-grep -v 'problem initializing NB-DNS' > tmp.log || true
+#remove harmless message
+grep -v 'problem initializing NB-DNS' stderr.log > tmp.log
 mv tmp.log stderr.log
