@@ -6,9 +6,15 @@ function CodeCtrl($scope, $http, $timeout) {
     $scope.mode = "text";
     $scope.visible = "Ready...";
 
+    $scope.editor = ace.edit("editor");
+    $scope.editor.getSession().setMode("ace/mode/perl");
+    $scope.editor.setShowPrintMargin(false);
+
+
     $scope.load_example = function () {
         $http.get("/static/examples/" + $scope.example_name).then(function(response) {
-            $scope.code = response.data;
+            $scope.editor.setValue(response.data);
+            $scope.editor.selection.clearSelection();
         });
     }
     $scope.$watch("example_name", function (newValue) {
@@ -19,8 +25,9 @@ function CodeCtrl($scope, $http, $timeout) {
     $scope.run_code = function() {
         $scope.mode = "text";
         $scope.file = "stdout.log";
-        $scope.visible = "Running..."
-        $http.post("/run", { "code": $scope.code, "pcap": $scope.pcap }).then(function(response) {
+        $scope.visible = "Running...";
+        var code = $scope.editor.getValue();
+        $http.post("/run", { "code": code, "pcap": $scope.pcap }).then(function(response) {
             $scope.job = response.data.job;
             $scope.wait();
         });

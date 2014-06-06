@@ -8,3 +8,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+#editor { 
+    height: 40em;
+}
