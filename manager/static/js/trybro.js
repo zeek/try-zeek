@@ -2,7 +2,7 @@ var tbApp = angular.module('trybro', ['ui.ace']);
 
 tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     $scope.examples = ["hello", "log", "ssh"];
-    $scope.pcaps = ["--", "ssh.pcap","http.pcap"];
+    $scope.pcaps = ["--", "exercise_traffic.pcap", "ssh.pcap","http.pcap"];
     $scope.pcap = "--";
     $scope.files = [];
     $scope.mode = "text";
