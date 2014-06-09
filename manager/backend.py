@@ -28,23 +28,25 @@ def remove_container(container):
             except:
                 time.sleep(1)
 
-def queue_run_code(code, pcap):
+def queue_run_code(sources, pcap):
     q = Queue(connection=r)
-    job = q.enqueue(run_code, code, pcap)
+    job = q.enqueue(run_code, sources, pcap)
     return job
 
 def read_fn(fn):
     with open(fn) as f:
         return f.read()
 
-def run_code(code, pcap=None):
+def run_code(sources, pcap=None):
     sys.stdout = sys.stderr
-    code = code.replace("\r\n", "\n") + "\n"
+    for s in sources:
+        s['content'] = s['content'].replace("\r\n", "\n") + "\n"
     job = get_current_job()
     work_dir = tempfile.mkdtemp(dir="/brostuff")
-    code_fn = os.path.join(work_dir,"code.bro")
-    with open(code_fn, 'w') as f:
-        f.write(code)
+    for s in sources:
+        code_fn = os.path.join(work_dir,s['name'])
+        with open(code_fn, 'w') as f:
+            f.write(s['content'])
 
     if pcap:
         src = os.path.join("/pcaps", pcap)

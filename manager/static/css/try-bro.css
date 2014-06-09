@@ -9,6 +9,10 @@ body {
     text-overflow: ellipsis;
 }
 
-#editor { 
+.editor { 
+    height: 40em;
+}
+
+.ace_editor { 
     height: 40em;
 }

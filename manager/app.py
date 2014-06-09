@@ -10,12 +10,12 @@ def index():
 
 @app.route("/run", methods=['POST'])
 def run():
-    code = request.json.get('code', '')
+    sources = request.json.get('sources', '')
     pcap = request.json.get('pcap', '')
     if '--' in pcap:
         pcap = None
 
-    job = backend.queue_run_code(code, pcap)
+    job = backend.queue_run_code(sources, pcap)
 
     return jsonify(job=job.id)
 

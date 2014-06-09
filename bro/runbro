@@ -9,7 +9,7 @@ if [ -e file.pcap ]; then
 fi
 
 
-/usr/bin/timeout -k 2 30 /bro/bin/bro -C $opts ./code.bro > stdout.log 2> stderr.log
+/usr/bin/timeout -k 2 30 /bro/bin/bro -C $opts ./main.bro > stdout.log 2> stderr.log
 
 #remove harmless message
 grep -v 'problem initializing NB-DNS' stderr.log > tmp.log

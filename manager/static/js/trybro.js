@@ -1,4 +1,6 @@
-function CodeCtrl($scope, $http, $timeout) {
+var tbApp = angular.module('trybro', ['ui.ace']);
+
+tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     $scope.examples = ["hello.bro", "log.bro", "ssh.bro"];
     $scope.pcaps = ["--", "ssh.pcap","http.pcap"];
     $scope.pcap = "--";
@@ -6,17 +8,44 @@ function CodeCtrl($scope, $http, $timeout) {
     $scope.mode = "text";
     $scope.visible = "Ready...";
 
-    $scope.editor = ace.edit("editor");
-    $scope.editor.getSession().setMode("ace/mode/perl");
-    $scope.editor.setShowPrintMargin(false);
+    $scope.source_files = [
+        { "name": "main.bro", "content": ""},
+    ];
 
+    $scope.aceLoaded = function(_editor) {
+        _editor.getSession().setMode("ace/mode/perl");
+        _editor.setShowPrintMargin(false);
+    };
 
     $scope.load_example = function () {
         $http.get("/static/examples/" + $scope.example_name).then(function(response) {
-            $scope.editor.setValue(response.data);
-            $scope.editor.selection.clearSelection();
+            $scope.code = response.data;
+            $scope.source_files = [
+                { "name": "main.bro", "content": response.data},
+            ];
+            $scope.current_file = $scope.source_files[0];
+            //$scope.editor.setValue(response.data);
+            //$scope.editor.selection.clearSelection();
         });
     }
+
+    $scope.add_file = function() {
+        $scope.source_files.push(
+            { "name": "new.bro", "content": "hello"}
+        );
+    };
+    $scope.edit_file = function(f) {
+        if($scope.current_file != f) {
+            $scope.current_file = f;
+            return;
+        }
+        if(f.name == "main.bro") {
+            return;
+        }
+
+        var newname = prompt("Rename " + f.name, f.name);
+        f.name = newname;
+    };
     $scope.$watch("example_name", function (newValue) {
         $scope.load_example(newValue);
     });
@@ -26,8 +55,7 @@ function CodeCtrl($scope, $http, $timeout) {
         $scope.mode = "text";
         $scope.file = "stdout.log";
         $scope.visible = "Running...";
-        var code = $scope.editor.getValue();
-        $http.post("/run", { "code": code, "pcap": $scope.pcap }).then(function(response) {
+        $http.post("/run", { "sources": $scope.source_files, "pcap": $scope.pcap }).then(function(response) {
             $scope.job = response.data.job;
             $scope.wait();
         });
@@ -65,5 +93,5 @@ function CodeCtrl($scope, $http, $timeout) {
         $scope.file = fn;
     };
 
-}
+});
 
