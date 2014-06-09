@@ -1,12 +1,16 @@
 var tbApp = angular.module('trybro', ['ui.ace']);
 
 tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
-    $scope.examples = ["hello.bro", "log.bro", "ssh.bro"];
+    $scope.examples = ["hello", "log", "ssh"];
     $scope.pcaps = ["--", "ssh.pcap","http.pcap"];
     $scope.pcap = "--";
     $scope.files = [];
     $scope.mode = "text";
     $scope.visible = "Ready...";
+
+    $http.get("/static/examples/examples.json").then(function(response) {
+        $scope.examples = response.data;
+    });
 
     $scope.source_files = [
         { "name": "main.bro", "content": ""},
@@ -18,11 +22,8 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     };
 
     $scope.load_example = function () {
-        $http.get("/static/examples/" + $scope.example_name).then(function(response) {
-            $scope.code = response.data;
-            $scope.source_files = [
-                { "name": "main.bro", "content": response.data},
-            ];
+        $http.get("/static/examples/" + $scope.example_name + ".json").then(function(response) {
+            $scope.source_files = response.data;
             $scope.current_file = $scope.source_files[0];
             //$scope.editor.setValue(response.data);
             //$scope.editor.selection.clearSelection();
@@ -49,7 +50,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     $scope.$watch("example_name", function (newValue) {
         $scope.load_example(newValue);
     });
-    $scope.example_name = "hello.bro";
+    $scope.example_name = "hello";
 
     $scope.run_code = function() {
         $scope.mode = "text";
