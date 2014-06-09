@@ -40,7 +40,8 @@ def read_fn(fn):
 def run_code(sources, pcap=None):
     sys.stdout = sys.stderr
     for s in sources:
-        s['content'] = s['content'].replace("\r\n", "\n") + "\n"
+        s['content'] = s['content'].replace("\r\n", "\n")
+        s['content'] = s['content'].rstrip() + "\n"
     job = get_current_job()
     work_dir = tempfile.mkdtemp(dir="/brostuff")
     for s in sources:
