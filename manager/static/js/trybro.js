@@ -45,7 +45,9 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
         }
 
         var newname = prompt("Rename " + f.name, f.name);
-        f.name = newname;
+        if(newname) {
+            f.name = newname;
+        }
     };
     $scope.$watch("example_name", function (newValue) {
         $scope.load_example(newValue);
