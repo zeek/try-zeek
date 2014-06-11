@@ -57,6 +57,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     $scope.run_code = function() {
         $scope.mode = "text";
         $scope.stdout = "Running...";
+        $scope.stderr = null;
         $scope.files = null;
         $scope.visible = null;
         $http.post("/run", { "sources": $scope.source_files, "pcap": $scope.pcap }).then(function(response) {
