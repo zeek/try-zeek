@@ -95,12 +95,12 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     };
 
     $scope.show_file = function(fn) {
-        $scope.visible = $scope.files[fn];
         if($scope.visible.header) {
             $scope.mode = "table";
         } else {
             $scope.mode = "text";
         }
+        $scope.visible = $scope.files[fn];
         $scope.file = fn;
     };
 
