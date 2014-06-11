@@ -57,6 +57,8 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     $scope.run_code = function() {
         $scope.mode = "text";
         $scope.stdout = "Running...";
+        $scope.files = null;
+        $scope.visible = null;
         $http.post("/run", { "sources": $scope.source_files, "pcap": $scope.pcap }).then(function(response) {
             $scope.job = response.data.job;
             $scope.wait();
@@ -95,12 +97,13 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     };
 
     $scope.show_file = function(fn) {
-        if($scope.visible.header) {
+        var visible = $scope.files[fn];
+        if(visible.header) {
             $scope.mode = "table";
         } else {
             $scope.mode = "text";
         }
-        $scope.visible = $scope.files[fn];
+        $scope.visible = visible;
         $scope.file = fn;
     };
 
