@@ -6,7 +6,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     $scope.pcap = "--";
     $scope.files = [];
     $scope.mode = "text";
-    $scope.visible = "Ready...";
+    $scope.stdout = "Ready...";
 
     $http.get("/static/examples/examples.json").then(function(response) {
         $scope.examples = response.data;
@@ -56,8 +56,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
 
     $scope.run_code = function() {
         $scope.mode = "text";
-        $scope.file = "stdout.log";
-        $scope.visible = "Running...";
+        $scope.stdout = "Running...";
         $http.post("/run", { "sources": $scope.source_files, "pcap": $scope.pcap }).then(function(response) {
             $scope.job = response.data.job;
             $scope.wait();
@@ -70,7 +69,6 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
             if(response.status != 202) {
                 $scope.mode = 'text';
                 $scope.stdout = response.data.txt;
-                $scope.visible = '';
                 $scope.load_files();
             } else {
                 $timeout($scope.wait, 200);
