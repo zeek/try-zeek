@@ -69,8 +69,8 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
             console.log(response);
             if(response.status != 202) {
                 $scope.mode = 'text';
-                $scope.visible = response.data.txt;
-                $scope.file = "stdout.log";
+                $scope.stdout = response.data.txt;
+                $scope.visible = '';
                 $scope.load_files();
             } else {
                 $timeout($scope.wait, 200);
@@ -80,9 +80,19 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     $scope.load_files = function() {
         $http.get("/files/" + $scope.job).then(function(response) {
             var files = response.data.files;
+
             $scope.stderr = files["stderr.log"];
             delete(files["stderr.log"]);
+
+            delete(files["stdout.log"]);
             $scope.files = files;
+
+            var file_keys = Object.keys(files);
+            if(file_keys.length == 0) {
+                $scope.files = null;
+            } else {
+                $scope.show_file(file_keys[0]);
+            }
         });
     };
 

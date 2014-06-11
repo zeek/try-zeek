@@ -4,7 +4,7 @@
 
 <div ng-controller="CodeCtrl">
 
-<h1>Code</h1>
+<h1>Input Files</h1>
 <form method="POST" ng-submit="run_code()">
 
 <label>Load example </label>
@@ -34,7 +34,13 @@
 <pre ng-bind="stderr" ng-show="stderr" class="alert alert-warning">
 </pre>
 
-<h2 ng-show="files">Files</h2>
+<h2 ng-show="stdout">Stdout</h2>
+<pre ng-bind="stdout" ng-show="stdout">
+</pre>
+
+<div ng-show="files">
+
+<h2>Output Files</h2>
 
 <ul class="nav nav-tabs">
     <li ng-repeat="(f, txt) in files" ng-class="{active: f==file}" ng-click="show_file(f)"><a ng-bind="f"></a></li>
@@ -42,6 +48,8 @@
 
 <pre ng-bind="visible" ng-show="mode=='text'">
 </pre>
+
+</div>
 
 {% raw %}
 <div class="table-responsive">
