@@ -32,9 +32,14 @@ def remove_container(container):
 
 def queue_run_code(sources, pcap):
     cache_key = hashlib.sha1(json.dumps([sources,pcap])).hexdigest()
-    existing = r.get(cache_key)
-    if existing:
-        return existing
+    job_id = r.get(cache_key)
+    if job_id:
+        with r.pipeline() as pipe:
+            pipe.expire(cache_key, 300*1000)
+            pipe.expire('rq:job:%s' % job_id, 305*1000)
+            pipe.expire('files:%s' % job_id, 305*1000)
+            pipe.execute()
+        return job_id
     q = Queue(connection=r)
     job = q.enqueue(run_code, sources, pcap)
     return job.id
