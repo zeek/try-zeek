@@ -35,9 +35,9 @@ def queue_run_code(sources, pcap):
     job_id = r.get(cache_key)
     if job_id:
         with r.pipeline() as pipe:
-            pipe.expire(cache_key, 300*1000)
-            pipe.expire('rq:job:%s' % job_id, 305*1000)
-            pipe.expire('files:%s' % job_id, 305*1000)
+            pipe.expire(cache_key, 600)
+            pipe.expire('rq:job:%s' % job_id, 605)
+            pipe.expire('files:%s' % job_id, 605)
             pipe.execute()
         return job_id
     q = Queue(connection=r)
