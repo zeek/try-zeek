@@ -1,4 +1,4 @@
-def reader(f):
+def reader(f, max_rows=None):
     line = ''
     headers = {}
     it = iter(f)
@@ -24,6 +24,10 @@ def reader(f):
             break
         parts = row.rstrip().split(sep)
         rows.append(parts)
+
+    if max_rows and len(rows) > max_rows:
+        mid = max_rows / 2
+        rows = rows[:mid] + rows[-mid:]
 
     return {
         "header": fields,
