@@ -3,6 +3,8 @@ import sys
 import shutil
 import tempfile
 import time
+import json
+import hashlib
 
 import docker
 from redis import Redis
@@ -29,15 +31,20 @@ def remove_container(container):
                 time.sleep(1)
 
 def queue_run_code(sources, pcap):
+    cache_key = hashlib.sha1(json.dumps([sources,pcap])).hexdigest()
+    existing = r.get(cache_key)
+    if existing:
+        return existing
     q = Queue(connection=r)
     job = q.enqueue(run_code, sources, pcap)
-    return job
+    return job.id
 
 def read_fn(fn):
     with open(fn) as f:
         return f.read()
 
 def run_code(sources, pcap=None):
+    cache_key = hashlib.sha1(json.dumps([sources,pcap])).hexdigest()
     sys.stdout = sys.stderr
     for s in sources:
         s['content'] = s['content'].replace("\r\n", "\n")
@@ -90,8 +97,11 @@ def run_code(sources, pcap=None):
         r.hset(files_key, f, txt)
         if f == 'stdout.log':
             stdout = txt
-    r.expire(files_key, 30*1000)
+    r.expire(files_key, 300*1000)
     shutil.rmtree(work_dir)
+
+    r.set(cache_key, job.id)
+    r.expire(cache_key, 300*1000)
     return stdout
 
 def get_stdout(job):
@@ -110,6 +120,6 @@ def get_files(job):
 def parse_tables(files):
     for fn, contents in files.items():
         if contents.startswith("#sep"):
-            files[fn] = bro_ascii_reader.reader(contents.splitlines())
+            files[fn] = bro_ascii_reader.reader(contents.splitlines(), max_rows=200)
     return files
 

@@ -15,9 +15,9 @@ def run():
     if '--' in pcap:
         pcap = None
 
-    job = backend.queue_run_code(sources, pcap)
+    job_id = backend.queue_run_code(sources, pcap)
 
-    return jsonify(job=job.id)
+    return jsonify(job=job_id)
 
 @app.route("/stdout/<job>")
 def stdout(job):
