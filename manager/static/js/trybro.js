@@ -1,12 +1,29 @@
-var tbApp = angular.module('trybro', ['ui.ace']);
+var tbApp = angular.module('trybro', ['ui.router', 'ui.ace']);
 
-tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
+tbApp.config(function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise("/");
+    $urlRouterProvider.when("/", "/trybro");
+    $stateProvider
+        .state('trybro', {
+            url: '/trybro',
+            templateUrl: '/static/trybro.html',
+            controller: 'CodeCtrl',
+        })
+        .state('trybro.saved', {
+            url: '/saved/:job',
+            templateUrl: '/static/trybro.html',
+            controller: 'CodeCtrl'
+        });
+});
+
+tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $state){
     $scope.examples = ["hello", "log", "ssh"];
     $scope.pcaps = ["--", "exercise_traffic.pcap", "ssh.pcap","http.pcap"];
     $scope.pcap = "--";
     $scope.files = [];
     $scope.mode = "text";
     $scope.stdout = "Ready...";
+    $scope.dont_reload = false;
 
     $http.get("/static/examples/examples.json").then(function(response) {
         $scope.examples = response.data;
@@ -22,13 +39,26 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     };
 
     $scope.load_example = function () {
+        if(!$scope.example_name || $scope.example_name === "--"){
+            return;
+        }
         $http.get("/static/examples/" + $scope.example_name + ".json").then(function(response) {
             $scope.source_files = response.data;
             $scope.current_file = $scope.source_files[0];
             //$scope.editor.setValue(response.data);
             //$scope.editor.selection.clearSelection();
         });
-    }
+    };
+
+    $scope.load_saved = function (job_id) {
+        $http.get("/saved/" + job_id).then(function(response) {
+            console.log(response.data);
+            $scope.source_files = response.data.sources;
+            $scope.current_file = $scope.source_files[0];
+            $scope.pcap = response.data.pcap;
+            $scope.run_code();
+        });
+    };
 
     $scope.add_file = function() {
         $scope.source_files.push(
@@ -52,7 +82,6 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
     $scope.$watch("example_name", function (newValue) {
         $scope.load_example(newValue);
     });
-    $scope.example_name = "hello";
 
     $scope.run_code = function() {
         $scope.mode = "text";
@@ -62,6 +91,8 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
         $scope.visible = null;
         $http.post("/run", { "sources": $scope.source_files, "pcap": $scope.pcap }).then(function(response) {
             $scope.job = response.data.job;
+            $scope.dont_reload = true;
+            $state.go("trybro.saved", {job: $scope.job});
             $scope.wait();
         });
     };
@@ -107,6 +138,15 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout) {
         $scope.visible = visible;
         $scope.file = fn;
     };
+
+    $scope.example_name = "hello";
+
+    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+        if(toParams.job && !$scope.dont_reload) {
+            $scope.example_name = null;
+            $scope.load_saved(toParams.job);
+        }
+    });
 
 });
 

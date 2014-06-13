@@ -8,11 +8,15 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route("/saved/<job>")
+def saved(job):
+    return backend.get_saved(job)
+
 @app.route("/run", methods=['POST'])
 def run():
     sources = request.json.get('sources', '')
     pcap = request.json.get('pcap', '')
-    if '--' in pcap:
+    if pcap and '--' in pcap:
         pcap = None
 
     job_id = backend.queue_run_code(sources, pcap)

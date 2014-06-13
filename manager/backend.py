@@ -38,6 +38,7 @@ def queue_run_code(sources, pcap):
             pipe.expire(cache_key, 600)
             pipe.expire('rq:job:%s' % job_id, 605)
             pipe.expire('files:%s' % job_id, 605)
+            pipe.expire('sources:%s' % job_id, 605)
             pipe.execute()
         return job_id
     q = Queue(connection=r)
@@ -93,6 +94,7 @@ def run_code(sources, pcap=None):
 
     stdout = ''
     files_key = 'files:%s' % job.id
+    sources_key = 'sources:%s' % job.id
 
     for f in os.listdir(work_dir):
         if not f.endswith(".log"): continue
@@ -102,11 +104,14 @@ def run_code(sources, pcap=None):
         r.hset(files_key, f, txt)
         if f == 'stdout.log':
             stdout = txt
-    r.expire(files_key, 300*1000)
+    r.expire(files_key, 600)
     shutil.rmtree(work_dir)
 
     r.set(cache_key, job.id)
-    r.expire(cache_key, 300*1000)
+    r.expire(cache_key, 600)
+
+    r.set(sources_key, json.dumps(dict(sources=sources, pcap=pcap)))
+    r.expire(sources_key, 60*60*4)
     return stdout
 
 def get_stdout(job):
@@ -122,9 +127,14 @@ def get_files(job):
     files = r.hgetall(files_key)
     return parse_tables(files)
 
+def get_saved(job):
+    sources_key = 'sources:%s' % job
+    return r.get(sources_key)
+
 def parse_tables(files):
     for fn, contents in files.items():
         if contents.startswith("#sep"):
             files[fn] = bro_ascii_reader.reader(contents.splitlines(), max_rows=200)
     return files
+
 
