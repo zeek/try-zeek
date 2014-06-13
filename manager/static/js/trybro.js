@@ -55,7 +55,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
             console.log(response.data);
             $scope.source_files = response.data.sources;
             $scope.current_file = $scope.source_files[0];
-            $scope.pcap = response.data.pcap;
+            $scope.pcap = response.data.pcap || '--';
             $scope.run_code();
         });
     };
