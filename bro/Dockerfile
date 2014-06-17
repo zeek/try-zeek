@@ -5,7 +5,7 @@
 FROM      ubuntu
 MAINTAINER Justin Azoff <justin.azoff@gmail.com>
 
-RUN apt-get update
+RUN apt-get update && echo 2014-06-17
 RUN apt-get -y install build-essential git bison flex cmake swig libssl-dev libgeoip-dev libmagic-dev libpcap-dev python-dev libcurl4-openssl-dev wget
 
 ADD buildbro ./buildbro
