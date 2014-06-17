@@ -1,1 +1,1 @@
-[{"content": "event bro_init() { \n    print \"Hello, World!\"; \n}\n\nevent bro_done() { \n    print \"Goodbye, World!\"; \n}\n\n", "name": "main.bro"}]
+[{"content": "event bro_init() { \n    print \"Hello, World!\"; \n}\n\nevent bro_done() { \n    print \"Goodbye, World!\"; \n}\n", "name": "main.bro"}]
