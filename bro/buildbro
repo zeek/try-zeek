@@ -1,0 +1,12 @@
+#!/bin/sh
+VER=$1
+PREFIX=$2
+
+cd bro
+git pull
+git checkout $VER
+git reset --hard
+git submodule foreach --recursive git reset --hard
+git checkout .
+git submodule foreach --recursive git checkout .
+./configure --prefix=/bro-${PREFIX} && make && make install

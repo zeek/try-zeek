@@ -9,7 +9,13 @@ RUN apt-get update
 RUN apt-get -y install build-essential git bison flex cmake swig libssl-dev libgeoip-dev libmagic-dev libpcap-dev python-dev libcurl4-openssl-dev
 
 RUN git clone --recursive git://git.bro.org/bro
-RUN cd bro && ./configure --prefix=/bro && make && make install
+
+ADD buildbro ./buildbro
+
+RUN ./buildbro v2.2 2.2
+RUN ./buildbro v2.3 2.3
+
+RUN ln -s /bro-2.3 /bro
 
 ADD pcaps /pcaps
 ADD runbro ./runbro
