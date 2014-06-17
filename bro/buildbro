@@ -2,6 +2,7 @@
 VER=$1
 URL=$2
 
+cd /tmp/
 wget $URL
 tar xvzf bro-${VER}.tar.gz
 cd bro-${VER}
