@@ -12,7 +12,8 @@ fi
 
 
 chown nobody . *
-su -s /bin/sh nobody -c "/usr/bin/timeout -k 2 30 /bro-${VER}/bin/bro -C $opts ./main.bro > stdout.log 2> stderr.log"
+mv main.bro trybro.bro
+su -s /bin/sh nobody -c "/usr/bin/timeout -k 2 30 /bro-${VER}/bin/bro -C $opts ./trybro.bro > stdout.log 2> stderr.log"
 
 #remove harmless message
 grep -v 'problem initializing NB-DNS' stderr.log > tmp.log
