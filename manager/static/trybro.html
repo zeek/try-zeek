@@ -20,9 +20,19 @@
 </select>
 
 <br>
+
+<label>Version</label>
+<select ng-model="version" ng-options="v for v in versions">
+</select>
+
+<br>
 <button type="run" class="btn btn-primary">Run <span class="glyphicon glyphicon-play"></span> </button>
 
 </form>
+
+<h2 ng-show="status">Status</h2>
+<pre ng-bind="status" ng-show="status">
+</pre>
 
 <h2 ng-show="stderr">Stderr</h2>
 <pre ng-bind="stderr" ng-show="stderr" class="alert alert-warning">

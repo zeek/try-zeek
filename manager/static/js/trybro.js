@@ -22,11 +22,15 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     $scope.pcap = "--";
     $scope.files = [];
     $scope.mode = "text";
-    $scope.stdout = "Ready...";
+    $scope.status = "Ready...";
     $scope.dont_reload = false;
 
     $http.get("/static/examples/examples.json").then(function(response) {
         $scope.examples = response.data;
+    });
+    $http.get("/versions.json").then(function(response) {
+        $scope.versions = response.data.versions;
+        $scope.version = response.data.default;
     });
 
     $scope.source_files = [
@@ -51,12 +55,18 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     };
 
     $scope.load_saved = function (job_id) {
+        //make sure I default to something if the get fails.
+        $scope.source_files = [{"name": "main.bro", "content": ""}];
+        $scope.current_file = $scope.source_files[0];
         $http.get("/saved/" + job_id).then(function(response) {
             console.log(response.data);
             $scope.source_files = response.data.sources;
             $scope.current_file = $scope.source_files[0];
             $scope.pcap = response.data.pcap || '--';
+            $scope.version = response.data.version;
             $scope.run_code();
+        }, function (reason) {
+            $scope.status = "Failed to load saved session";
         });
     };
 
@@ -85,11 +95,16 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
 
     $scope.run_code = function() {
         $scope.mode = "text";
-        $scope.stdout = "Running...";
+        $scope.status = "Running...";
         $scope.stderr = null;
         $scope.files = null;
         $scope.visible = null;
-        $http.post("/run", { "sources": $scope.source_files, "pcap": $scope.pcap }).then(function(response) {
+        var data = {
+            "sources": $scope.source_files,
+            "pcap": $scope.pcap,
+            "version": $scope.version
+        }
+        $http.post("/run", data).then(function(response) {
             $scope.job = response.data.job;
             $scope.dont_reload = true;
             $state.go("trybro.saved", {job: $scope.job});
@@ -110,7 +125,9 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         });
     };
     $scope.load_files = function() {
+        $scope.status = "Loading files.."
         $http.get("/files/" + $scope.job).then(function(response) {
+            $scope.status = null;
             var files = response.data.files;
 
             $scope.stderr = files["stderr.log"];

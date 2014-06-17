@@ -13,6 +13,9 @@ from rq.job import Job
 
 import bro_ascii_reader
 
+BRO_VERSION = "2.3"
+BRO_VERSIONS = ["2.2", "2.3", "master"]
+
 r = Redis()
 
 def queue_remove_container(container):
@@ -30,8 +33,8 @@ def remove_container(container):
             except:
                 time.sleep(1)
 
-def queue_run_code(sources, pcap):
-    cache_key = hashlib.sha1(json.dumps([sources,pcap])).hexdigest()
+def queue_run_code(sources, pcap, version=BRO_VERSION):
+    cache_key = hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
     job_id = r.get(cache_key)
     if job_id:
         with r.pipeline() as pipe:
@@ -42,15 +45,17 @@ def queue_run_code(sources, pcap):
             pipe.execute()
         return job_id
     q = Queue(connection=r)
-    job = q.enqueue(run_code, sources, pcap)
+    job = q.enqueue(run_code, sources, pcap, version)
     return job.id
 
 def read_fn(fn):
     with open(fn) as f:
         return f.read()
 
-def run_code(sources, pcap=None):
-    cache_key = hashlib.sha1(json.dumps([sources,pcap])).hexdigest()
+def run_code(sources, pcap=None, version=BRO_VERSION):
+    if version not in BRO_VERSIONS:
+        version = BRO_VERSION
+    cache_key = hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
     sys.stdout = sys.stderr
     for s in sources:
         s['content'] = s['content'].replace("\r\n", "\n")
@@ -76,7 +81,7 @@ def run_code(sources, pcap=None):
         print "Creating container.."
         volumes = {work_dir: {}}
         container = c.create_container('bro_worker',
-            command="/runbro",
+            command="/runbro %s" % version,
             volumes=volumes,
             mem_limit="128m",
             network_disabled=True,
@@ -110,7 +115,7 @@ def run_code(sources, pcap=None):
     r.set(cache_key, job.id)
     r.expire(cache_key, 600)
 
-    r.set(sources_key, json.dumps(dict(sources=sources, pcap=pcap)))
+    r.set(sources_key, json.dumps(dict(sources=sources, pcap=pcap, version=version)))
     r.expire(sources_key, 60*60*4)
     return stdout
 

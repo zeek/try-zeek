@@ -16,10 +16,11 @@ def saved(job):
 def run():
     sources = request.json.get('sources', '')
     pcap = request.json.get('pcap', '')
+    version = request.json.get('version', '')
     if pcap and '--' in pcap:
         pcap = None
 
-    job_id = backend.queue_run_code(sources, pcap)
+    job_id = backend.queue_run_code(sources, pcap=pcap, version=version)
 
     return jsonify(job=job_id)
 
@@ -34,6 +35,10 @@ def stdout(job):
 def files(job):
     files = backend.get_files(job)
     return jsonify(files=files)
+
+@app.route("/versions.json")
+def versions():
+    return jsonify(versions=backend.BRO_VERSIONS, default=backend.BRO_VERSION)
 
 if __name__ == "__main__":
     app.run(debug=True)
