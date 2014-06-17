@@ -1,4 +1,6 @@
 #!/bin/sh
+VER=$1
+
 export BRO_DNS_FAKE=1
 
 cd /brostuff/*/ || exit 1
@@ -10,7 +12,7 @@ fi
 
 
 chown nobody . *
-su -s /bin/sh nobody -c "/usr/bin/timeout -k 2 30 /bro/bin/bro -C $opts ./main.bro > stdout.log 2> stderr.log"
+su -s /bin/sh nobody -c "/usr/bin/timeout -k 2 30 /bro-${VER}/bin/bro -C $opts ./main.bro > stdout.log 2> stderr.log"
 
 #remove harmless message
 grep -v 'problem initializing NB-DNS' stderr.log > tmp.log
