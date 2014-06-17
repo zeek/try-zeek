@@ -4,6 +4,7 @@ VER=$1
 wget http://www.bro.org/downloads/release/bro-${VER}.tar.gz
 tar xvzf bro-${VER}.tar.gz
 cd bro-${VER}
-./configure --prefix=/bro-${VER} && make && make install
+./configure --prefix=/bro-${VER} && make install
+cd ..
 rm bro-${VER}.tar.gz
 rm -rf bro-${VER}
