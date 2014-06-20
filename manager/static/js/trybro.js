@@ -9,9 +9,12 @@ tbApp.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: '/static/trybro.html',
             controller: 'CodeCtrl',
         })
+        .state('trybro.go', {
+            url: '/go?example&pcap&version&run',
+            controller: 'CodeCtrl',
+        })
         .state('trybro.saved', {
             url: '/saved/:job',
-            templateUrl: '/static/trybro.html',
             controller: 'CodeCtrl'
         });
 });
@@ -162,6 +165,16 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         if(toParams.job && !$scope.dont_reload) {
             $scope.example_name = null;
             $scope.load_saved(toParams.job);
+        }
+        console.log(toParams);
+        if(toParams.example) {
+            $scope.example_name = toParams.example;
+        }
+        if(toParams.pcap) {
+            $scope.pcap = toParams.pcap;
+        }
+        if(toParams.run) {
+            $scope.run_code();
         }
     });
 
