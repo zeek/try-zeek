@@ -5,12 +5,8 @@ tbApp.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.when("/", "/trybro");
     $stateProvider
         .state('trybro', {
-            url: '/trybro',
+            url: '/trybro?example&pcap&version&run',
             templateUrl: '/static/trybro.html',
-            controller: 'CodeCtrl',
-        })
-        .state('trybro.go', {
-            url: '/go?example&pcap&version&run',
             controller: 'CodeCtrl',
         })
         .state('trybro.saved', {
