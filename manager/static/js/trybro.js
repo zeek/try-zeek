@@ -29,7 +29,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     });
     $http.get("/versions.json").then(function(response) {
         $scope.versions = response.data.versions;
-        $scope.version = response.data.default;
+        $scope.version = $scope.version || response.data.default;
     });
 
     $scope.source_files = [
@@ -163,11 +163,15 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
             $scope.load_saved(toParams.job);
         }
         console.log(toParams);
+        /*FIXME: just make this a loop */
         if(toParams.example) {
             $scope.example_name = toParams.example;
         }
         if(toParams.pcap) {
             $scope.pcap = toParams.pcap;
+        }
+        if(toParams.version) {
+            $scope.version = toParams.version;
         }
         if(toParams.run) {
             $scope.run_code();
