@@ -41,7 +41,7 @@ def queue_run_code(sources, pcap, version=BRO_VERSION):
             pipe.expire(cache_key, 600)
             pipe.expire('rq:job:%s' % job_id, 605)
             pipe.expire('files:%s' % job_id, 605)
-            pipe.expire('sources:%s' % job_id, 605)
+            pipe.expire('sources:%s' % job_id, 60*60*12)
             pipe.execute()
         return job_id
     q = Queue(connection=r)
@@ -116,7 +116,7 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
     r.expire(cache_key, 600)
 
     r.set(sources_key, json.dumps(dict(sources=sources, pcap=pcap, version=version)))
-    r.expire(sources_key, 60*60*4)
+    r.expire(sources_key, 60*60*12)
     return stdout
 
 def get_stdout(job):
