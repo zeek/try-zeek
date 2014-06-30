@@ -22,7 +22,6 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     $scope.files = [];
     $scope.mode = "text";
     $scope.status = "Ready...";
-    $scope.dont_reload = false;
 
     $http.get("/static/examples/examples.json").then(function(response) {
         $scope.examples = response.data;
@@ -105,8 +104,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         }
         $http.post("/run", data).then(function(response) {
             $scope.job = response.data.job;
-            $scope.dont_reload = true;
-            $state.go("trybro.saved", {job: $scope.job});
+            $state.go("trybro.saved", {job: $scope.job}, {notify: false, inherit: false});
             $scope.wait();
         });
     };
@@ -158,7 +156,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     $scope.example_name = "hello";
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-        if(toParams.job && !$scope.dont_reload) {
+        if(toParams.job) {
             $scope.example_name = null;
             $scope.load_saved(toParams.job);
         }
