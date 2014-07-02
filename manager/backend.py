@@ -25,7 +25,7 @@ def queue_remove_container(container):
 
 def remove_container(container):
     with r.lock("docker", 5) as lck:
-        c = docker.Client()
+        c = docker.Client(version='1.11')
         for x in range(5):
             try :
                 c.remove_container(container)
