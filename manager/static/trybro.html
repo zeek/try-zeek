@@ -19,7 +19,7 @@
 <select ng-model="pcap" ng-options="p for p in pcaps">
 </select>
 
-Or upload file <input type="file" name="pcap_upload" id="pcap_upload">
+Or upload file <input type="file" name="pcap_upload" id="pcap_upload" onchange="angular.element(this).scope().pcap_changed()">
 
 <div class="progress" ng-show="upload_percentage">
     <div class="progress-bar" role="progressbar" aria-valuenow="{{upload_percentage}}" aria-valuemin="0" aria-valuemax="100" 
@@ -33,7 +33,12 @@ Or upload file <input type="file" name="pcap_upload" id="pcap_upload">
 </select>
 
 <br>
+<div ng-hide="pcap_too_large">
 <button type="run" class="btn btn-primary">Run <span class="glyphicon glyphicon-play"></span> </button>
+</div>
+<div ng-show="pcap_too_large" class="alert alert-danger">
+The selected PCAP is too large to upload
+</div>
 
 </form>
 

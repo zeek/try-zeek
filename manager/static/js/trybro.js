@@ -22,6 +22,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     $scope.files = [];
     $scope.mode = "text";
     $scope.status = "Ready...";
+    $scope.pcap_too_large = false;
 
     $http.get("/static/examples/examples.json").then(function(response) {
         $scope.examples = response.data;
@@ -39,6 +40,13 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         _editor.getSession().setMode("ace/mode/perl");
         _editor.setShowPrintMargin(false);
     };
+
+    $scope.pcap_changed = function() {
+        var f = document.getElementById("pcap_upload").files[0];
+        $scope.$apply(function() {
+            $scope.pcap_too_large = !!(f.size > 1024*1024*10);
+        });
+    }
 
     $scope.load_example = function () {
         if(!$scope.example_name || $scope.example_name === "--"){
@@ -213,7 +221,6 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
             $scope.example_name = null;
             $scope.load_saved(toParams.job);
         }
-        console.log(toParams);
         /*FIXME: just make this a loop */
         if(toParams.example) {
             $scope.example_name = toParams.example;
