@@ -21,8 +21,10 @@
 
 Or upload file <input type="file" name="pcap_upload" id="pcap_upload">
 
-<div ng-show="upload_percentage">
-    Upload: <span ng-bind="upload_percentage"></span> %
+<div class="progress" ng-show="upload_percentage">
+    <div class="progress-bar" role="progressbar" aria-valuenow="{{upload_percentage}}" aria-valuemin="0" aria-valuemax="100" 
+        ng-style="{width : ( upload_percentage + '%' ) }">
+    </div>
 </div>
 <br>
 
