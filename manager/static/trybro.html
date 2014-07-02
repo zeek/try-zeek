@@ -19,6 +19,11 @@
 <select ng-model="pcap" ng-options="p for p in pcaps">
 </select>
 
+Or upload file <input type="file" name="pcap_upload" id="pcap_upload">
+
+<div ng-show="upload_percentage">
+    Upload: <span ng-bind="upload_percentage"></span> %
+</div>
 <br>
 
 <label>Version</label>

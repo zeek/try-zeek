@@ -92,6 +92,59 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     });
 
     $scope.run_code = function() {
+        var f = document.getElementById("pcap_upload").files[0];
+        if(f)
+            return $scope.maybe_upload_pcap(f);
+        else
+            return $scope.really_run_code($scope.pcap);
+    };
+
+
+    $scope.maybe_upload_pcap = function(file) {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            var checksum = md5(reader.result);
+            $scope.maybe_upload_pcap_checksum(file, checksum);
+        }
+        reader.readAsBinaryString(file);
+    };
+
+    $scope.maybe_upload_pcap_checksum = function(file, checksum) {
+        $http.get("/pcap/" + checksum).then(function(response) {
+            if(response.data.status) {
+                $scope.really_run_code(checksum);
+                $scope.upload_percentage = null;
+            } else {
+                $scope.upload_pcap(file, checksum);
+            }
+        });
+    };
+
+    $scope.upload_pcap = function(file, checksum) {
+        var xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener("progress", function(e) {
+            if (e.lengthComputable) {
+                var percentage = Math.round((e.loaded * 100) / e.total);
+                $scope.$apply(function() {
+                    $scope.upload_percentage = percentage;
+                });
+            }
+        }, false);
+        xhr.upload.addEventListener("load", function(e){
+            $scope.$apply(function() {
+                $scope.upload_percentage = null;
+                $scope.really_run_code(checksum);
+            });
+        }, false);
+
+        var fd = new FormData();
+        fd.append('pcap', file);
+
+        xhr.open("POST", "/pcap/upload/" + checksum, true);
+        xhr.send(fd);
+    };
+
+    $scope.really_run_code = function(pcap) {
         $scope.mode = "text";
         $scope.status = "Running...";
         $scope.stderr = null;
@@ -99,7 +152,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         $scope.visible = null;
         var data = {
             "sources": $scope.source_files,
-            "pcap": $scope.pcap,
+            "pcap": pcap,
             "version": $scope.version
         }
         $http.post("/run", data).then(function(response) {
@@ -177,4 +230,3 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     });
 
 });
-

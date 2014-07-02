@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from flask import jsonify
 import backend
+import hashlib
 
 app = Flask(__name__)
 
@@ -39,6 +40,25 @@ def files(job):
 @app.route("/versions.json")
 def versions():
     return jsonify(versions=backend.BRO_VERSIONS, default=backend.BRO_VERSION)
+
+@app.route("/pcap/upload/<checksum>", methods=['POST'])
+def pcap_upload(checksum):
+    contents = request.files['pcap'].read()
+    actual = md5(contents)
+    ok = actual == checksum
+    if ok:
+        backend.save_pcap(checksum, contents)
+    return jsonify(status=ok, checksum=actual)
+
+@app.route("/pcap/<checksum>")
+def has_pcap(checksum):
+    status = backend.check_pcap(checksum)
+    return jsonify(status=status)
+
+def md5(s):
+    m = hashlib.md5()
+    m.update(s)
+    return m.hexdigest()
 
 if __name__ == "__main__":
     app.run(debug=True)

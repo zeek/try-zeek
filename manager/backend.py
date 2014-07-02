@@ -68,9 +68,14 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
             f.write(s['content'])
 
     if pcap:
-        src = os.path.join("/pcaps", pcap)
         dst = os.path.join(work_dir, "file.pcap")
-        os.symlink(src, dst)
+        contents = get_pcap(pcap)
+        if contents:
+            with open(dst, 'w') as f:
+                f.write(contents)
+        else:
+            src = os.path.join("/pcaps", pcap)
+            os.symlink(src, dst)
     
     #docker run -v /brostuff/tmpWh0k1x:/brostuff/ -n --rm -t -i  bro_worker /bro/bin/bro /brostuff/code.bro
 
@@ -142,4 +147,21 @@ def parse_tables(files):
             files[fn] = bro_ascii_reader.reader(contents.splitlines(), max_rows=200)
     return files
 
+def save_pcap(checksum, contents):
+    pcap_key = "pcaps:%s" % checksum
+    r.set(pcap_key, contents)
+    r.expire(pcap_key, 60*60)
+    return True
 
+def get_pcap(checksum):
+    pcap_key = "pcaps:%s" % checksum
+    r.expire(pcap_key, 60*60)
+    return r.get(pcap_key)
+
+def check_pcap(checksum):
+    pcap_key = "pcaps:%s" % checksum
+    exists = r.exists(pcap_key)
+
+    if exists:
+        r.expire(pcap_key, 60*60)
+    return exists
