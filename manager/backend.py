@@ -68,15 +68,16 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
             f.write(s['content'])
 
     if pcap:
+        src = os.path.join("/pcaps", pcap)
         dst = os.path.join(work_dir, "file.pcap")
-        contents = get_pcap(pcap)
-        if contents:
-            with open(dst, 'w') as f:
-                f.write(contents)
-        else:
-            src = os.path.join("/pcaps", pcap)
+        if os.path.exists(src):
             os.symlink(src, dst)
-    
+        else:
+            contents = get_pcap_with_retry(pcap)
+            if contents:
+                with open(dst, 'w') as f:
+                    f.write(contents)
+
     #docker run -v /brostuff/tmpWh0k1x:/brostuff/ -n --rm -t -i  bro_worker /bro/bin/bro /brostuff/code.bro
 
     print "Connecting to docker...."
@@ -157,6 +158,18 @@ def get_pcap(checksum):
     pcap_key = "pcaps:%s" % checksum
     r.expire(pcap_key, 60*60)
     return r.get(pcap_key)
+
+def get_pcap_with_retry(checksum):
+    """There is an annoying race condition where POST /pcap/upload is returning as soon as the pcap is sent, but before
+    the request is complete and redis has actually saved it. then run_code
+    doesn't find it. so for now, retry here and see if it shows up"""
+
+    for x in range(10):
+        contents = get_pcap(checksum)
+        if contents:
+            return contents
+        time.sleep(0.1)
+    return None
 
 def check_pcap(checksum):
     pcap_key = "pcaps:%s" % checksum
