@@ -81,7 +81,7 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
 
     print "Connecting to docker...."
     with r.lock("docker", 5) as lck:
-        c = docker.Client()
+        c = docker.Client(version='1.11')
 
         print "Creating container.."
         volumes = {work_dir: {}}
