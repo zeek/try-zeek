@@ -68,9 +68,9 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
             f.write(s['content'])
 
     if pcap:
-        src = os.path.join("/pcaps", pcap)
         dst = os.path.join(work_dir, "file.pcap")
-        if os.path.exists(src):
+        if '.' in pcap:
+            src = os.path.join("/pcaps", pcap)
             os.symlink(src, dst)
         else:
             contents = get_pcap_with_retry(pcap)
