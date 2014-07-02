@@ -38,6 +38,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
 
     $scope.aceLoaded = function(_editor) {
         _editor.getSession().setMode("ace/mode/perl");
+        _editor.getSession().setUseSoftTabs(false);
         _editor.setShowPrintMargin(false);
     };
 
