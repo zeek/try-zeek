@@ -37,6 +37,11 @@ def files(job):
     files = backend.get_files(job)
     return jsonify(files=files)
 
+@app.route("/files/<job>.json")
+def files_json(job):
+    files = backend.get_files_json(job)
+    return jsonify(files=files)
+
 @app.route("/versions.json")
 def versions():
     return jsonify(versions=backend.BRO_VERSIONS, default=backend.BRO_VERSION)

@@ -136,6 +136,10 @@ def get_stdout(job):
 def get_files(job):
     files_key = 'files:%s' % job
     files = r.hgetall(files_key)
+    return files
+
+def get_files_json(job):
+    files = get_files(job)
     return parse_tables(files)
 
 def get_saved(job):

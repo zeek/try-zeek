@@ -176,7 +176,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     };
     $scope.load_files = function() {
         $scope.status = "Loading files.."
-        $http.get("/files/" + $scope.job).then(function(response) {
+        $http.get("/files/" + $scope.job + ".json").then(function(response) {
             $scope.status = null;
             var files = response.data.files;
 
