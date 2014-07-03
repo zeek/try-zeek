@@ -1,8 +1,8 @@
 <h1>Input Files</h1>
 <form method="POST" ng-submit="run_code()">
 
-<label>Load example </label>
-<select ng-model="example_name" ng-options="e for e in examples">
+<label for="example">Load example </label>
+<select id="example" ng-model="example_name" ng-options="e for e in examples">
 </select>
 
 <ul class="nav nav-tabs">
@@ -14,22 +14,26 @@
     <div ng-show="f==current_file" ui-ace="{onLoad: aceLoaded}" ng-model="f.content"></div>
 </div>
 
+<div class="row">
+    <div class="col-md-4">
+        <label for="pcap">Use example PCAP</label>
+        <select id="pcap" ng-model="pcap" ng-options="p for p in pcaps">
+        </select>
+    </div>
 
-<label>PCAP</label>
-<select ng-model="pcap" ng-options="p for p in pcaps">
-</select>
-
-Or upload file <input type="file" name="pcap_upload" id="pcap_upload" onchange="angular.element(this).scope().pcap_changed()">
-
-<div class="progress" ng-show="upload_percentage">
-    <div class="progress-bar" role="progressbar" aria-valuenow="{{upload_percentage}}" aria-valuemin="0" aria-valuemax="100" 
-        ng-style="{width : ( upload_percentage + '%' ) }">
+    <div class="col-md-4">
+        <label for="pcap_upload">Or upload a PCAP</label>
+        <input type="file" id="pcap_upload" name="pcap_upload" id="pcap_upload" onchange="angular.element(this).scope().pcap_changed()">
+        <div class="progress" ng-show="upload_percentage">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{upload_percentage}}" aria-valuemin="0" aria-valuemax="100" 
+                ng-style="{width : ( upload_percentage + '%' ) }">
+            </div>
+        </div>
     </div>
 </div>
-<br>
 
-<label>Version</label>
-<select ng-model="version" ng-options="v for v in versions">
+<label for="version">Bro Version</label>
+<select id="version" ng-model="version" ng-options="v for v in versions">
 </select>
 
 <br>
