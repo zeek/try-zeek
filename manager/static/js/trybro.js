@@ -23,6 +23,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     $scope.mode = "text";
     $scope.status = "Ready...";
     $scope.pcap_too_large = false;
+    $scope.run_after_example_loaded = false;
 
     $http.get("/static/examples/examples.json").then(function(response) {
         $scope.examples = response.data;
@@ -58,6 +59,10 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
             $scope.current_file = $scope.source_files[0];
             //$scope.editor.setValue(response.data);
             //$scope.editor.selection.clearSelection();
+            if($scope.run_after_example_loaded) {
+                $scope.run_after_example_loaded = false;
+                $scope.run_code();
+            }
         });
     };
 
@@ -229,8 +234,8 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
             $scope.load_saved(toParams.job);
         }
         /*FIXME: just make this a loop */
-        if(toParams.example) {
-            $scope.example_name = toParams.example;
+        if(toParams.run) {
+            $scope.run_after_example_loaded = true;
         }
         if(toParams.pcap) {
             $scope.pcap = toParams.pcap;
@@ -238,8 +243,8 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         if(toParams.version) {
             $scope.version = toParams.version;
         }
-        if(toParams.run) {
-            $scope.run_code();
+        if(toParams.example) {
+            $scope.example_name = toParams.example;
         }
     });
 
