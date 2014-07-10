@@ -16,6 +16,8 @@ import bro_ascii_reader
 BRO_VERSION = "2.3"
 BRO_VERSIONS = ["2.2", "2.3", "master"]
 
+SOURCES_EXPIRE = 60*60*24*3
+
 r = Redis()
 
 def queue_remove_container(container):
@@ -41,7 +43,7 @@ def queue_run_code(sources, pcap, version=BRO_VERSION):
             pipe.expire(cache_key, 600)
             pipe.expire('rq:job:%s' % job_id, 605)
             pipe.expire('files:%s' % job_id, 605)
-            pipe.expire('sources:%s' % job_id, 60*60*12)
+            pipe.expire('sources:%s' % job_id, SOURCES_EXPIRE)
             pipe.execute()
         return job_id
     q = Queue(connection=r)
@@ -122,7 +124,7 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
     r.expire(cache_key, 600)
 
     r.set(sources_key, json.dumps(dict(sources=sources, pcap=pcap, version=version)))
-    r.expire(sources_key, 60*60*12)
+    r.expire(sources_key, SOURCES_EXPIRE)
     return stdout
 
 def get_stdout(job):
