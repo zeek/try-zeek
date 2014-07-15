@@ -16,6 +16,7 @@ import bro_ascii_reader
 BRO_VERSION = "2.3"
 BRO_VERSIONS = ["2.2", "2.3", "master"]
 
+CACHE_EXPIRE = 60*10
 SOURCES_EXPIRE = 60*60*24*3
 
 r = Redis()
@@ -40,9 +41,9 @@ def queue_run_code(sources, pcap, version=BRO_VERSION):
     job_id = r.get(cache_key)
     if job_id:
         with r.pipeline() as pipe:
-            pipe.expire(cache_key, 600)
-            pipe.expire('rq:job:%s' % job_id, 605)
-            pipe.expire('files:%s' % job_id, 605)
+            pipe.expire(cache_key, CACHE_EXPIRE)
+            pipe.expire('rq:job:%s' % job_id, CACHE_EXPIRE + 5)
+            pipe.expire('files:%s' % job_id, CACHE_EXPIRE + 5)
             pipe.expire('sources:%s' % job_id, SOURCES_EXPIRE)
             pipe.execute()
         return job_id
@@ -117,11 +118,11 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
         r.hset(files_key, f, txt)
         if f == 'stdout.log':
             stdout = txt
-    r.expire(files_key, 600)
+    r.expire(files_key, CACHE_EXPIRE+5)
     shutil.rmtree(work_dir)
 
     r.set(cache_key, job.id)
-    r.expire(cache_key, 600)
+    r.expire(cache_key, CACHE_EXPIRE)
 
     r.set(sources_key, json.dumps(dict(sources=sources, pcap=pcap, version=version)))
     r.expire(sources_key, SOURCES_EXPIRE)
