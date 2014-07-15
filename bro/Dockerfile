@@ -18,5 +18,8 @@ RUN ./gitbro 5d7b3f850be483c99b6c123387798f408041d825
 
 RUN ln -s /bro-2.3 /bro
 
+ADD getgeo.sh /getgeo.sh
+RUN /getgeo.sh
+
 ADD pcaps /pcaps
 ADD runbro ./runbro
