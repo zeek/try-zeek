@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 VER=$1
 URL=$2
 
@@ -6,7 +6,8 @@ cd /tmp/
 wget $URL
 tar xvzf bro-${VER}.tar.gz
 cd bro-${VER}
-./configure --prefix=/bro-${VER} && make -j4 install
+./configure --prefix=/bro-${VER}
+make -j4 install
 cd ..
 rm -f bro-${VER}.tar.gz
 rm -rf bro-${VER}

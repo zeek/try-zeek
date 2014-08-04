@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 VER=$1
 
 cd /tmp/bro
@@ -8,5 +8,7 @@ git reset --hard
 git submodule foreach --recursive git reset --hard
 git checkout .
 git submodule foreach --recursive git checkout .
-./configure --prefix=/bro-master && make && make install
+./configure --prefix=/bro-master
+make
+make install
 rm -rf /tmp/bro
