@@ -14,7 +14,7 @@ RUN ./buildbro 2.3 http://www.bro.org/downloads/release/bro-2.3.tar.gz
 
 RUN cd /tmp && git clone --recursive git://git.bro.org/bro
 ADD gitbro ./gitbro
-RUN ./gitbro 5d7b3f850be483c99b6c123387798f408041d825
+RUN ./gitbro f8bb17bcb8fad4ba46d68fc24416f3c8aa8233f6
 
 RUN ln -s /bro-2.3 /bro
 
