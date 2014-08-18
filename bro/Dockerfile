@@ -9,8 +9,6 @@ RUN apt-get update && echo 2014-08-18
 RUN apt-get -y install build-essential git bison flex cmake swig libssl-dev libgeoip-dev libmagic-dev libpcap-dev python-dev libcurl4-openssl-dev wget libncurses5-dev
 
 ADD buildbro ./buildbro
-RUN ./buildbro 1.5 http://www.bro.org/downloads/archive/bro-1.5.tar.gz
-RUN ./buildbro 2.1 http://www.bro.org/downloads/archive/bro-2.1.tar.gz
 RUN ./buildbro 2.2 http://www.bro.org/downloads/archive/bro-2.2.tar.gz
 RUN ./buildbro 2.3 http://www.bro.org/downloads/release/bro-2.3.tar.gz
 
