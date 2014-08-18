@@ -1,3 +1,4 @@
+import codecs
 import os
 import sys
 import shutil
@@ -67,7 +68,7 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
     work_dir = tempfile.mkdtemp(dir="/brostuff")
     for s in sources:
         code_fn = os.path.join(work_dir,s['name'])
-        with open(code_fn, 'w') as f:
+        with codecs.open(code_fn, 'w', encoding="utf-8") as f:
             f.write(s['content'])
 
     if pcap:
