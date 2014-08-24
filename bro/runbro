@@ -16,7 +16,7 @@ mv main.bro trybro.bro
 su -s /bin/sh nobody -c "/usr/bin/timeout -k 2 15 /bro-${VER}/bin/bro -C $opts ./trybro.bro local 'Site::local_nets += { 0.0.0.0/0 }' > stdout.log 2> stderr.log"
 
 #remove harmless message
-grep -v 'problem initializing NB-DNS' stderr.log > tmp.log
+grep -v 'NB-DNS' stderr.log > tmp.log
 mv tmp.log stderr.log
 
 #remove useless output files
