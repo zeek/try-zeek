@@ -2,7 +2,7 @@
 #
 # VERSION               0.1
 
-FROM      ubuntu
+FROM      ubuntu:trusty
 MAINTAINER Justin Azoff <justin.azoff@gmail.com>
 
 RUN apt-get update && echo 2014-08-18

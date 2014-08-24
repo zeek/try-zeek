@@ -2,10 +2,10 @@
 #
 # VERSION               0.2
 
-FROM      ubuntu
+FROM      ubuntu:trusty
 MAINTAINER Justin Azoff <justin.azoff@gmail.com>
 
-RUN apt-get update && apt-get install -yq python-pip
+RUN apt-get update && apt-get install -yq python-pip python-dev
 RUN apt-get update && apt-get install -yq redis-server
 
 RUN sed -i "s/daemonize yes/daemonize no/" /etc/redis/redis.conf
