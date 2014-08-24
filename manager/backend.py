@@ -97,7 +97,7 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
             network_disabled=True,
         )
         print "Starting container.."
-        c.start(container, binds={
+        c.start(container, dns="127.0.0.1", binds={
             work_dir: work_dir,
         })
 
