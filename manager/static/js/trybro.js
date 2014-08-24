@@ -104,6 +104,9 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     $scope.$watch("example_name", function (newValue) {
         $scope.load_example(newValue);
     });
+    $scope.$watch("pcap", function (newValue) {
+        $("#pcap_upload").val('');
+    });
 
     $scope.run_code = function() {
         var f = document.getElementById("pcap_upload").files[0];
