@@ -20,4 +20,4 @@ grep -v 'problem initializing NB-DNS' stderr.log > tmp.log
 mv tmp.log stderr.log
 
 #remove useless output files
-rm -f loaded_scripts.log
+rm -f loaded_scripts.log packet_filter.log
