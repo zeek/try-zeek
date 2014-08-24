@@ -10,7 +10,7 @@ def reader(f, max_rows=None):
     sep = headers['separator'].decode("string-escape")
 
     for k,v in headers.items():
-        if sep in v:
+        if sep in v or k in ('fields', 'types'):
             headers[k] = v.split(sep)
 
     headers['separator'] = sep
