@@ -15,7 +15,7 @@ from rq.job import Job
 import bro_ascii_reader
 
 BRO_VERSION = "2.3"
-BRO_VERSIONS = ["1.5", "2.1", "2.2", "2.3", "master"]
+BRO_VERSIONS = ["2.2", "2.3", "master"]
 
 CACHE_EXPIRE = 60*10
 SOURCES_EXPIRE = 60*60*24*3
