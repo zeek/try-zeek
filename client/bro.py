@@ -6,6 +6,7 @@ import sys
 import time
 import hashlib
 HOST="http://brototype.ncsa.illinois.edu/"
+HOST="http://192.168.59.103/"
 
 DEFAULT_VERSION="2.3"
 
@@ -71,7 +72,7 @@ def run(files, version=DEFAULT_VERSION, pcap=None):
     if pcap:
         pcap = maybe_upload_pcap(pcap)
     job = run_code(files, version, pcap=pcap)
-    print wait(job)['txt']
+    sys.stdout.write(wait(job)['txt'])
     get_files(job)
 
 if __name__ == "__main__":
