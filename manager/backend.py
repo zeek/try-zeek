@@ -61,11 +61,12 @@ def run_code_simple(stdin, version=BRO_VERSION):
     sources = [
         {"name": "main.bro", "content": stdin}
     ]
-    job = queue_run_code(sources, pcap, version)
-    stdout = backend.get_stdout(job.id)
+    job = queue_run_code(sources, pcap=None, version=version)
+    stdout = get_stdout(job.id)
     if stdout is None:
         stdout = job.get(timeout=5)
-    files = backend.get_files_json(job.id)
+    files = get_files_json(job.id)
+    return files
 
 def read_fn(fn):
     with open(fn) as f:
