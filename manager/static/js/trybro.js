@@ -174,29 +174,12 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         }
         $http.post("/run", data).then(function(response) {
             $scope.job = response.data.job;
+            $scope.stdout = response.data.stdout;
             $state.go("trybro.saved", {job: $scope.job}, {notify: false, inherit: false});
-            $scope.wait(0);
+            $scope.load_files();
         });
     };
 
-    $scope.wait = function(attempt) {
-        if(attempt > 30) {
-            $scope.mode = 'text';
-            $scope.stderr = 'request timed out';
-            return;
-        }
-        $http.get("/stdout/" + $scope.job).then(function(response) {
-            if(response.status != 202) {
-                $scope.mode = 'text';
-                $scope.stdout = response.data.txt;
-                $scope.load_files();
-            } else {
-                $timeout(function() {
-                    $scope.wait(attempt+1)
-                }, 200);
-            }
-        });
-    };
     $scope.load_files = function() {
         $scope.status = "Loading files.."
         $http.get("/files/" + $scope.job + ".json").then(function(response) {

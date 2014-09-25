@@ -21,9 +21,19 @@ def run():
     if pcap and '--' in pcap:
         pcap = None
 
-    job_id = backend.queue_run_code(sources, pcap=pcap, version=version)
+    job = backend.queue_run_code(sources, pcap=pcap, version=version)
+    stdout = backend.get_stdout(job.id)
+    if stdout is None:
+        stdout = job.get(10)
 
-    return jsonify(job=job_id)
+    return jsonify(job=job.id, stdout=stdout)
+
+@app.route("/run_simple/<version>", methods=["POST"])
+def run_simple(version="2.3"):
+    stdin = request.form.get("stdin") or 'print "Huh?";'
+
+    files = backend.run_code_simple(stdin, version=version)
+    return jsonify(files=files)
 
 @app.route("/stdout/<job>")
 def stdout(job):
@@ -64,6 +74,8 @@ def md5(s):
     m = hashlib.md5()
     m.update(s)
     return m.hexdigest()
+
+app.debug = True
 
 if __name__ == "__main__":
     app.run(debug=True)

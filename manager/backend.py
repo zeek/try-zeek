@@ -9,10 +9,20 @@ import hashlib
 
 import docker
 from redis import Redis
-from rq import Queue, get_current_job
-from rq.job import Job
+from celery import Celery
+from celery.result import AsyncResult
 
 import bro_ascii_reader
+
+app = Celery('trybro', broker="redis://localhost:6379/0")
+app.conf.update(
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0',
+    CELERY_DISABLE_RATE_LIMITS=True,
+    CELERY_TASK_SERIALIZER='json',
+    CELERY_ACCEPT_CONTENT=['json'],  # Ignore other content
+    CELERY_RESULT_SERIALIZER='json',
+)
+
 
 BRO_VERSION = "2.3"
 BRO_VERSIONS = ["2.2", "2.3", "master"]
@@ -22,11 +32,7 @@ SOURCES_EXPIRE = 60*60*24*3
 
 r = Redis()
 
-def queue_remove_container(container):
-    q = Queue(connection=r)
-    job = q.enqueue(remove_container, container)
-    return job
-
+@app.task(ignore_result=True)
 def remove_container(container):
     with r.lock("docker", 5) as lck:
         c = docker.Client(version='1.11')
@@ -43,28 +49,68 @@ def queue_run_code(sources, pcap, version=BRO_VERSION):
     if job_id:
         with r.pipeline() as pipe:
             pipe.expire(cache_key, CACHE_EXPIRE)
-            pipe.expire('rq:job:%s' % job_id, CACHE_EXPIRE + 5)
+            pipe.expire('stdout:%s' % job_id, CACHE_EXPIRE + 5)
             pipe.expire('files:%s' % job_id, CACHE_EXPIRE + 5)
             pipe.expire('sources:%s' % job_id, SOURCES_EXPIRE)
             pipe.execute()
-        return job_id
-    q = Queue(connection=r)
-    job = q.enqueue(run_code, sources, pcap, version)
-    return job.id
+        return AsyncResult(job_id)
+    job = run_code.delay(sources, pcap, version)
+    return job
+
+def run_code_simple(stdin, version=BRO_VERSION):
+    sources = [
+        {"name": "main.bro", "content": stdin}
+    ]
+    job = queue_run_code(sources, pcap, version)
+    stdout = backend.get_stdout(job.id)
+    if stdout is None:
+        stdout = job.get(timeout=5)
+    files = backend.get_files_json(job.id)
 
 def read_fn(fn):
     with open(fn) as f:
         return f.read()
 
+@app.task
 def run_code(sources, pcap=None, version=BRO_VERSION):
     if version not in BRO_VERSIONS:
         version = BRO_VERSION
     cache_key = hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
     sys.stdout = sys.stderr
+    job = run_code.request
+    stdout_key = 'stdout:%s' % job.id
+    files_key = 'files:%s' % job.id
+    sources_key = 'sources:%s' % job.id
+
+    file_output = really_run_code(sources, pcap, version)
+
+    for f, txt in file_output.items():
+        if not f.endswith(".log"): continue
+        r.hset(files_key, f, txt)
+        if f == 'stdout.log':
+            stdout = txt
+    r.expire(files_key, CACHE_EXPIRE+5)
+
+    r.set(stdout_key, stdout)
+    r.expire(stdout_key, SOURCES_EXPIRE+5)
+
+    r.set(sources_key, json.dumps(dict(sources=sources, pcap=pcap, version=version)))
+    r.expire(sources_key, SOURCES_EXPIRE)
+
+    r.set(cache_key, job.id)
+    r.expire(cache_key, CACHE_EXPIRE)
+    return stdout
+
+
+
+def really_run_code(sources, pcap=None, version=BRO_VERSION):
+    if version not in BRO_VERSIONS:
+        version = BRO_VERSION
+
     for s in sources:
         s['content'] = s['content'].replace("\r\n", "\n")
         s['content'] = s['content'].rstrip() + "\n"
-    job = get_current_job()
+
     work_dir = tempfile.mkdtemp(dir="/brostuff")
     for s in sources:
         code_fn = os.path.join(work_dir,s['name'])
@@ -105,37 +151,22 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
     c.wait(container)
 
     print "Removing Container"
-    queue_remove_container(container)
+    remove_container.delay(container)
 
-    stdout = ''
-    files_key = 'files:%s' % job.id
-    sources_key = 'sources:%s' % job.id
-
+    files = {}
     for f in os.listdir(work_dir):
         if not f.endswith(".log"): continue
         full = os.path.join(work_dir, f)
         txt = read_fn(full)
-        #print "Setting", f, txt
-        r.hset(files_key, f, txt)
-        if f == 'stdout.log':
-            stdout = txt
-    r.expire(files_key, CACHE_EXPIRE+5)
-    shutil.rmtree(work_dir)
-
-    r.set(cache_key, job.id)
-    r.expire(cache_key, CACHE_EXPIRE)
-
-    r.set(sources_key, json.dumps(dict(sources=sources, pcap=pcap, version=version)))
-    r.expire(sources_key, SOURCES_EXPIRE)
-    return stdout
+        files[f] = txt
+    return files
 
 def get_stdout(job):
-    for x in range(10):
-        j = Job.fetch(job, connection=r)
-        if j.result:
-            return j.result
-        time.sleep(.1)
-    return j.result
+    stdout_key = 'stdout:%s' % job
+    stdout = r.get(stdout_key)
+    if stdout:
+        r.expire(stdout_key, SOURCES_EXPIRE+5)
+    return stdout
 
 def get_files(job):
     files_key = 'files:%s' % job
