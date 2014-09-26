@@ -13,7 +13,7 @@ fi
 
 chown nobody . *
 mv main.bro trybro.bro
-su -s /bin/sh nobody -c "/usr/bin/timeout -k 2 15 /bro-${VER}/bin/bro -C $opts ./trybro.bro local 'Site::local_nets += { 0.0.0.0/0 }' > stdout.log 2> stderr.log"
+su -s /bin/sh nobody -c "/usr/bin/timeout -k 2 15 /bro-${VER}/bin/bro -C $opts local ./trybro.bro 'Site::local_nets += { 0.0.0.0/0 }' > stdout.log 2> stderr.log"
 
 #remove harmless message
 grep -v 'NB-DNS' stderr.log > tmp.log
