@@ -35,7 +35,8 @@ def run_code(files, version=DEFAULT_VERSION, pcap=None):
     }
     data = json.dumps(req)
     headers = {'Content-type': 'application/json'}
-    return requests.post(HOST  + "run", data=data, headers=headers).json()["job"]
+    res = requests.post(HOST  + "run", data=data, headers=headers).json()
+    return res
 
 def maybe_upload_pcap(pcap):
     with open(pcap) as f:
@@ -50,16 +51,6 @@ def maybe_upload_pcap(pcap):
 
     return checksum
 
-def wait(job):
-    while True:
-        res = requests.get(HOST + "stdout/" + job)
-        if res.status_code != 202:
-            break
-        print "waiting..."
-        time.sleep(.1)
-    res.raise_for_status()
-    return res.json()
-
 def get_files(job):
     res = requests.get(HOST + "files/" + job)
     file_output = res.json()['files']
@@ -71,9 +62,9 @@ def get_files(job):
 def run(files, version=DEFAULT_VERSION, pcap=None):
     if pcap:
         pcap = maybe_upload_pcap(pcap)
-    job = run_code(files, version, pcap=pcap)
-    sys.stdout.write(wait(job)['txt'])
-    get_files(job)
+    res = run_code(files, version, pcap=pcap)
+    sys.stdout.write(res['stdout'])
+    get_files(res["job"])
 
 if __name__ == "__main__":
     parser = OptionParser()
