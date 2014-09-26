@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from flask import jsonify
+from flask.ext.jsonpify import jsonify
 import backend
 import hashlib
 
@@ -28,9 +28,9 @@ def run():
 
     return jsonify(job=job.id, stdout=stdout)
 
-@app.route("/run_simple/<version>", methods=["POST"])
+@app.route("/run_simple/<version>", methods=['GET', 'POST'])
 def run_simple(version="2.3"):
-    stdin = request.form.get("stdin") or 'print "Huh?";'
+    stdin = request.args.get("code") or request.form.get("code") or 'print "Huh?";'
 
     files = backend.run_code_simple(stdin, version=version)
     return jsonify(files=files)

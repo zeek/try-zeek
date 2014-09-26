@@ -20,3 +20,4 @@ urllib3==1.7.1
 websocket-client==0.11.0
 wsgiref==0.1.2
 celery[redis]
+flask-jsonpify
