@@ -1,4 +1,14 @@
 <html>
+<style type="text/css">
+.bro_source {
+    background: #eee;
+    padding: 1em;
+}
+.bro_result {
+    background: #eee;
+}
+
+</style>
 <body>
 
 <h2>Examples</h2>
@@ -6,15 +16,17 @@
 <p> Hello World!</p>
 
 <pre class="bro_source">
-print "Hello, World!";
+event bro_init() {
+    print "Hello, World!";
+}
 </pre>
 
-<p>Hello world using events!</p>
+<p>Hello and goodbye!</p>
 
 <pre class="bro_source">
 event bro_init() { 
     print "Hello, World!"; 
-    }
+}
 
 event bro_done() { 
     print "Goodbye, World!"; 
@@ -23,26 +35,10 @@ event bro_done() {
 
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="trybro_embded.js"></script>
 <script type="text/javascript">
 $(function() {
-    console.log("ready!");
-    $(".bro_source").prop("contenteditable", true);
-    $(".bro_source").wrap("<div class='bro_example'></div>")
-    $(".bro_source").after("<button>Run</button> <pre class='bro_result'></pre>");
-    $(".bro_example button").click(function() {
-        var code = $(this).parent().find(".bro_source").text()
-        var res = $(this).parent().find(".bro_result");
-        res.text("running...");
-        $.getJSON("http://try.bro.org/run_simple/2.3?callback=?", {code: code}, function(data) {
-            var out = data.files['stdout.log'];
-            var err = data.files['stderr.log'];
-            if(err) {
-                res.text(err + "\n" + out);
-            } else {
-                res.text(out);
-            }
-        });
-    });
+    $(".bro_source").trybro();
 });
 </script>
 
