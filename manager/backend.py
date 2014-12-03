@@ -17,6 +17,7 @@ import bro_ascii_reader
 app = Celery('trybro', broker="redis://localhost:6379/0")
 app.conf.update(
     CELERY_RESULT_BACKEND = 'redis://localhost:6379/0',
+    CELERY_TASK_RESULT_EXPIRES = 60, #1 minute
     CELERY_DISABLE_RATE_LIMITS=True,
     CELERY_TASK_SERIALIZER='json',
     CELERY_ACCEPT_CONTENT=['json'],  # Ignore other content
