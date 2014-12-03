@@ -94,7 +94,7 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
     r.expire(files_key, CACHE_EXPIRE+5)
 
     r.set(stdout_key, stdout)
-    r.expire(stdout_key, SOURCES_EXPIRE+5)
+    r.expire(stdout_key, CACHE_EXPIRE+5)
 
     r.set(sources_key, json.dumps(dict(sources=sources, pcap=pcap, version=version)))
     r.expire(sources_key, SOURCES_EXPIRE)
