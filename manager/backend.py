@@ -161,6 +161,7 @@ def really_run_code(sources, pcap=None, version=BRO_VERSION):
         full = os.path.join(work_dir, f)
         txt = read_fn(full)
         files[f] = txt
+    shutil.rmtree(work_dir)
     return files
 
 def get_stdout(job):
