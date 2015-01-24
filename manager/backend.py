@@ -26,11 +26,24 @@ app.conf.update(
 )
 
 
-BRO_VERSION = "2.3.1"
-BRO_VERSIONS = ["2.2", "2.3.1", "master"]
+def get_bro_versions():
+    c = docker.Client(version='1.11')
+    images = c.images(name='bro')
+    tags = [i['RepoTags'][0] for i in images]
+    versions = [t.replace("bro:", "") for t in tags if '_' not in t]
+    return sorted(versions)
 
 CACHE_EXPIRE = 60*10
 SOURCES_EXPIRE = 60*60*24*3
+
+BRO_VERSIONS = get_bro_versions()
+#Set the default bro version to the most recent version, unless that is master
+BRO_VERSION = BRO_VERSIONS[-1]
+if BRO_VERSION == 'master' and len(BRO_VERSION) > 1:
+    BRO_VERSION = BRO_VERSIONS[-2]
+
+print "Available Bro versions %r. Using %r as default" % (BRO_VERSIONS, BRO_VERSION)
+
 
 r = Redis()
 
