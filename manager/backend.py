@@ -142,7 +142,12 @@ def really_run_code(sources, pcap=None, version=BRO_VERSION):
         with codecs.open(code_fn, 'w', encoding="utf-8") as f:
             f.write(s['content'])
 
-    shutil.copy("./runbro", runbro_path)
+    runbro_src = "./runbro"
+    runbro_src_version_specific = "%s-%s" % (runbro_src, version)
+    if os.path.exists(runbro_src_version_specific):
+        runbro_src = runbro_src_version_specific
+
+    shutil.copy(runbro_src, runbro_path)
     os.chmod(runbro_path, 0755)
 
     binds = {work_dir: {"bind": work_dir, "ro": False}}
