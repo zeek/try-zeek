@@ -6,6 +6,7 @@ import tempfile
 import time
 import json
 import hashlib
+import traceback
 
 import docker
 from redis import Redis
@@ -25,8 +26,8 @@ app.conf.update(
 )
 
 
-BRO_VERSION = "2.3"
-BRO_VERSIONS = ["2.2", "2.3", "master"]
+BRO_VERSION = "2.3.1"
+BRO_VERSIONS = ["2.2", "2.3.1", "master"]
 
 CACHE_EXPIRE = 60*10
 SOURCES_EXPIRE = 60*60*24*3
@@ -35,6 +36,7 @@ r = Redis()
 
 @app.task(ignore_result=True)
 def remove_container(container):
+    time.sleep(1)
     with r.lock("docker", 5) as lck:
         c = docker.Client(version='1.11')
         for x in range(5):
@@ -84,7 +86,14 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
     files_key = 'files:%s' % job.id
     sources_key = 'sources:%s' % job.id
 
-    file_output = really_run_code(sources, pcap, version)
+    try :
+        file_output = really_run_code(sources, pcap, version)
+    except Exception, e:
+        traceback.print_exc()
+        file_output = None
+
+    if not file_output:
+        return "Something went wrong :("
 
     for f, txt in file_output.items():
         if not f.endswith(".log"): continue
@@ -114,16 +123,23 @@ def really_run_code(sources, pcap=None, version=BRO_VERSION):
         s['content'] = s['content'].rstrip() + "\n"
 
     work_dir = tempfile.mkdtemp(dir="/brostuff")
+    runbro_path = os.path.join(work_dir, "runbro")
     for s in sources:
-        code_fn = os.path.join(work_dir,s['name'])
+        code_fn = os.path.join(work_dir, s['name'])
         with codecs.open(code_fn, 'w', encoding="utf-8") as f:
             f.write(s['content'])
 
+    shutil.copy("./runbro", runbro_path)
+    os.chmod(runbro_path, 0755)
+
+    binds = {work_dir: {"bind": work_dir, "ro": False}}
     if pcap:
         dst = os.path.join(work_dir, "file.pcap")
         if '.' in pcap:
-            src = os.path.join("/pcaps", pcap)
-            os.symlink(src, dst)
+            src = os.path.join(os.getcwd(), "static/pcaps", pcap)
+            #FIXME: Work out a better way to share pcaps around
+            #binds[src]={"bind": dst, "ro": True}
+            shutil.copy(src, dst)
         else:
             contents = get_pcap_with_retry(pcap)
             if contents:
@@ -137,17 +153,19 @@ def really_run_code(sources, pcap=None, version=BRO_VERSION):
         c = docker.Client(version='1.11')
 
         print "Creating container.."
-        volumes = {work_dir: {}}
-        container = c.create_container('bro_worker',
-            command="/runbro %s" % version,
-            volumes=volumes,
+        container = c.create_container('bro:' + version,
+            working_dir=work_dir,
+            command=runbro_path,
             mem_limit="128m",
             network_disabled=True,
         )
         print "Starting container.."
-        c.start(container, dns="127.0.0.1", binds={
-            work_dir: work_dir,
-        })
+        try :
+            c.start(container, dns="127.0.0.1", binds=binds)
+        except Exception, e:
+            shutil.rmtree(work_dir)
+            remove_container.delay(container)
+            raise
 
     print "Waiting.."
     c.wait(container)
