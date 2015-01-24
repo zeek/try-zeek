@@ -24,7 +24,7 @@ def pack(example):
 
 def main():
     examples = []
-    for x in glob.glob("*/main.bro"):
+    for x in sorted(glob.glob("*/main.bro")):
         example = os.path.dirname(x)
         jsfile = example + ".json"
         examples.append(example)
