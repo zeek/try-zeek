@@ -56,6 +56,9 @@ def get_files(job):
     file_output = res.json()['files']
     for fn, data in file_output.items():
         if fn == "stdout.log" or not data: continue
+        if fn == "stderr.log":
+            sys.stderr.write(data)
+            continue
         with open(fn, 'w') as f:
             f.write(data)
 

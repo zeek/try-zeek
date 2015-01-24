@@ -1,0 +1,23 @@
+#!/bin/sh
+
+export BRO_DNS_FAKE=1
+
+cd /brostuff/*/ || exit 1
+opts=""
+
+if [ -e file.pcap ]; then
+    opts="-r file.pcap"
+fi
+
+
+chown nobody . *
+mv main.bro trybro.bro
+su -s /bin/sh nobody -c \
+    "/usr/bin/timeout -k 2 15 /bro/bin/bro -C $opts brolite ./trybro.bro 'local_nets += { 0.0.0.0/0 }' 'log_rotate_interval = 0secs' > stdout.log 2> stderr.log"
+
+#remove harmless message
+grep -v 'NB-DNS' stderr.log > tmp.log
+mv tmp.log stderr.log
+
+#remove useless output files
+rm -f loaded_scripts.log packet_filter.log
