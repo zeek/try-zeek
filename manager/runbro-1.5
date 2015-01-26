@@ -10,7 +10,6 @@ if [ -e file.pcap ]; then
 fi
 
 
-chown nobody . *
 mv main.bro trybro.bro
 
 cat <<EOF >> start.bro
@@ -19,6 +18,8 @@ redef local_nets += { 0.0.0.0/0 };
 @load brolite
 redef log_rotate_interval = 0secs;
 EOF
+
+chown nobody . *
 
 su -s /bin/sh nobody -c \
     "/usr/bin/timeout -k 2 15 /bro/bin/bro -C $opts start.bro ./trybro.bro > stdout.log 2> stderr.log"
