@@ -170,7 +170,7 @@ def really_run_code(sources, pcap=None, version=BRO_VERSION):
     with r.lock("docker", 5) as lck:
         c = docker.Client(version='1.11')
 
-        print "Creating container.."
+        print "Creating Bro %s container.." % version
         container = c.create_container('bro:' + version,
             working_dir=work_dir,
             command=runbro_path,
