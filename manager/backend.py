@@ -196,7 +196,7 @@ def really_run_code(sources, pcap=None, version=BRO_VERSION):
         if not f.endswith(".log"): continue
         full = os.path.join(work_dir, f)
         txt = read_fn(full)
-        if txt.strip():
+        if txt.strip() or 'stdout' in f:
             files[f] = txt
     shutil.rmtree(work_dir)
     return files
