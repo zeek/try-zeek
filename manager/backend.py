@@ -60,6 +60,8 @@ def remove_container(container):
                 time.sleep(1)
 
 def queue_run_code(sources, pcap, version=BRO_VERSION):
+    if version not in BRO_VERSIONS:
+        version = BRO_VERSION
     cache_key = hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
     job_id = r.get(cache_key)
     if job_id:
