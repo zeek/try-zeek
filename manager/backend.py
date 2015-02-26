@@ -207,7 +207,7 @@ def get_stdout(job):
     stdout_key = 'stdout:%s' % job
     stdout = r.get(stdout_key)
     if stdout:
-        r.expire(stdout_key, SOURCES_EXPIRE+5)
+        r.expire(stdout_key, CACHE_EXPIRE+5)
     return stdout
 
 def get_files(job):
