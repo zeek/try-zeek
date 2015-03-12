@@ -28,9 +28,9 @@ app.conf.update(
 
 def get_bro_versions():
     c = docker.Client(version='1.11')
-    images = c.images(name='bro')
+    images = c.images(name='broplatform/bro')
     tags = [i['RepoTags'][0] for i in images]
-    versions = [t.replace("bro:", "") for t in tags if '_' not in t]
+    versions = [t.replace("broplatform/bro:", "") for t in tags if '_' not in t]
     return sorted(versions)
 
 CACHE_EXPIRE = 60*10
@@ -173,7 +173,7 @@ def really_run_code(sources, pcap=None, version=BRO_VERSION):
         c = docker.Client(version='1.11')
 
         print "Creating Bro %s container.." % version
-        container = c.create_container('bro:' + version,
+        container = c.create_container('broplatform/bro:' + version,
             working_dir=work_dir,
             command=runbro_path,
             mem_limit="128m",
