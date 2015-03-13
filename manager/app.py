@@ -24,7 +24,7 @@ def run():
     job = backend.queue_run_code(sources, pcap=pcap, version=version)
     stdout = backend.get_stdout(job.id)
     if stdout is None:
-        stdout = job.get(10)
+        stdout = job.get(timeout=10, interval=.1)
 
     return jsonify(job=job.id, stdout=stdout)
 
