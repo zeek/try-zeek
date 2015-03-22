@@ -79,7 +79,7 @@ The selected PCAP is too large to upload
     </tr>
 </thead>
 <tbody>
-    <tr ng-repeat="row in visible.rows">
+    <tr ng-repeat="row in visible.rows" ng-click="popup(row)" style="cursor: pointer">
         <td ng-repeat="col in row track by $index"><div class="overflow" ng-bind="col" title="{{col}}"></div></td>
     </tr>
 </tbody>

@@ -15,3 +15,13 @@ body {
 .ace_editor { 
     height: 40em;
 }
+
+.modal.modal-wide .modal-dialog {
+  width: 90%;
+}
+.modal.modal-wide .modal-content{
+  width: 90%;
+}
+.modal-wide .modal-body {
+  overflow-y: auto;
+}

@@ -1,4 +1,4 @@
-var tbApp = angular.module('trybro', ['ui.router', 'ui.ace']);
+var tbApp = angular.module('trybro', ['ui.router', 'ui.ace', 'angularModalService']);
 
 tbApp.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/");
@@ -15,11 +15,13 @@ tbApp.config(function($stateProvider, $urlRouterProvider) {
         });
 });
 
-tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $state){
+tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $state, ModalService){
     $scope.examples = ["hello", "log", "ssh"];
     $scope.pcaps = ["--", "exercise_traffic.pcap", "ssh.pcap","http.pcap"];
     $scope.pcap = "--";
-    $scope.files = [];
+    $scope.stderr = null;
+    $scope.stdout = null;
+    $scope.files = null;
     $scope.mode = "text";
     $scope.status = "Ready...";
     $scope.pcap_too_large = false;
@@ -165,6 +167,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         $scope.mode = "text";
         $scope.status = "Running...";
         $scope.stderr = null;
+        $scope.stdout = null;
         $scope.files = null;
         $scope.visible = null;
         var data = {
@@ -212,6 +215,20 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         $scope.file = fn;
     };
 
+    $scope.popup = function(record) {
+        var zipped = zip([$scope.visible.header, record]);
+        ModalService.showModal({
+            templateUrl: '/static/popup.html',
+            controller: 'PopupController',
+            inputs: {
+                record: zipped
+            }
+        }).then(function(modal) {
+            modal.element.modal();
+            modal.close.then(function(result) {});
+        });
+    };
+
     $scope.example_name = "hello";
 
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
@@ -235,3 +252,20 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
     });
 
 });
+
+tbApp.controller('PopupController', [
+  '$scope', '$element', 'record', 'close',
+  function($scope, $element, record, close) {
+
+  $scope.record = record;
+  $scope.close = function(result) {
+      close(result, 500); // close, but give 500ms for bootstrap to animate
+  };
+}]);
+
+zip = function(arrays) {
+    return arrays[0].map(function(_,i){
+        return arrays.map(function(array){return array[i]})
+    });
+}
+
