@@ -21,12 +21,8 @@ def run():
     if pcap and '--' in pcap:
         pcap = None
 
-    job = backend.queue_run_code(sources, pcap=pcap, version=version)
-    stdout = backend.get_stdout(job.id)
-    if stdout is None:
-        stdout = job.get(timeout=10, interval=.1)
-
-    return jsonify(job=job.id, stdout=stdout)
+    job_id, stdout = backend.run_code(sources, pcap=pcap, version=version)
+    return jsonify(job=job_id, stdout=stdout)
 
 @app.route("/run_simple/<version>", methods=['GET', 'POST'])
 def run_simple(version=backend.BRO_VERSION):
