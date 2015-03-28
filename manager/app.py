@@ -1,13 +1,23 @@
 from flask import Flask, render_template, request
 from flask.ext.jsonpify import jsonify
-import backend
 import hashlib
+
+import backend
+import metrics
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
     return render_template('index.html')
+
+@app.route("/metrics")
+def bro_metrics():
+    return render_template('metrics.html', metrics=metrics.get())
+
+@app.route("/metrics.json")
+def bro_metrics_json():
+    return jsonify(**metrics.get())
 
 @app.route("/saved/<job>")
 def saved(job):
