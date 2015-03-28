@@ -37,7 +37,7 @@ print "Available Bro versions %r. Using %r as default" % (BRO_VERSIONS, BRO_VERS
 r = Redis()
 
 def get_job_id():
-    return r.incr("trybro:id")
+    return str(r.incr("trybro:id"))
 
 def remove_container(container):
     time.sleep(1)
@@ -47,10 +47,14 @@ def remove_container(container):
             try :
                 c.remove_container(container)
                 return "removed %r" % container
-            except:
-                time.sleep(1)
+            except Exception, e:
+                print "Failed to remove container:"
+                traceback.print_exc()
+                time.sleep(2)
 
 def run_code(sources, pcap, version=BRO_VERSION):
+    """Try to find a cached result for this submission
+    If not found, submit a new job to the worker"""
     if version not in BRO_VERSIONS:
         version = BRO_VERSION
     cache_key = "cache:" + hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
@@ -62,25 +66,22 @@ def run_code(sources, pcap, version=BRO_VERSION):
             pipe.expire('files:%s' % job_id, CACHE_EXPIRE + 5)
             pipe.expire('sources:%s' % job_id, SOURCES_EXPIRE)
             pipe.execute()
-        return AsyncResult(job_id)
+        return job_id, get_stdout(job_id)
     job_id = get_job_id()
     job_data = {
-        "id": job_id,
+        "job_id": job_id,
         "sources": sources,
         "pcap": pcap,
         "version": version
     }
-    gm.get_client().submit_job("run_code", job_data)
-    return job_id
+    result = gm.get_client().submit_job("run_code", job_data)
+    return job_id, result.result
 
 def run_code_simple(stdin, version=BRO_VERSION):
     sources = [
         {"name": "main.bro", "content": stdin}
     ]
-    job_id = run_code(sources, pcap=None, version=version)
-    stdout = get_stdout(job_id)
-    if stdout is None:
-        stdout = job.get(timeout=5)
+    job_id, stdout = run_code(sources, pcap=None, version=version)
     files = get_files_json(job_id)
     return files
 
@@ -92,7 +93,6 @@ def really_run_code(job_id, sources, pcap=None, version=BRO_VERSION):
     if version not in BRO_VERSIONS:
         version = BRO_VERSION
     cache_key = "cache:" + hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
-    sys.stdout = sys.stderr
     stdout_key = 'stdout:%s' % job_id
     files_key = 'files:%s' % job_id
     sources_key = 'sources:%s' % job_id

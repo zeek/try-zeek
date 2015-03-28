@@ -11,7 +11,7 @@ class JsonDataEncoder(gearman.DataEncoder):
         return json.loads(decodable_string)
 
 class JsonClient(gearman.GearmanClient):
-    data_encoder = PickleDataEncoder
+    data_encoder = JsonDataEncoder
 
 class JsonWorker(gearman.GearmanWorker):
     data_encoder = JsonDataEncoder

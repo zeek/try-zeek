@@ -12,6 +12,7 @@ RUN sed -i "s/daemonize yes/daemonize no/" /etc/redis/redis.conf
 
 RUN apt-get update && apt-get install -yq nginx
 RUN apt-get update && apt-get install -yq supervisor
+RUN apt-get update && apt-get install -yq gearman-job-server
 
 RUN mkdir -p /var/log/supervisor
 RUN mkdir /brostuff
