@@ -10,20 +10,9 @@ import traceback
 
 import docker
 from redis import Redis
-from celery import Celery
-from celery.result import AsyncResult
+import gm
 
 import bro_ascii_reader
-
-app = Celery('trybro', broker="redis://localhost:6379/0")
-app.conf.update(
-    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0',
-    CELERY_TASK_RESULT_EXPIRES = 60, #1 minute
-    CELERY_DISABLE_RATE_LIMITS=True,
-    CELERY_TASK_SERIALIZER='json',
-    CELERY_ACCEPT_CONTENT=['json'],  # Ignore other content
-    CELERY_RESULT_SERIALIZER='json',
-)
 
 
 def get_bro_versions():
@@ -47,7 +36,9 @@ print "Available Bro versions %r. Using %r as default" % (BRO_VERSIONS, BRO_VERS
 
 r = Redis()
 
-@app.task(ignore_result=True)
+def get_job_id():
+    return r.incr("trybro:id")
+
 def remove_container(container):
     time.sleep(1)
     with r.lock("docker", 5) as lck:
@@ -59,10 +50,10 @@ def remove_container(container):
             except:
                 time.sleep(1)
 
-def queue_run_code(sources, pcap, version=BRO_VERSION):
+def run_code(sources, pcap, version=BRO_VERSION):
     if version not in BRO_VERSIONS:
         version = BRO_VERSION
-    cache_key = hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
+    cache_key = "cache:" + hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
     job_id = r.get(cache_key)
     if job_id:
         with r.pipeline() as pipe:
@@ -72,37 +63,42 @@ def queue_run_code(sources, pcap, version=BRO_VERSION):
             pipe.expire('sources:%s' % job_id, SOURCES_EXPIRE)
             pipe.execute()
         return AsyncResult(job_id)
-    job = run_code.delay(sources, pcap, version)
-    return job
+    job_id = get_job_id()
+    job_data = {
+        "id": job_id,
+        "sources": sources,
+        "pcap": pcap,
+        "version": version
+    }
+    gm.get_client().submit_job("run_code", job_data)
+    return job_id
 
 def run_code_simple(stdin, version=BRO_VERSION):
     sources = [
         {"name": "main.bro", "content": stdin}
     ]
-    job = queue_run_code(sources, pcap=None, version=version)
-    stdout = get_stdout(job.id)
+    job_id = run_code(sources, pcap=None, version=version)
+    stdout = get_stdout(job_id)
     if stdout is None:
         stdout = job.get(timeout=5)
-    files = get_files_json(job.id)
+    files = get_files_json(job_id)
     return files
 
 def read_fn(fn):
     with open(fn) as f:
         return f.read()
 
-@app.task
-def run_code(sources, pcap=None, version=BRO_VERSION):
+def really_run_code(job_id, sources, pcap=None, version=BRO_VERSION):
     if version not in BRO_VERSIONS:
         version = BRO_VERSION
-    cache_key = hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
+    cache_key = "cache:" + hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
     sys.stdout = sys.stderr
-    job = run_code.request
-    stdout_key = 'stdout:%s' % job.id
-    files_key = 'files:%s' % job.id
-    sources_key = 'sources:%s' % job.id
+    stdout_key = 'stdout:%s' % job_id
+    files_key = 'files:%s' % job_id
+    sources_key = 'sources:%s' % job_id
 
     try :
-        file_output = really_run_code(sources, pcap, version)
+        file_output = run_code_docker(sources, pcap, version)
     except Exception, e:
         traceback.print_exc()
         file_output = None
@@ -123,13 +119,11 @@ def run_code(sources, pcap=None, version=BRO_VERSION):
     r.set(sources_key, json.dumps(dict(sources=sources, pcap=pcap, version=version)))
     r.expire(sources_key, SOURCES_EXPIRE)
 
-    r.set(cache_key, job.id)
+    r.set(cache_key, job_id)
     r.expire(cache_key, CACHE_EXPIRE)
     return stdout
 
-
-
-def really_run_code(sources, pcap=None, version=BRO_VERSION):
+def run_code_docker(sources, pcap=None, version=BRO_VERSION):
     if version not in BRO_VERSIONS:
         version = BRO_VERSION
 
@@ -184,14 +178,14 @@ def really_run_code(sources, pcap=None, version=BRO_VERSION):
             c.start(container, dns="127.0.0.1", binds=binds)
         except Exception, e:
             shutil.rmtree(work_dir)
-            remove_container.delay(container)
+            gm.get_client().submit_job("remove_container", {"container": container}, background=True)
             raise
 
     print "Waiting.."
     c.wait(container)
 
     print "Removing Container"
-    remove_container.delay(container)
+    gm.get_client().submit_job("remove_container", {"container": container}, background=True)
 
     files = {}
     for f in os.listdir(work_dir):
