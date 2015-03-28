@@ -10,9 +10,10 @@ import traceback
 
 import docker
 from redis import Redis
-import gm
 
 import bro_ascii_reader
+import gm
+import metrics
 
 
 def get_bro_versions():
@@ -23,7 +24,7 @@ def get_bro_versions():
     return sorted(versions)
 
 CACHE_EXPIRE = 60*10
-SOURCES_EXPIRE = 60*60*24*3
+SOURCES_EXPIRE = 60*60*24*30
 
 BRO_VERSIONS = get_bro_versions()
 #Set the default bro version to the most recent version, unless that is master
@@ -57,15 +58,15 @@ def run_code(sources, pcap, version=BRO_VERSION):
     If not found, submit a new job to the worker"""
     if version not in BRO_VERSIONS:
         version = BRO_VERSION
+    metrics.log_execution(version)
     cache_key = "cache:" + hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
     job_id = r.get(cache_key)
     if job_id:
-        with r.pipeline() as pipe:
-            pipe.expire(cache_key, CACHE_EXPIRE)
-            pipe.expire('stdout:%s' % job_id, CACHE_EXPIRE + 5)
-            pipe.expire('files:%s' % job_id, CACHE_EXPIRE + 5)
-            pipe.expire('sources:%s' % job_id, SOURCES_EXPIRE)
-            pipe.execute()
+        metrics.log_cache_hit()
+        r.expire(cache_key, CACHE_EXPIRE)
+        r.expire('stdout:%s' % job_id, CACHE_EXPIRE + 5)
+        r.expire('files:%s' % job_id, CACHE_EXPIRE + 5)
+        r.expire('sources:%s' % job_id, SOURCES_EXPIRE)
         return job_id, get_stdout(job_id)
     job_id = get_job_id()
     job_data = {
