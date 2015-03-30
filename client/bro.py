@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 from optparse import OptionParser
 import json
+import os
 import requests
 import sys
 import time
 import hashlib
-HOST="http://brototype.ncsa.illinois.edu/"
-HOST="http://192.168.59.103/"
 
-DEFAULT_VERSION="2.3"
+DEFAULT_HOST="http://try.bro.org/"
+HOST = os.getenv("TRYBRO_HOST", DEFAULT_HOST)
+
+DEFAULT_VERSION="2.3.2"
 
 def md5(s):
     m = hashlib.md5()
