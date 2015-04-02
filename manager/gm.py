@@ -1,6 +1,9 @@
 import gearman
 import json
 
+import threading
+local_data = threading.local()
+
 class JsonDataEncoder(gearman.DataEncoder):
     @classmethod
     def encode(cls, encodable_object):
@@ -16,8 +19,12 @@ class JsonClient(gearman.GearmanClient):
 class JsonWorker(gearman.GearmanWorker):
     data_encoder = JsonDataEncoder
 
+local_data.gm_client = None
 def get_client():
-    return JsonClient(['localhost:4730'])
+    if local_data.gm_client is not None:
+        return local_data.gm_client
+    local_data.gm_client = client = JsonClient(['localhost:4730'])
+    return client
 
 def get_worker():
     return JsonWorker(['localhost:4730'])
