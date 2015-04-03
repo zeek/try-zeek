@@ -34,9 +34,10 @@ def run():
     job_id, stdout = backend.run_code(sources, pcap=pcap, version=version)
     return jsonify(job=job_id, stdout=stdout)
 
-@app.route("/run_simple/<version>", methods=['GET', 'POST'])
-def run_simple(version=backend.BRO_VERSION):
+@app.route("/run_simple", methods=['GET', 'POST'])
+def run_simple():
     stdin = request.args.get("code") or request.form.get("code") or 'print "Huh?";'
+    version = request.args.get("version") or request.form.get("version") or backend.BRO_VERSION
 
     files = backend.run_code_simple(stdin, version=version)
     response = jsonify(files=files)
