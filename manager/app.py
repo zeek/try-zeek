@@ -39,7 +39,9 @@ def run_simple(version=backend.BRO_VERSION):
     stdin = request.args.get("code") or request.form.get("code") or 'print "Huh?";'
 
     files = backend.run_code_simple(stdin, version=version)
-    return jsonify(files=files)
+    response = jsonify(files=files)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 @app.route("/stdout/<job>")
 def stdout(job):
