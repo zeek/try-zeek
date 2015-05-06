@@ -1,0 +1,15 @@
+[Unit]
+Description=TryBro
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill trybro
+ExecStartPre=-/usr/bin/docker rm trybro
+ExecStartPre=/usr/bin/docker pull broplatform/trybro
+ExecStart=/usr/bin/docker  run --name trybro -v /brostuff:/brostuff -v /var/run/docker.sock:/var/run/docker.sock --rm=true -p 80:80 broplatform/trybro
+#ExecStart=/usr/bin/docker run --name trybro  -v /brostuff:/brostuff -v /var/run/docker.sock:/var/run/docker.sock --volumes-from trybro_data --rm=true -p 80:80 broplatform/trybro
+
+[Install]
+WantedBy=multi-user.target
