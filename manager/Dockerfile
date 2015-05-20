@@ -27,5 +27,11 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 ADD . /src
 WORKDIR /src
 
+#Redirect log files
+#
+RUN ln -sf /dev/stdout /var/log/redis/redis-server.log
+RUN ln -sf /dev/stdout /var/log/nginx/access.log
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
+
 EXPOSE  80
 CMD ["/usr/bin/supervisord"]
