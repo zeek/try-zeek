@@ -147,7 +147,7 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
     shutil.copy(runbro_src, runbro_path)
     os.chmod(runbro_path, 0755)
 
-    binds = {work_dir: {"bind": work_dir, "ro": False}}
+    binds = {work_dir: {"bind": work_dir, "mode": "rw"}}
     if pcap:
         dst = os.path.join(work_dir, "file.pcap")
         if '.' in pcap:
@@ -168,15 +168,22 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
         c = docker.Client()
 
         print "Creating Bro %s container.." % version
+        host_config = docker.utils.create_host_config(
+            binds=binds,
+            dns=["127.0.0.1"],
+            mem_limit="128m",
+            network_mode="none",
+            read_only=True,
+        )
         container = c.create_container('broplatform/bro:' + version,
             working_dir=work_dir,
             command=runbro_path,
-            mem_limit="128m",
-            network_disabled=True,
+            host_config=host_config,
+            volumes=[work_dir],
         )
         print "Starting container.."
         try :
-            c.start(container, dns="127.0.0.1", binds=binds)
+            c.start(container)
         except Exception, e:
             shutil.rmtree(work_dir)
             gm.get_client().submit_job("remove_container", {"container": container}, background=True)
