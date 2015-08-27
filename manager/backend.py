@@ -17,7 +17,7 @@ import metrics
 
 
 def get_bro_versions():
-    c = docker.Client(version='1.11')
+    c = docker.Client()
     images = c.images(name='broplatform/bro')
     tags = [i['RepoTags'][0] for i in images]
     versions = [t.replace("broplatform/bro:", "") for t in tags if '_' not in t]
@@ -43,7 +43,7 @@ def get_job_id():
 def remove_container(container):
     time.sleep(1)
     with r.lock("docker", 5) as lck:
-        c = docker.Client(version='1.11')
+        c = docker.Client()
         for x in range(5):
             try :
                 c.remove_container(container)
@@ -165,7 +165,7 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
 
     print "Connecting to docker...."
     with r.lock("docker", 5) as lck:
-        c = docker.Client(version='1.11')
+        c = docker.Client()
 
         print "Creating Bro %s container.." % version
         container = c.create_container('broplatform/bro:' + version,
