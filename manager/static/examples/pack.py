@@ -5,6 +5,7 @@ import json
 import markdown
 
 HELP_FILE = "readme.markdown"
+MULTI_VALUE_FIELDS = ['pcaps']
 
 def main_first_sort_key(f):
     if f['name'] == 'main.bro':
@@ -37,7 +38,10 @@ def pack(example):
         html = md.convert(source)
         packed_example['html'] = html
         for k, vs in md.Meta.items():
-            packed_example[k] = vs[0]
+            if k not in MULTI_VALUE_FIELDS:
+                packed_example[k] = vs[0]
+            else:
+                packed_example[k] = vs
 
     return packed_example
 
