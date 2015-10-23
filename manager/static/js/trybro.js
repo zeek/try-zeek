@@ -52,8 +52,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         });
     }
 
-    $scope.load_example = function (name) {
-        $scope.example_name = name;
+    $scope.load_example = function () {
         if(!$scope.example_name || $scope.example_name === "--"){
             return;
         }
@@ -118,9 +117,10 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
             f.name = newname;
         }
     };
-    $scope.$watch("example_name", function (newValue) {
-        $scope.load_example(newValue);
-    });
+    $scope.example_changed = function() {
+        $state.go("trybro", {example: $scope.example_name});
+    };
+
     $scope.$watch("pcap", function (newValue) {
         $("#pcap_upload").val('');
     });
@@ -244,8 +244,6 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         });
     };
 
-    $scope.example_name = "hello";
-
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
         if(toParams.job) {
             $scope.example_name = null;
@@ -263,6 +261,11 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         }
         if(toParams.example) {
             $scope.example_name = toParams.example;
+            $scope.load_example();
+            console.log("Example name is", $scope.example_name);
+        }
+        if(!toParams.example && !toParams.job) {
+            $state.go("trybro", {example: 'hello'});
         }
     });
 
