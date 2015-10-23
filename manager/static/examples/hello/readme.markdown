@@ -9,7 +9,7 @@ Hello
 Welcome to our interactive Bro tutorial.
 
 This tutorial is divided into different topics covering aspect and use cases of Bro. You can access them
-via `Index <content.html>`_. You can navigate though the exercises by clicking next or back  on the bottom of this page.
+via the menu above. You can navigate though the exercises by clicking next or back  on the bottom of this page.
 
 Try Bro is interactive, you can always click the Run button and view the result in Stdout and the genrated log files below.
 
