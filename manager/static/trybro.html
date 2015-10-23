@@ -5,13 +5,22 @@
 <select id="example" ng-model="example_name" ng-options="e for e in examples">
 </select>
 
-<ul class="nav nav-tabs">
-    <li ng-repeat="f in source_files" ng-class="{active: f==current_file}" ng-click="edit_file(f)"><a ng-bind="f.name"></a></li>
-    <li ng-click="add_file()"><a>Add file <span class="glyphicon glyphicon-plus"></span></a></li>
-</ul>
+<div class="row">
+    <div class="col-md-4 col-md-push-8">
+    <div ng-bind-html="example.html"></div>
+    <a ng-show="example.pred" class="btn btn-primary" href="/#/trybro?example={{example.pred}}">Previous</a>
+    <a ng-show="example.succ" class="btn btn-primary" href="/#/trybro?example={{example.succ}}">Next</a>
+    </div>
+    <div class="col-md-8 col-md-pull-4">
+        <ul class="nav nav-tabs">
+            <li ng-repeat="f in source_files" ng-class="{active: f==current_file}" ng-click="edit_file(f)"><a ng-bind="f.name"></a></li>
+            <li ng-click="add_file()"><a>Add file <span class="glyphicon glyphicon-plus"></span></a></li>
+        </ul>
 
-<div ng-repeat="f in source_files">
-    <div ng-show="f==current_file" ui-ace="{onLoad: aceLoaded}" ng-model="f.content"></div>
+        <div ng-repeat="f in source_files">
+            <div ng-show="f==current_file" ui-ace="{onLoad: aceLoaded}" ng-model="f.content"></div>
+        </div>
+    </div>
 </div>
 
 <div class="row">
