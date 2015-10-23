@@ -1,15 +1,12 @@
-<h1>Input Files</h1>
 <form method="POST" ng-submit="run_code()">
-
-<label for="example">Load example </label>
-<select id="example" ng-model="example_name" ng-options="e for e in examples">
-</select>
-
 <div class="row">
     <div class="col-md-4 col-md-push-8">
-    <div ng-bind-html="example.html"></div>
-    <a ng-show="example.pred" class="btn btn-primary" href="/#/trybro?example={{example.pred}}">Previous</a>
-    <a ng-show="example.succ" class="btn btn-primary" href="/#/trybro?example={{example.succ}}">Next</a>
+        <label for="example">Load example </label>
+        <select id="example" ng-model="example_name" ng-options="e for e in examples">
+        </select>
+        <div ng-bind-html="example.html"></div>
+        <a ng-show="example.pred" class="btn btn-primary" href="/#/trybro?example={{example.pred}}">Previous</a>
+        <a ng-show="example.succ" class="btn btn-primary" href="/#/trybro?example={{example.succ}}">Next</a>
     </div>
     <div class="col-md-8 col-md-pull-4">
         <ul class="nav nav-tabs">
