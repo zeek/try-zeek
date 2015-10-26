@@ -5,7 +5,15 @@ import hashlib
 import backend
 import metrics
 
-app = Flask(__name__)
+from flask import Flask
+
+class FlaskStaticCors(Flask):
+    def send_static_file(self, filename):
+        response = super(FlaskStaticCors, self).send_static_file(filename)
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+
+app = FlaskStaticCors(__name__)
 
 @app.route("/")
 def index():
@@ -17,7 +25,7 @@ def bro_metrics():
 
 @app.route("/metrics.json")
 def bro_metrics_json():
-    return jsonify(**metrics.get())
+    return cors_jsonify(**metrics.get())
 
 @app.route("/saved/<job>")
 def saved(job):
@@ -32,7 +40,7 @@ def run():
         pcap = None
 
     job_id, stdout = backend.run_code(sources, pcap=pcap, version=version)
-    return jsonify(job=job_id, stdout=stdout)
+    return cors_jsonify(job=job_id, stdout=stdout)
 
 @app.route("/run_simple", methods=['GET', 'POST'])
 def run_simple():
@@ -40,30 +48,28 @@ def run_simple():
     version = request.args.get("version") or request.form.get("version") or backend.BRO_VERSION
 
     files = backend.run_code_simple(stdin, version=version)
-    response = jsonify(files=files)
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    return response
+    return cors_jsonify(files=files)
 
 @app.route("/stdout/<job>")
 def stdout(job):
     txt = backend.get_stdout(job)
     if txt is None:
         return 'wait', 202
-    return jsonify(txt=txt)
+    return cors_jsonify(txt=txt)
 
 @app.route("/files/<job>")
 def files(job):
     files = backend.get_files(job)
-    return jsonify(files=files)
+    return cors_jsonify(files=files)
 
 @app.route("/files/<job>.json")
 def files_json(job):
     files = backend.get_files_json(job)
-    return jsonify(files=files)
+    return cors_jsonify(files=files)
 
 @app.route("/versions.json")
 def versions():
-    return jsonify(versions=backend.BRO_VERSIONS, default=backend.BRO_VERSION)
+    return cors_jsonify(versions=backend.BRO_VERSIONS, default=backend.BRO_VERSION)
 
 @app.route("/pcap/upload/<checksum>", methods=['POST'])
 def pcap_upload(checksum):
@@ -72,17 +78,22 @@ def pcap_upload(checksum):
     ok = actual == checksum
     if ok:
         backend.save_pcap(checksum, contents)
-    return jsonify(status=ok, checksum=actual)
+    return cors_jsonify(status=ok, checksum=actual)
 
 @app.route("/pcap/<checksum>")
 def has_pcap(checksum):
     status = backend.check_pcap(checksum)
-    return jsonify(status=status)
+    return cors_jsonify(status=status)
 
 def md5(s):
     m = hashlib.md5()
     m.update(s)
     return m.hexdigest()
+
+def cors_jsonify(**kwargs):
+    response = jsonify(**kwargs)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 app.debug = True
 
