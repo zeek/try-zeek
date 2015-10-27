@@ -28,6 +28,7 @@ def pack(example):
 
     packed_example = {
         'sources': sources,
+        'name': example,
     }
 
     full_help_filename = os.path.join(example, HELP_FILE)
