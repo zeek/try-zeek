@@ -1,7 +1,7 @@
 title: Hello World
 pcaps: exercise_traffic.pcap
 pred:
-succ: intel
+succ: namespaces
 
 Hello
 =====
