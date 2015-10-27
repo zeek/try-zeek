@@ -1,5 +1,4 @@
 all:
-	cd static/examples && ./pack.py
 	docker build -t broplatform/trybro ./
 
 run: all
