@@ -31,6 +31,10 @@ def bro_metrics_json():
 def saved(job):
     return backend.get_saved(job)
 
+@app.route("/run", methods=['OPTIONS'])
+def run_options_for_cors():
+    return cors_jsonify(ok="ok")
+
 @app.route("/run", methods=['POST'])
 def run():
     sources = request.json.get('sources', '')
@@ -93,6 +97,7 @@ def md5(s):
 def cors_jsonify(**kwargs):
     response = jsonify(**kwargs)
     response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
 
 app.debug = True
