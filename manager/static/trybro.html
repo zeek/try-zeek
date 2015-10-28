@@ -60,10 +60,10 @@ The selected PCAP is too large to upload
 
 <div ng-show="files">
 
-<h2>Output Files</h2>
+<h2>Output Logs</h2>
 
 <ul class="nav nav-tabs">
-    <li ng-repeat="(f, txt) in files" ng-class="{active: f==file}" ng-click="show_file(f)"><a ng-bind="f"></a></li>
+    <li ng-repeat="(f, txt) in files" ng-class="{active: f==file}" ng-click="show_file(f)"><a>{{f.replace('.log', '')}}</a></li>
 </ul>
 
 <pre ng-bind="visible" ng-show="mode=='text'">
