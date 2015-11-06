@@ -33,7 +33,7 @@ def pack(example):
 
     full_help_filename = os.path.join(example, HELP_FILE)
     if os.path.exists(full_help_filename):
-        md = markdown.Markdown(extensions = ['markdown.extensions.meta'])
+        md = markdown.Markdown(extensions = ['markdown.extensions.meta', 'markdown.extensions.tables'])
         with open(full_help_filename) as f:
             source = f.read()
         html = md.convert(source)
