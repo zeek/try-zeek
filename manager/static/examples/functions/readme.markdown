@@ -1,24 +1,13 @@
 title: Functions
-pcaps: exercise_traffic.pcap
+pcaps: 
 pred: namespaces
 succ: variables
 
 Functions
 ==========
 
-TODO: Example does not run!
-# Optional function declaration.
-# Takes one required string argument
-# and another optional string argument
-# and returns a string value.
-global emphasize: function(s: string, p: string &default = "*"): string;
+The example of a function shown here starts with an optional function declaration.
+In the next step the function is implemented and afterwards called and executed.
 
-# Function implementation.
-function emphasize(s: string, p: string &default = "*"): string
-    {
-    return p + s + p;
-    }
-
-# Function calls.
-print emphasize("yes");
-print emphasize("no", "_");
+The function takes one required string argument and another optional string argument.
+It returns a string.

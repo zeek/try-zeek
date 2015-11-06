@@ -1,5 +1,5 @@
 title: Namespaces
-pcaps: exercise_traffic.pcap
+pcaps: 
 pred: hello
 succ: functions
 
