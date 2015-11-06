@@ -1,13 +1,13 @@
 title: Namespaces
 pcaps: exercise_traffic.pcap
 pred: hello
-succ: intel
+succ: functions
 
 Modules (Namespaces)
 =====================
 
 Bro implements namespacing with the module and export keywords.
-Every script implicitly starts out in a module named "GLOBAL". 
+Every script implicitly starts out in a module named “GLOBAL”. 
 Identifiers declared within that module are accessible by any other module. 
 If a script changes the current module, any identifiers that are subsequently 
 declared are only accessible by other modules if they occur within an export block.

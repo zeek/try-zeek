@@ -50,6 +50,7 @@ def main():
     for x in sorted(glob.glob("*/main.bro")):
         example = os.path.dirname(x)
         jsfile = example + ".json"
+        print example + "\n"
         examples.append(example)
         with open(jsfile, 'w') as f:
             json.dump(pack(example), f)
