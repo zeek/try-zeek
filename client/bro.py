@@ -71,7 +71,7 @@ def run(files, version=DEFAULT_VERSION, pcap=None):
     sys.stdout.write(res['stdout'])
     get_files(res["job"])
 
-if __name__ == "__main__":
+def main():
     parser = OptionParser()
     parser.add_option("-r", "--readfile", dest="pcap", help="read from given tcpdump file", action="store")
     parser.add_option("-V", "--bro-version", dest="version", help="Select bro version", action="store", default=DEFAULT_VERSION)
@@ -79,3 +79,6 @@ if __name__ == "__main__":
 
     files = args
     run(files, version=options.version, pcap=options.pcap)
+
+if __name__ == "__main__":
+    main()
