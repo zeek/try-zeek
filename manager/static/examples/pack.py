@@ -1,8 +1,15 @@
 #!/usr/bin/env python
+# encoding=utf8  
+import sys  
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
+
 import os
 import glob
 import json
 import markdown
+
 
 HELP_FILE = "readme.markdown"
 MULTI_VALUE_FIELDS = ['pcaps']
