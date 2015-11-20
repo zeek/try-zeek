@@ -5,8 +5,13 @@
         <select id="example" ng-model="example_name" ng-options="e for e in examples" ng-change="example_changed()">
         </select>
         <div ng-bind-html="example.html"></div>
-        <a ng-show="example.pred" class="btn btn-primary" ui-sref="trybro({example:example.pred})">Previous</a>
-        <a ng-show="example.succ" class="btn btn-primary" ui-sref="trybro({example:example.succ})">Next</a>
+        <ul class="pager">
+        <li class="previous">
+            <a ng-show="example.pred" ui-sref="trybro({example:example.pred})">Previous</a>
+        </li>
+        <li class="next">
+            <a ng-show="example.succ" ui-sref="trybro({example:example.succ})">Next</a>
+        </li>
     </div>
     <div class="col-md-8 col-md-pull-4">
         <ul class="nav nav-tabs">
