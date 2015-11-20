@@ -1,8 +1,15 @@
 #!/usr/bin/env python
+# encoding=utf8  
+import sys  
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
+
 import os
 import glob
 import json
 import markdown
+
 
 HELP_FILE = "readme.markdown"
 MULTI_VALUE_FIELDS = ['pcaps']
@@ -32,7 +39,7 @@ def pack(example):
 
     full_help_filename = os.path.join(example, HELP_FILE)
     if os.path.exists(full_help_filename):
-        md = markdown.Markdown(extensions = ['markdown.extensions.meta'])
+        md = markdown.Markdown(extensions = ['markdown.extensions.meta', 'markdown.extensions.tables'])
         with open(full_help_filename) as f:
             source = f.read()
         html = md.convert(source)
@@ -50,7 +57,6 @@ def main():
     for x in sorted(glob.glob("*/main.bro")):
         example = os.path.dirname(x)
         jsfile = example + ".json"
-        print example + "\n"
         examples.append(example)
         with open(jsfile, 'w') as f:
             json.dump(pack(example), f)
