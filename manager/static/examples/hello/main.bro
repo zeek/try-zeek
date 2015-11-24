@@ -1,7 +1,9 @@
-event bro_init() { 
+event bro_init() 
+    { 
     print "Hello, World!"; 
-}
+    }
 
-event bro_done() { 
+event bro_done() 
+    { 
     print "Goodbye, World!"; 
-}
+    }

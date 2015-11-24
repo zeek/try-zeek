@@ -1,6 +1,6 @@
 title: Operators
 pcaps:
-pred: primitive_datatypes
+pred: primitive\_datatypes
 succ: loops 
 
 Operators
@@ -39,12 +39,12 @@ Relational Operators
 
  Name            | Syntax     | Example Usage
  --------------- | ---------- | ----------------------
-Equality         | ``a -- b`` | ``print 2 -- 2; # T``
-Inequality       | ``a !- b`` | ``print 2 !- 2; # F``
+Equality         | ``a = b`` | ``print 2 = 2; # T``
+Inequality       | ``a != b`` | ``print 2 != 2; # F``
 Less             | ``a < b``  | ``print 2 < 3;  # T``
-Less or Equal    | ``a <- b`` | ``print 2 <- 2; # T``
+Less or Equal    | ``a <= b`` | ``print 2 <= 2; # T``
 Greater          | ``a > b``  | ``print 2 > 3;  # F``
-Greater or Equal | ``a >- b`` | ``print 2 >- 2; # T``
+Greater or Equal | ``a >= b`` | ``print 2 >= 2; # T``
 
 Logical Operators
 ------------------

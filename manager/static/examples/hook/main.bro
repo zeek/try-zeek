@@ -17,10 +17,11 @@ hook myhook(s: string) &priority = -5
     print "not going to happen", s;
     }
 
-event bro_init() {
-	
+event bro_init() 
+    {
     local ret: bool = hook myhook("hi");
-
     if ( ret )
+        {
         print "all handlers ran";
-}
+        }
+    }
