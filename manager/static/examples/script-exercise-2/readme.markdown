@@ -19,3 +19,4 @@ Write a script that:
 * counts all connections seen and prints them in the end.
 * prints out for each unique IP address if its is local or external.
 
+To solve this exercise please load the traffic sample exercise_traffic.pcap.
