@@ -1,13 +1,9 @@
-event bro_init() { 
+event bro_init() 
+    { 
+    print "find meeeeeee!";
+    }    
 
-	print "find meeeeeee!";
-
-
-}    
-
-event bro_done() {
-
-	print "fizz buzz";
-
-
-}
+event bro_done() 
+    {
+    print "fizz buzz";
+    }

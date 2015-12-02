@@ -1,16 +1,17 @@
-event bro_init() { 
-
+event bro_init() 
+    { 
     local result = "";
 
     for ( c in "testing" )
+        {
         if ( c != "e" )
+	    {
             result = result + c;
             # Compound assignment, ``result += c``, also works.
-
+            }
+        }
     print result;
-
-
-}
+    }
 
 #Recursive approach w/ string concatenation.   
 function fizzbuzz(i: count)
@@ -31,10 +32,9 @@ function fizzbuzz(i: count)
     
     if ( i < 100 )
         fizzbuzz(i + 1);
-}
+    }
 
-event bro_done() {
-
+event bro_done() 
+    {
     fizzbuzz(1);
-
-}
+    }

@@ -1,10 +1,12 @@
-type MyRecord: record {
+type MyRecord: record 
+    {
     a: string &default="hi";
     b: count  &default=7;
     } &redef;
 
     
-redef record MyRecord += {
+redef record MyRecord += 
+    {
         c: bool &optional;
         d: bool &default=F;
         #e: bool; # Not allowed, must be &optional or &default.
@@ -15,9 +17,8 @@ redef record MyRecord += {
 
     
     
-event bro_init() {
-	
-
+event bro_init() 
+    {
     const TWO = 2;
     #redef TWO = 1; # not allowed
     #PI = 5.5;      # not allowed
@@ -26,6 +27,5 @@ event bro_init() {
 
     print MyRecord();
     print MyRecord($c=T);
-	
-}
+    }
 
