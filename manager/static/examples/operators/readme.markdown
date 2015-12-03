@@ -20,10 +20,10 @@ Subtraction    | ``a - b`` | ``print 2 - 2;   # 0``
 Multiplication | ``a * b`` | ``print 4 * 4;   # 16``
 Division       | ``a / b`` | ``print 15 / 3;  # 5``
 Modulo         | ``a % b`` | ``print 18 % 15; # 3``
-Unary Plus     | ``+a``    | ``local a - +1;  # Force use of a signed integer``
-Unary Minus    | ``-a``    | ``local a - 5; print -a; # -5``
-Increment      | ``++a``   | ``local a - 1; print ++a, a; # 2, 2``
-Decrement      | ``--a``   | ``local a - 2; print --a, a; # 1, 1``
+Unary Plus     | ``+a``    | ``local a = +1;  # Force use of a signed integer``
+Unary Minus    | ``-a``    | ``local a = 5; print -a; # -5``
+Increment      | ``++a``   | ``local a = 1; print ++a, a; # 2, 2``
+Decrement      | ``--a``   | ``local a = 2; print --a, a; # 1, 1``
 
 Assignment Operators
 --------------------
@@ -31,15 +31,15 @@ Assignment Operators
 Name                   | Syntax     |  Example Usage
 -----------------------| ---------- | ------------------------ 
 Assignment             | ``a = b``  |  ``local a = 7;``
-Addition assignment    | ``a += b`` |  ``local a = 7; a += 2;``
-Subtraction assignment | ``a -= b`` |  ``local a = 7; a -= 2;``
+Addition assignment    | ``a += b`` |  ``local a = 7; a += 2; # 9``
+Subtraction assignment | ``a -= b`` |  ``local a = 7; a -= 2; # 5``
 
 Relational Operators
 ---------------------
 
  Name            | Syntax     | Example Usage
  --------------- | ---------- | ----------------------
-Equality         | ``a = b`` | ``print 2 = 2; # T``
+Equality         | ``a == b`` | ``print 2 == 2; # T``
 Inequality       | ``a != b`` | ``print 2 != 2; # F``
 Less             | ``a < b``  | ``print 2 < 3;  # T``
 Less or Equal    | ``a <= b`` | ``print 2 <= 2; # T``
