@@ -11,20 +11,20 @@ In this chapter we will introduce the simpler types.
 
 Bro has a static type system (the type of data a variable holds is
 fixed) with type inference, e.g., `local x = 0` is equivalent to
-`local x: count = 0` and implicit type promotion/coercion - limited
-to numeric types or records with fields marked as `&optional` or `&default`.
+`local x: count = 0`. It also implicitly promotes/coerces types in
+certain situations.
 
 The full reference on types in Bro can be found [here](https://www.bro.org/sphinx/script-reference/types.html).
-For now got through the simple types. Most of the types should be familiar from other programming languages,
-e.g., `bool`, `double`, `int`, `count`, `string`, `pattern` (a regular expression using [flex's syntax](http://flex.sourceforge.net/manual/Patterns.html).
-But Bro as a network monitoring system introduces also a set of special types that is explained 
+For now, look through the simple types. Most of the types should be familiar from other programming languages,
+e.g., `bool`, `double`, `int`, `count`, `string`, `pattern` (a regular expression using [flex's syntax](http://flex.sourceforge.net/manual/Patterns.html)).
+But Bro as a network monitoring system introduces also a set of domain-specific types that are explained 
 in the [reference](https://www.bro.org/sphinx/script-reference/types.html).
 Examples are `time`, `interval`, `port`, `addr`, and `subnet`.
 
-The special Bro types and the more complex types will be discussed in detailed examples in later chapters. 
+These custom Bro types and the more complex types will be discussed in detailed examples in later chapters. 
 
-Run the code in this example. Try to play with the given code example, e.g. change the given types.
-Can types be changed?
+Run the code in this example. Try to play with the given code example,
+e.g. change the given types. Does that work?
 
 
 

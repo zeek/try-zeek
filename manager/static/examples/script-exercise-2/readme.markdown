@@ -3,7 +3,7 @@ pcaps: exercise\_traffic.pcap
 pred: bro-types
 succ: solution-script-exercise-2
 
-Exercise 2
+Exercise
 ==========================
 
 By now we have all basic concepts of the Bro scripting language.
@@ -15,7 +15,7 @@ Consider the following list of subnets as your given local subnets:
 
 Write a script that:
 
-* tells for the first 10  new connections source IP and port, destinations IP and port, connection-ID, time when the connection started.
+* tells for the first 10  new connections source IP and port, destinations IP and port, connection ID, time when the connection started.
 * counts all connections seen and prints them in the end.
 * prints out for each unique IP address if its is local or external.
 

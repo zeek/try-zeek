@@ -3,7 +3,7 @@ pcaps:
 pred: script-exercise-1
 succ: switch
 
-Exercise 1: Soluition
+Exercise: Solution
 =====================================
 
 Here is the solution for the first exercise.
