@@ -19,8 +19,8 @@ What do we see here?
 
 Input variables are within the braces in a comma separated list. The return value follows after the colon.
 All variables in this function are of type 'string'. We will see more about types in Bro in the second next 
-[chapter](http://try.bro.com/example/primitive_datatypes).
-A few more details about variables in Bro are given in the next [chapter](http://try.bro.com/example/primitive\_datatypes).
+[chapter](http://try.bro.org/example/primitive_datatypes).
+A few more details about variables in Bro are given in the next [chapter](http://try.bro.org/example/primitive\_datatypes).
 
 The second argument in this example is optional. This is because of the [attribute](https://www.bro.org/sphinx/script-reference/attributes.html) 
 &default. In the example here the default value would be '\*' in case the second variable is missing.
