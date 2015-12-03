@@ -20,6 +20,9 @@ def main_first_sort_key(f):
     else:
         return (1, f['name'])
 
+def redirect_example_links(source):
+    return source.replace("http://try.bro.org/example/", "#/trybro?example=")
+
 def pack(example):
     sources = []
     for fn in os.listdir(example):
@@ -43,6 +46,7 @@ def pack(example):
         md = markdown.Markdown(extensions = ['markdown.extensions.meta', 'markdown.extensions.tables'])
         with open(full_help_filename) as f:
             source = f.read()
+        source = redirect_example_links(source)
         html = md.convert(source)
         packed_example['html'] = html
         for k, vs in md.Meta.items():
