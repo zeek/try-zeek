@@ -100,7 +100,7 @@ def cors_jsonify(**kwargs):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
 
-app.debug = True
+app.debug = False
 
 if __name__ == "__main__":
     app.run(debug=True)
