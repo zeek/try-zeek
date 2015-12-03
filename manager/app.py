@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from flask.ext.jsonpify import jsonify
 import hashlib
 
@@ -83,6 +83,10 @@ def md5(s):
     m = hashlib.md5()
     m.update(s)
     return m.hexdigest()
+
+@app.route("/example/<name>")
+def example(name):
+    return redirect("/#/trybro?example=%s" % name)
 
 app.debug = True
 
