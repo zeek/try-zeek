@@ -1,7 +1,7 @@
 event bro_init() 
-    { 
-    for ( c in "abc" )
-        {
-        print c;
+	{ 
+	for ( character in "abc" )
+		{
+		print character;
+		}
 	}
-    }

@@ -10,11 +10,11 @@ Welcome to our interactive Bro tutorial.
 
 This tutorial is divided into different topics covering aspects and use cases of Bro. 
 You can navigate through the exercises by clicking next or back on the bottom of each page. 
-Every lesson comes with a small code ezample that you can play with and there are some exercises, too.
+Every lesson comes with a small code example that you can play with and there are some exercises, too.
 Each exercise is followed by a solution with an explanation.
 
-Try Bro is interactive, you can always click the Run button and view the result in Stdout and the genrated log files below.
-Most of the topics in the first cvhapter don't require a traffic sample, so you can concentrate on learning Bro first.
+Try Bro is interactive, you can always click the Run button and view the result in STDOUT and the generated log files below.
+Most of the topics in the first chapter don't require a traffic sample, so you can concentrate on learning Bro first.
 
 The different example scripts demonstrate different aspects of Bro. They are meant as a starting point for your
 journey learning Bro. You can edit each example and run it again.
@@ -29,7 +29,7 @@ are familiar with basic terminology, e.g., what a variable is.
 Now click run and see the Bro magic happen. 
 
 In this simple example you can see already the specialty in Bro, the "event". Bro is event driven.
-This means you can control any execution by making it dependant on an event trigger. 
+This means you can control any execution by making it dependent on an event trigger. 
 Our example here would not work without an event to be triggered so we use the two events that are always raised,
 	bro_init()
 and 

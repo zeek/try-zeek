@@ -10,7 +10,7 @@ The solution is one possible way to solve this exercise.
 
 * First we load the connection-module.
 * Then we write local subnets into a set.
-* To count all connections we declare the globale counter my\_count.
+* To count all connections we declare the global counter my\_count.
 * To learn about every new connection we simply use the event [new\_connection](https://www.bro.org/sphinx/scripts/base/bif/event.bif.bro.html#id-new_connection). 
   Every time this
   event is triggered we increase the counter. For the first 10 connections we print source IP and port and 
@@ -22,6 +22,6 @@ The solution is one possible way to solve this exercise.
 * At the very end inside the bro\_done event we compute the rest. Print the number of connections stored in my\_count
   and use a for-loop to print out a list of all unique IPs and if they are local or external IPs.
   In this example we simply define which subnets are considered local. This does not mean that the list is complete. In a real
-  world example this should be verfied and documented in [networks.cfg](https://www.bro.org/sphinx/components/broctl/README.html).
+  world example this should be verified and documented in [networks.cfg](https://www.bro.org/sphinx/components/broctl/README.html).
 
 

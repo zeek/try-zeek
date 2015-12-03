@@ -1,13 +1,9 @@
-event bro_init() { 
-
+event bro_init()
+	{
 	print "use all the Bro types";
+	}
 
-
-}    
-
-event bro_done() {
-
+event bro_done()
+	{
 	print "and tell me what you learned";
-
-
-}
+	}

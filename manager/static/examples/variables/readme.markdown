@@ -12,7 +12,7 @@ scope is restricted to the body of a function
 if its declared within one and will be assigned an initial 
 value each time the function body is executed. 
 You typically won’t see local variables declared outside the body of functions 
-unless it’s example code or possibly work-in-progress code that 
+unless it's example code or possibly work-in-progress code that 
 may later be moved into a function, but is currently freely floating inside 
 some small script just for quick testing purposes.
 

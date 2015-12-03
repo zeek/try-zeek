@@ -22,7 +22,7 @@ They differ from functions in the following ways:
 
 In the Bro documentation is a detailed chapter about Bro's event engine, how Bro and the scripts
 interact, and what role the `event` plays in a Bro script. Please [read](https://www.bro.org/sphinx-git/scripting/index.html#the-event-queue-and-event-handlers).
-The refernce for [events](https://www.bro.org/sphinx/scripts/base/bif/event.bif.bro.html).
+The reference for [events](https://www.bro.org/sphinx/scripts/base/bif/event.bif.bro.html).
 
 * In this example we first see an event declaration of "myevent" that takes the string "s".
 * The the event handler implementation follows. The `&priority` attribute is optional and
@@ -31,7 +31,7 @@ If omitted, &priority is implicitly 0. In the example the priority is `-10` and 
 When this handler is called it will increment `n` from `0` to `1`.
 * The next handler for the same event sets the priority to 10. This handler will print the string "myevent"
 and the current values of the variables `s` and `n`.
-* Next we see the already fmiliar `bro_init` event that is executed once when Bro starts.
+* Next we see the already familiar `bro_init` event that is executed once when Bro starts.
 
 Run the code and follow the order in which the events are executed. The first execution is a 'a soon as possible"
 schedule, the `schedule 5 sec {}` executes either in 5 seconds or upon Bro shutting down, whichever 

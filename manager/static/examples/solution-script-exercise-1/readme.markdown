@@ -13,5 +13,5 @@ the string "testing". Every character is tested if it is an "e",
 and if yes a counter is incremented.
 
 The second example shows recursive usage of a function.
-The rexursion counts to 100 and replaces every 3rd number by "Fizz", every
+The recursion counts to 100 and replaces every 3rd number by "Fizz", every
 fifth by "Buzz". To do this the modulo operation is used.

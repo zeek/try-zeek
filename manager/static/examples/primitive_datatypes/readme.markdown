@@ -12,10 +12,10 @@ In this chapter we will introduce the simpler types.
 Bro has a static type system (the type of data a variable holds is
 fixed) with type inference, e.g., `local x = 0` is equivalent to
 `local x: count = 0` and implicit type promotion/coercion - limited
-to numeric types or records with optional/default fields.
+to numeric types or records with fields marked as `&optional` or `&default`.
 
 The full reference on types in Bro can be found [here](https://www.bro.org/sphinx/script-reference/types.html).
-For now got through the simple types. Most of the types should be familiar from other progarmming languages,
+For now got through the simple types. Most of the types should be familiar from other programming languages,
 e.g., `bool`, `double`, `int`, `count`, `string`, `pattern` (a regular expression using [flex's syntax](http://flex.sourceforge.net/manual/Patterns.html).
 But Bro as a network monitoring system introduces also a set of special types that is explained 
 in the [reference](https://www.bro.org/sphinx/script-reference/types.html).
