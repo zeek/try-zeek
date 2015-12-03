@@ -88,7 +88,7 @@ def md5(s):
 def example(name):
     return redirect("/#/trybro?example=%s" % name)
 
-app.debug = True
+app.debug = False
 
 if __name__ == "__main__":
     app.run(debug=True)
