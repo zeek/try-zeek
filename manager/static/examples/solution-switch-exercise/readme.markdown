@@ -12,5 +12,5 @@ choosing.
 
 Here is an example that works.
 We loop through the string that is given in the variable `input`.
-Inside the for loop every character is sent to the switch that test if it is a vowel. If so, the 
+Inside the for loop every character is sent to the switch to test if it is a vowel. If so, the 
 variable `result` is incremented.

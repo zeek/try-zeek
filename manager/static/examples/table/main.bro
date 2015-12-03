@@ -9,6 +9,7 @@ event bro_init()
 	delete x[3];
 	print 3 !in x; # T
 	x[1] = "1"; # changed the value at index 1
+
 	for ( key in x ) 
 		{
 		print key;

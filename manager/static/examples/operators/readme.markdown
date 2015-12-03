@@ -10,6 +10,10 @@ So far we have functions, variables, and we can even type them.
 We still can't connect two (or more) values to build a new one. 
 So now we can talk about operators that are used to manipulate, inspect, or compare data.
 
+Explore the operators below to play with the Bro elements we have so
+far. In the next two steps, we introduce loops 
+and if-statements so that we can solve more complex exercises.
+
 Arithmetic Operators
 -----------------------
 
@@ -67,5 +71,3 @@ Absolute Value   | ``|a|``                   | ``print |-5|;           # 5``
 Index            | ``a[i]``                  | ``print "test"[2];      # s``
 String Slicing   | ``a[i:j], a[i:], a[:j]``  | ``print "testing"[2:4]; # st``
 
-Explore this page and play with the Bro elements we have so far. In the next two steps loops 
-and if-statements are introduced so we can solve more complex exercises.

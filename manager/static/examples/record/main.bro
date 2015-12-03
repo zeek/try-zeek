@@ -12,6 +12,7 @@ event bro_init()
 		{
 		print x$d;
 		}
+	
 	x = MyRecord($a = "abc", $b = 3);
 	print x$c;  # T (default value of the field)
 	print x?$d; # F (optional field was not set)

@@ -3,7 +3,7 @@ pcaps: exercise\_traffic.pcap
 pred: script-exercise-2
 succ: chapter-2
 
-Exercise 2: Solution
+Exercise: Solution
 ==========================
 
 The solution is one possible way to solve this exercise.

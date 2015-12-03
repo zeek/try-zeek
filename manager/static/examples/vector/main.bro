@@ -5,6 +5,7 @@ event bro_init()
 	print x[1]; # two
 	x[|x|] = "one";
 	print x; # [one, two, three, one]
+
 	for ( i in x ) 
 		{
 		print i;  # Iterates over indices.

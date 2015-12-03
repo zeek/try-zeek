@@ -6,8 +6,8 @@ succ: table
 Set
 ===================
 
-A `set` is a collection of unique values.  Set uses the `add` and
-`delete` operators to add and remove elements itself and the `in`
+A `set` is a collection of unique values.  Sets use the `add` and
+`delete` operators to add and remove elements, and the `in`
 operator to test for membership. 
 
 Run the example. 
