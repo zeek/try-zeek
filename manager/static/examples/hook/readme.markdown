@@ -1,6 +1,6 @@
 title: hook
 pcaps: 
-pred: events
+pred: event
 succ: composite-types
 
 Hook
@@ -13,8 +13,7 @@ in two regards:
 * They do execute immediately when invoked (i.e. they're not scheduled
   like events).
 * The way the body of a hook handler terminates determines if further
-  handlers get executed.
-  If the end of the
+  handlers get executed. If the end of the
   body, or a `return` statement, is reached, the next hook handler
   will be executed.  If, however, a hook handler body terminates with a `break`
   statement, no remaining hook handlers will execute.

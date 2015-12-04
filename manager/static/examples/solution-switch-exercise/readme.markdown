@@ -1,7 +1,7 @@
 title: Switch Exercise: Solution
 pcaps:
 pred: switch-exercise
-succ: events
+succ: event
 
 Switch Exercise: Solution
 ==========================================
