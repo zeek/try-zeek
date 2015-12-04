@@ -1,7 +1,7 @@
 title: Exercise 2
-pcaps: exercise\_traffic.pcap
+pcaps: exercise_traffic.pcap
 pred: script-exercise-2
-succ: 
+succ: congrats
 
 Exercise: Solution
 ==========================
