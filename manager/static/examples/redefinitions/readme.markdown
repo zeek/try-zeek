@@ -1,7 +1,7 @@
 title: Redefinitions
 pcaps: 
 pred: record
-succ: bro-types
+succ: redef-records
 
 Redefinitions
 ============================
@@ -27,10 +27,6 @@ There are other types of attributes, but their behavior ranges
 from fairly obvious to rather advanced, so they're not covered
 here.  To see all possible attributes please see the [script
 reference](http://www.bro.org/sphinx/script-reference/builtins.html).
-
-`redef` not only works with values, but also
-certain *types*.  Namely `record` and `enum` may be extended, which is shown in this
-code example.
 
 Run the code and try to uncomment the line 
     
