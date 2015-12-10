@@ -1,4 +1,4 @@
-title: Events	
+title: Event	
 pcaps: 
 pred: solution-switch-exercise
 succ: hook

@@ -1,7 +1,7 @@
 title: Redefinitions
 pcaps: 
 pred: record
-succ: bro-types
+succ: redef-records
 
 Redefinitions
 ============================
@@ -25,15 +25,13 @@ Also, the `&redef` is something called an attribute.  It simply marks
 the identifier as one that can be altered via a `redef` statement.
 There are other types of attributes, but their behavior ranges
 from fairly obvious to rather advanced, so they're not covered
-extensively here.  To see all possible attributes please see the [script
+here.  To see all possible attributes please see the [script
 reference](http://www.bro.org/sphinx/script-reference/builtins.html).
 
-`redef` not only works with values, but also
-certain *types*.  Namely `record` and `enum` may be extended, which is shown in this
-code example.
-
 Run the code and try to uncomment the line 
-	redef two = 1;
-The uncomment the next line.
+    
+    redef two = 1;
+
+Then uncomment the next line.
 
 

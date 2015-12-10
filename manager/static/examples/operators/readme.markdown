@@ -1,6 +1,6 @@
 title: Operators
 pcaps:
-pred: primitive\_datatypes
+pred: primitive_datatypes
 succ: loops 
 
 Operators

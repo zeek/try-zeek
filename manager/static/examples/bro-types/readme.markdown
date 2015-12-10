@@ -18,7 +18,6 @@ specifically helpful when working with networks.
 * `interval` - a relative unit of time. Known units are `usec`,
   `msec`, `sec`, `min`, `hr`, or `day` (any may be pluralized by
   adding "s" to the end).  Examples: `3secs`, `-1min`.
-
 * `port` - a transport-level port number.  Examples: `80/tcp`,
   `53/udp`.
 * `addr` - an IP address.  Examples: `1.2.3.4`, `[2001:db8::1]`.

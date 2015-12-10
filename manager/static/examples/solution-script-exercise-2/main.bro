@@ -1,5 +1,3 @@
-@load base/protocols/conn
-
 global local_subnets: set[subnet] = { 192.168.1.0/24, 192.68.2.0/24, 172.16.0.0/20, 172.16.16.0/20, 172.16.32.0/20, 172.16.48.0/20 };
 global my_count = 0;
 global inside_networks: set[addr];

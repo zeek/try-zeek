@@ -1,15 +1,14 @@
 title: Exercise 2
-pcaps: exercise\_traffic.pcap
+pcaps: exercise_traffic.pcap
 pred: script-exercise-2
-succ: chapter-2
+succ: congrats
 
 Exercise: Solution
 ==========================
 
 The solution is one possible way to solve this exercise.
 
-* First we load the connection-module.
-* Then we write local subnets into a set.
+* First we write local subnets into a set.
 * To count all connections we declare the global counter my\_count.
 * To learn about every new connection we simply use the event [new\_connection](https://www.bro.org/sphinx/scripts/base/bif/event.bif.bro.html#id-new_connection). 
   Every time this
