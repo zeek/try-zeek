@@ -1,6 +1,6 @@
 title: Functions
 pcaps: 
-pred: namespaces
+pred: loading
 succ: variables
 
 Functions

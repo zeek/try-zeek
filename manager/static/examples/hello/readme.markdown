@@ -1,30 +1,12 @@
 title: Hello World
 pcaps: 
 pred:
-succ: namespaces
+succ: loading
 
 Hello
 =======
 
 Welcome to our interactive Bro tutorial.
-
-This tutorial is divided into different topics covering aspects and use cases of Bro. 
-You can navigate through the exercises by clicking next or back on the bottom of each page. 
-Every lesson comes with a small code example that you can play with and there are some exercises, too.
-Each exercise is followed by a solution with an explanation.
-
-Try Bro is interactive, you can always click the Run button and view the result in STDOUT and the generated log files below.
-Most of the topics in the first chapter don't require a traffic sample, so you can concentrate on learning Bro first.
-
-The different example scripts demonstrate different aspects of Bro. They are meant as a starting point for your
-journey learning Bro. You can edit each example and run it again.
-
-Some training examples come with one or more traffic samples in pcap format which the script is run on. 
-To make things faster you can select no pcap file. The button "choose file" allows you to upload your own
-traffic sample.
-
-In this tutorial we assume that you already "speak" another programming or scripting language and
-are familiar with basic terminology, e.g., what a variable is.
 
 Now click run and see the Bro magic happen. You may need to scroll
 down a bit to get to the output.
