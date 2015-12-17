@@ -3,7 +3,7 @@ pcaps:
 pred: loops
 succ: script-exercise-1
 
-If
+If Statement
 ================
 
 If statements conditionally execute another statement or block of statements.
