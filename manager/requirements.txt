@@ -21,3 +21,4 @@ websocket-client==0.11.0
 wsgiref==0.1.2
 flask-jsonpify
 gearman==2.0.2
+Markdown==2.6.2

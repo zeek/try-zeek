@@ -15,7 +15,7 @@ tbApp.config(function($stateProvider, $urlRouterProvider) {
         });
 });
 
-tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $state, ModalService){
+tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $state, $sce, ModalService){
     $scope.examples = ["hello", "log", "ssh"];
     $scope.pcaps = ["--", "exercise_traffic.pcap", "ssh.pcap","http.pcap"];
     $scope.pcap = "--";
@@ -57,15 +57,29 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
             return;
         }
         $http.get("/static/examples/" + $scope.example_name + ".json").then(function(response) {
-            $scope.source_files = response.data;
-            $scope.current_file = $scope.source_files[0];
-            //$scope.editor.setValue(response.data);
-            //$scope.editor.selection.clearSelection();
-            if($scope.run_after_example_loaded) {
-                $scope.run_after_example_loaded = false;
-                $scope.run_code();
-            }
+            $scope.display_example(response.data);
         });
+    };
+    $scope.display_example = function(example) {
+        $scope.source_files = example.sources;
+        $scope.example = example;
+        $scope.example.html = $sce.trustAsHtml(example.html);
+        $scope.current_file = $scope.source_files[0];
+
+        console.log(example);
+        if(example.title) {
+            document.title = 'Try Bro - ' + example.title;
+        }
+        if(example.pcaps) {
+            $scope.pcap = example.pcaps[0];
+        }
+
+        //$scope.editor.setValue(response.data);
+        //$scope.editor.selection.clearSelection();
+        if($scope.run_after_example_loaded) {
+            $scope.run_after_example_loaded = false;
+            $scope.run_code();
+        }
     };
 
     $scope.load_saved = function (job_id) {
@@ -103,9 +117,10 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
             f.name = newname;
         }
     };
-    $scope.$watch("example_name", function (newValue) {
-        $scope.load_example(newValue);
-    });
+    $scope.example_changed = function() {
+        $state.go("trybro", {example: $scope.example_name});
+    };
+
     $scope.$watch("pcap", function (newValue) {
         $("#pcap_upload").val('');
     });
@@ -229,8 +244,6 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         });
     };
 
-    $scope.example_name = "hello";
-
     $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
         if(toParams.job) {
             $scope.example_name = null;
@@ -248,6 +261,11 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
         }
         if(toParams.example) {
             $scope.example_name = toParams.example;
+            $scope.load_example();
+            console.log("Example name is", $scope.example_name);
+        }
+        if(!toParams.example && !toParams.job) {
+            $state.go("trybro", {example: 'hello'});
         }
     });
 
