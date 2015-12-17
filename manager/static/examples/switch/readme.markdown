@@ -3,7 +3,7 @@ pcaps:
 pred: solution-script-exercise-1
 succ: switch-exercise
 
-The Switch Statement
+Switch Statement
 =====================
 
 Sometimes a switch statement is a more convenient way to organize code.
