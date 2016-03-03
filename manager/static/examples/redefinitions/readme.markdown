@@ -26,7 +26,7 @@ the identifier as one that can be altered via a `redef` statement.
 There are other types of attributes, but their behavior ranges
 from fairly obvious to rather advanced, so they're not covered
 here.  To see all possible attributes please see the [script
-reference](http://www.bro.org/sphinx/script-reference/builtins.html).
+reference](https://www.bro.org/sphinx/script-reference/attributes.html).
 
 Run the code and try to uncomment the line 
     
