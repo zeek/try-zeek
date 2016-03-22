@@ -1,10 +1,11 @@
 # bro
 #
-# VERSION               0.2
+# VERSION               0.3
 
 FROM      ubuntu:trusty
 MAINTAINER Justin Azoff <justin.azoff@gmail.com>
 
+RUN rm /var/lib/apt/lists/*list -vf && apt-get update && apt-get dist-upgrade -yq #2016-02-16
 RUN apt-get update && apt-get install -yq python-pip python-dev
 RUN apt-get update && apt-get install -yq redis-server
 
