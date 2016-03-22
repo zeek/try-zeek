@@ -12,7 +12,7 @@ fi
 
 mv main.bro trybro.bro
 
-cat <<EOF > trybro_pre.bro
+cat <<EOF > __pre.bro
 const use_dpd = T;
 @load brolite
 redef log_rotate_interval = 0secs;
@@ -22,7 +22,7 @@ EOF
 chown nobody . *
 
 su -s /bin/sh nobody -c \
-    "/usr/bin/timeout -k 2 15 /bro/bin/bro -f 'ip or not ip' -C $opts trybro_pre.bro ./trybro.bro > stdout.log 2> stderr.log"
+    "/usr/bin/timeout -k 2 15 /bro/bin/bro -f 'ip or not ip' -C $opts __pre.bro ./trybro.bro > stdout.log 2> stderr.log"
 
 #remove harmless message
 grep -v 'NB-DNS' stderr.log > tmp.log
