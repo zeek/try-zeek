@@ -21,7 +21,7 @@ and
 The first is executed when Bro is started, the second when Bro terminates, so we can use these for example
 when no traffic is actually analyzed as we do for our basic examples
 (see [here](https://www.bro.org/sphinx/scripts/base/bif/event.bif.bro.html) for more on these basic events).
-In this tutorial we will come back to events in the chapter about [complex data types](http://try.bro.org/example/events).
+In this tutorial we will come back to events in the lesson about [complex data types](http://try.bro.org/example/events).
 
 Other than that, all this script does is sending warm greetings to new Bro users by printing to STDOUT.
 

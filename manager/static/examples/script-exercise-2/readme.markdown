@@ -7,7 +7,7 @@ Exercise
 ==========================
 
 By now we have all basic concepts of the Bro scripting language.
-To finish the first chapter of your journey into the Bro language solve the following exercise.
+To finish the first part of your journey into the Bro language solve the following exercise.
 
 Consider the following list of subnets as your given local subnets:
 

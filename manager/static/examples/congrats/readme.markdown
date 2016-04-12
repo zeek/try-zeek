@@ -1,12 +1,12 @@
 title: Congrats
 pcaps:
-pred: solution-script-exercise-2
-succ:
+pred: new-notice 
+succ: 
 
 Congratulations
 ==========================
 
-You have finished the first lesson in Bro Script!
+You have finished all lessons in Bro Script we have provided so far.
 Welcome in the world of Bro. We hope you enjoyed this little journey.
 
 Feedback is more than welcome, please write to [info@bro.org](info@bro.org).

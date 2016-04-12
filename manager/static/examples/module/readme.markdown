@@ -21,7 +21,7 @@ Events that are not working on traffic can created within a bro script, though.
 Before you dive into Bro Modules we would like to point you on the
 [Bro Scripting Conventions](https://www.bro.org/development/howtos/script-conventions.html).
 Apart from naming conventions the Bro scripts sets use a convention for file-names and
-the setup of Modules. In the first chapter we already talked about 
+the setup of Modules. We've already talked about 
 [loading scripts](http://try.bro.org/examples/loading). If you have a look into the
 [Bro Script Packages](https://www.bro.org/sphinx/script-reference/packages.html)
 you will find that each Module consists at least of two files, `__load__.bro` and
@@ -32,4 +32,4 @@ In this tutorial we will not use this convention most of the time since we keep 
 If you want to convert the final Bro Module that we create in this tutorial to test it with your Bro installation you can also
 try the naming conventions for Bro Modules.
 
-For this tutorial chapter we will assume the knowledge from the previous lessons.
+For the next lessons you will need the knowledge from the previous lessons.
