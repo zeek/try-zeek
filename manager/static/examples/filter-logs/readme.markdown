@@ -1,7 +1,7 @@
 title: Filtering Logs
-pcaps: 
+pcaps:  
 pred: rename-logs
-succ: 
+succ: new-notice
 
 Filtering Logs
 =========================
