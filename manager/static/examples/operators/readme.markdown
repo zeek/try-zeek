@@ -57,7 +57,7 @@ Name             | Syntax     | Example Usage
 ---------------- | ---------- | ----------------------
 Logical NOT      | ``! a``    | ``print !T;     # F``
 Logical AND      | ``a && b`` | ``print T && F; # F``
-Logical OR       | ``a || b`` | ``print F || T; # T``
+Logical OR       | ``a &#124;&#124; b`` | ``print F &#124;&#124; T; # T``
 
 Other Operators
 ----------------
@@ -66,8 +66,8 @@ Name             | Syntax                    | Example Usage
 ---------------- | ------------------------  | -----------------------------
 Member Inclusion | ``a in b``                | ``print "z" in "test";  # F``
 Member Exclusion | ``a !in b``               | ``print "z" !in "test"; # T``
-Size/Length      | ``|a|``                   | ``print |"test"|;       # 4``
-Absolute Value   | ``|a|``                   | ``print |-5|;           # 5``
+Size/Length      | ``&#124;a&#124;``         | ``print &#124;"test"&#124;; # 4``
+Absolute Value   | ``&#124;a&#124;``         | ``print &#124;-5&#124;;     # 5``
 Index            | ``a[i]``                  | ``print "test"[2];      # s``
 String Slicing   | ``a[i:j], a[i:], a[:j]``  | ``print "testing"[2:4]; # st``
 
