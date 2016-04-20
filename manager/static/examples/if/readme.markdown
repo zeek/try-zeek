@@ -1,6 +1,6 @@
 title: If
 pcaps:
-pred: loops
+pred: while
 succ: script-exercise-1
 
 If Statement

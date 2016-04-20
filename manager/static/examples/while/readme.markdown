@@ -1,7 +1,7 @@
 title: Loops: While
 pcaps:
 pred: loops
-succ: while
+succ: if
 
 Loops: While
 ================
