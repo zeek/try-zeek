@@ -48,6 +48,10 @@ def pack(example):
             source = f.read()
         source = redirect_example_links(source)
         html = md.convert(source)
+        #HACK, FIXME: We are having issues with | chars inside tables
+        #The python parser doesn't seem to support \|, at least not inside code blocks
+        #This hack lets ``&#124;`` be rendered as a | in a code block.
+        html = html.replace("&amp;#124;", "&#124;")
         packed_example['html'] = html
         for k, vs in md.Meta.items():
             if k not in MULTI_VALUE_FIELDS:
