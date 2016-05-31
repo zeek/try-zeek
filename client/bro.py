@@ -10,7 +10,7 @@ import hashlib
 DEFAULT_HOST="http://try.bro.org/"
 HOST = os.getenv("TRYBRO_HOST", DEFAULT_HOST)
 
-DEFAULT_VERSION="2.3.2"
+DEFAULT_VERSION="2.4.1"
 
 def md5(s):
     m = hashlib.md5()
