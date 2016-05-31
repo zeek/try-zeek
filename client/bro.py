@@ -64,21 +64,24 @@ def get_files(job):
         with open(fn, 'w') as f:
             f.write(data)
 
-def run(files, version=DEFAULT_VERSION, pcap=None):
+def run(files, version=DEFAULT_VERSION, pcap=None, link=False):
     if pcap:
         pcap = maybe_upload_pcap(pcap)
     res = run_code(files, version, pcap=pcap)
+    if link:
+        sys.stdout.write("http://try.bro.org/#/trybro/saved/%s\n\n" % res['job'])
     sys.stdout.write(res['stdout'])
     get_files(res["job"])
 
 def main():
     parser = OptionParser()
     parser.add_option("-r", "--readfile", dest="pcap", help="read from given tcpdump file", action="store")
+    parser.add_option("-l", "--link", dest="link", help="Output sharable link", action="store_true")
     parser.add_option("-V", "--bro-version", dest="version", help="Select bro version", action="store", default=DEFAULT_VERSION)
     (options, args) = parser.parse_args()
 
     files = args
-    run(files, version=options.version, pcap=options.pcap)
+    run(files, version=options.version, pcap=options.pcap, link=options.link)
 
 if __name__ == "__main__":
     main()
