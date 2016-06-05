@@ -60,6 +60,7 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
             $scope.display_example(response.data);
         });
     };
+
     $scope.display_example = function(example) {
         $scope.source_files = example.sources;
         $scope.example = example;
@@ -81,6 +82,11 @@ tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $st
             $scope.run_code();
         }
     };
+
+    $scope.hide_example = function() {
+        $scope.example_name = null;
+        $scope.example = null;
+    }
 
     $scope.load_saved = function (job_id) {
         //make sure I default to something if the get fails.
