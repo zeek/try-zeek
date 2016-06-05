@@ -1,9 +1,13 @@
 <form method="POST" ng-submit="run_code()">
 <div class="row">
     <div class="col-md-6 col-md-push-6">
-        <label for="example">Load example </label>
-        <select id="example" ng-model="example_name" ng-options="e for e in examples" ng-change="example_changed()">
-        </select>
+        <label for="example">Load example</label>
+        <select id="example" ng-model="example_name" ng-options="e for e in examples" ng-change="example_changed()"></select>
+        <a class="btn" ng-show="example" ng-click="hide_example()"><span class="glyphicon glyphicon-remove"></span>Hide example</a>
+    </div>
+</div>
+<div class="row">
+    <div ng-if="example" class="col-md-6 col-md-push-6">
         <div ng-bind-html="example.html"></div>
         <ul class="pager">
         <li class="previous">
@@ -13,7 +17,7 @@
             <a ng-show="example.succ" ui-sref="trybro({example:example.succ})">Next</a>
         </li>
     </div>
-    <div class="col-md-6 col-md-pull-6">
+    <div ng-class="{'col-md-6 col-md-pull-6': example}">
         <ul class="nav nav-tabs">
             <li ng-repeat="f in source_files" ng-class="{active: f==current_file}" ng-click="edit_file(f)"><a ng-bind="f.name"></a></li>
             <li ng-click="add_file()"><a>Add file <span class="glyphicon glyphicon-plus"></span></a></li>
