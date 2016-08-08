@@ -1,6 +1,6 @@
 title: Congrats
 pcaps:
-pred: new-notice 
+pred: sumstats3
 succ: 
 
 Congratulations
