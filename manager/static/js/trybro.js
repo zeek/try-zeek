@@ -17,7 +17,7 @@ tbApp.config(function($stateProvider, $urlRouterProvider) {
 
 tbApp.controller('CodeCtrl', function($scope, $http, $timeout, $stateParams, $state, $sce, ModalService){
     $scope.examples = ["hello", "log", "ssh"];
-    $scope.pcaps = ["--", "exercise_traffic.pcap", "ssh.pcap","http.pcap"];
+    $scope.pcaps = ["--", "exercise_traffic.pcap", "ssh.pcap","http.pcap","sumstat.pcap"];
     $scope.pcap = "--";
     $scope.stderr = null;
     $scope.stdout = null;
