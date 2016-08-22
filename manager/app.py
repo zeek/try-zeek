@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, make_response
 from flask.ext.jsonpify import jsonify
 import hashlib
 
@@ -29,7 +29,7 @@ def bro_metrics_json():
 
 @app.route("/saved/<job>")
 def saved(job):
-    return backend.get_saved(job)
+    return corsify(make_response(backend.get_saved(job)))
 
 @app.route("/run", methods=['OPTIONS'])
 def run_options_for_cors():
@@ -100,6 +100,9 @@ def md5(s):
 
 def cors_jsonify(**kwargs):
     response = jsonify(**kwargs)
+    return corsify(response)
+
+def corsify(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
