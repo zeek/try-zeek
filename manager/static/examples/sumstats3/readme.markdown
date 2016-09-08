@@ -1,7 +1,7 @@
 title: SumStats Exercise Solution
 pcaps: sumstat.pcap
 pred: sumstats2
-succ: congrats
+succ: intel
 
 SumStats Exercise Solution
 ==================================
