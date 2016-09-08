@@ -1,6 +1,6 @@
 title: Congrats
 pcaps:
-pred: sumstats3
+pred: intel
 succ: 
 
 Congratulations
