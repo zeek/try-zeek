@@ -1,7 +1,6 @@
 title: Congrats
 pcaps:
-pred: sumstats3
-succ: 
+order:
 
 Congratulations
 ==========================
