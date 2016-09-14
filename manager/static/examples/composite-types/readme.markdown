@@ -1,7 +1,6 @@
 title: Composite Datatypes
 pcaps: 
-pred: hook
-succ: set
+order:set,table,vector,record
 
 Composite Datatypes
 ===================

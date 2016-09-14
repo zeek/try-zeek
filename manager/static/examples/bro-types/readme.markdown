@@ -1,7 +1,6 @@
 title: Bro Datatypes
 pcaps: 
-pred: redefinitions 
-succ: script-exercise-2
+order:
 
 Bro Datatypes
 ===================

@@ -1,14 +1,10 @@
 title: Loops
 pcaps:
-pred: operators
-succ: while
+order:for,while
 
-Loops: For
+Loops
 ================
 
-Bro uses a "foreach" style loop.
-In the given example we simply iterate through the string "abc"
-and print the current character.
+Bro provides two types of loops that will be introduced in the following examples.
 
-Note: Iterating over any collection other than a vector won't provide any guarantee of the order
-Bro iterates over the collection. If the order is important the collection should be a vector.
+We assume at this point that your are familiar with the concept of the different types of loops.

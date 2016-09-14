@@ -1,7 +1,6 @@
 title: hook
 pcaps: 
-pred: event
-succ: composite-types
+order:
 
 Hook
 =======

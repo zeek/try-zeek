@@ -1,7 +1,6 @@
 title: Variables
 pcaps:
-pred: functions
-succ: primitive_datatypes 
+order:
 
 Variables
 ===========

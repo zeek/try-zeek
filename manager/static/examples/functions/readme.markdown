@@ -1,7 +1,6 @@
 title: Functions
 pcaps: 
-pred: loading
-succ: variables
+order:
 
 Functions
 ==========

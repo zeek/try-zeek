@@ -1,7 +1,6 @@
 title: Primitive Datatypes
 pcaps: 
-pred: variables
-succ: operators 
+order:
 
 Primitive Datatypes
 ===================

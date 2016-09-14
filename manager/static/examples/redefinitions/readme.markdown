@@ -1,7 +1,6 @@
 title: Redefinitions
 pcaps: 
-pred: record
-succ: redef-records
+order:redef-records
 
 Redefinitions
 ============================

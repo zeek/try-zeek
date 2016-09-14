@@ -1,7 +1,6 @@
 title: The Summary Statistics Framework
 pcaps: exercise_traffic.pcap
-pred: new-notice 
-succ: sumstats2
+order:sumstats2,sumstats3
 
 The Summary Statistics Framework
 ==================================
