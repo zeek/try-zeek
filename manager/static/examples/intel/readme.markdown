@@ -1,6 +1,5 @@
 title: Intel
 pcaps: http.pcap
-order:
 
 The Intel Framework
 ====================
