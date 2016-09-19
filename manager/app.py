@@ -75,6 +75,10 @@ def files_json(job):
 def versions():
     return cors_jsonify(versions=backend.BRO_VERSIONS, default=backend.BRO_VERSION)
 
+@app.route("/pcap/upload/<checksum>", methods=['OPTIONS'])
+def pcap_upload_options_for_cors(checksum):
+    return cors_jsonify(ok="ok")
+
 @app.route("/pcap/upload/<checksum>", methods=['POST'])
 def pcap_upload(checksum):
     contents = request.files['pcap'].read()
