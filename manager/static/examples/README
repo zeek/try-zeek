@@ -1,0 +1,17 @@
+Creating and/or changing try-bro content
+==========================================
+
+All examples should follow a certain structure.
+The order of the examples is given by index files named 'index'.
+The toplevel index file contains the top-level topics or chapters, e.g.,
+basics. Basics contains all basic Bro functionality, e.g., data types, loops etc.
+The list in an index file contains the names of the sub direktories.
+Each directory contains at least two files, the readme.markdown with the explanation, and
+the main.bro with the example code. The readme files have to be written using the 
+markdown syntax.
+
+Within basics some of the examples have sub directories themselves. In that case the sub dir contains another index that lists 
+further directories, e.g., 'for' and 'while' in the directory 'loops'.
+Please have a look at existing examples before creating new ones.
+
+
