@@ -330,6 +330,6 @@ export function handleLocationChange(dispatch, location, initial=false) {
         if (q.example)
             dispatch(loadExample(q.example, q.run));
     }
-    if(location.path === '/' && Object.keys(location.query).length == 0 && location.hash === '')
+    if(location.path === '/' && Object.keys(location.query).length === 0 && location.hash === '')
         tbhistory.push({query: {example: 'hello'}});
 }

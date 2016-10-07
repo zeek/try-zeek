@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import AceEditor from 'react-ace';
 
 import { fetchVersions, setVersion } from './actions';
-import { fetchExamples, loadExample, hideExample, showExample } from './actions';
+import { fetchExamples, hideExample, showExample } from './actions';
 import { codeAddFile, codeSelectFile, codeRenameFile, codeEditFile } from './actions';
 import { execReset, execSubmit } from './actions';
 import { pcapSelected, pcapFileChanged } from './actions';
@@ -55,7 +55,7 @@ class BroEditor extends Component {
             this.props.onAddFile();
         } else if(this.props.code.current === key && this.props.code.current !== 'main.bro') {
             var new_name = prompt(`Rename ${this.props.code.current} to`, this.props.code.current);
-            if (new_name && new_name !== '' && new_name != this.props.code.current)
+            if (new_name && new_name !== '' && new_name !== this.props.code.current)
                 this.props.onRenameFile(new_name);
         } else if(this.props.code.current !== key) {
             this.props.onSelectFile(key);
@@ -138,12 +138,12 @@ var BroFileViewerDetailTable = ({record}) => {
 class BroFileViewerModal extends Component {
 
   render() {
-    const { show, file, recordNum, onPrev, onNext } = this.props;
+    const { file, recordNum, onPrev, onNext } = this.props;
     var record = null;
     var rowStatus = null;
     if (file && file.rows && file.rows.length && recordNum !== null) {
         var row = file.rows[recordNum]
-        var record = zip([file.header, file.types, row]);
+        record = zip([file.header, file.types, row]);
         rowStatus = <span>Viewing record {recordNum+1} of {file.rows.length}</span>;
     }
     return (
@@ -151,7 +151,7 @@ class BroFileViewerModal extends Component {
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-lg">
           <ButtonGroup>
-              <Button onClick={() => onPrev()} disabled={this.props.recordNum==0}>Prev</Button>
+              <Button onClick={() => onPrev()} disabled={this.props.recordNum === 0}>Prev</Button>
               <Button onClick={() => onNext()} disabled={this.props.recordNum === file.rows.length -1}>Next</Button>
           </ButtonGroup>
           {rowStatus}
@@ -247,7 +247,7 @@ var BroFileViewerDetail = ({file}) => {
 
 class BroFileViewer extends Component {
     shouldComponentUpdate(nextProps) {
-        return nextProps.files != this.props.files;
+        return nextProps.files !== this.props.files;
     }
     render() {
         const { files } = this.props;
@@ -404,7 +404,7 @@ class App extends Component {
         }
     }
     render() {
-        const { dispatch, versions, examples, code, pcap, exec } = this.props;
+        const { exec } = this.props;
         return (
             <Grid fluid={true}>
                 {this.renderCodeRow()}

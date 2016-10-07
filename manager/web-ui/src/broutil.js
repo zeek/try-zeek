@@ -4,6 +4,7 @@ export function parse_errors(stderr)
 {
     var errors = {};
     var match = {};
+    // eslint-disable-next-line
     while ((match = BroErrorRegex.exec(stderr)) !== null) {
         var type = match[1];
         var filename = match[2];

@@ -134,7 +134,7 @@ function code(state = initialCodeState, action) {
   case CODE_EDIT_FILE:
     var new_sources = [];
     state.sources.map( s => {
-        if(s.name != action.name) {
+        if(s.name !== action.name) {
             new_sources.push(s);
         } else {
             new_sources.push({
