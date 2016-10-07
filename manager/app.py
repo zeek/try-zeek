@@ -15,9 +15,13 @@ class FlaskStaticCors(Flask):
 
 app = FlaskStaticCors(__name__)
 
+@app.route('/favicon.ico')
+def favicon():
+    return app.send_static_file("favicon.ico")
+
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return app.send_static_file("index.html")
 
 @app.route("/metrics")
 def bro_metrics():
