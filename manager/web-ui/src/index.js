@@ -2,9 +2,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import App from './App';
 
-import thunkMiddleware from 'redux-thunk';
-import createLogger from 'redux-logger';
-import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import { compose, createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 
 import { tbhistory } from './tbhistory';
@@ -16,13 +15,14 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 
 
-const loggerMiddleware = createLogger();
-const createStoreWithMiddleware = applyMiddleware(
-  thunkMiddleware, // lets us dispatch() functions
-  loggerMiddleware // neat middleware that logs actions
-)(createStore);
+const middlewares = [thunk];
+if (process.env.NODE_ENV === `development`) {
+  const createLogger = require(`redux-logger`);
+  const logger = createLogger();
+  middlewares.push(logger);
+}
 
-const store = createStoreWithMiddleware(tryBroApp);
+const store = compose(applyMiddleware(...middlewares))(createStore)(tryBroApp);
 
 tbhistory.listen(function (location, action) {
     console.log(action, location);
