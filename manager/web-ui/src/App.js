@@ -17,7 +17,6 @@ import {Grid, Row, Col} from 'react-bootstrap';
 import {Table} from 'react-bootstrap';
 import {Modal} from 'react-bootstrap';
 
-import queryString from 'query-string'
 import { setHistoryToExample } from './tbhistory';
 
 var DropDown = ({options, includeBlank, selected, onChange}) => {
