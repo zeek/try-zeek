@@ -1,0 +1,336 @@
+import fetch from 'isomorphic-fetch';
+
+import { tbhistory } from './tbhistory';
+import md5 from 'md5';
+
+export const VERSIONS_FETCHING  = 'VERSIONS_FETCHING';
+export const VERSIONS_FETCHED   = 'VERSIONS_FETCHED';
+export const VERSIONS_SET       = 'VERSIONS_SET';
+
+
+export function fetchingVersions() {
+    return {
+        type: VERSIONS_FETCHING,
+    };
+}
+
+export function fetchedVersions(version_data) {
+    return {
+        type: VERSIONS_FETCHED,
+        versions: version_data.versions,
+        version: version_data['default']
+    };
+}
+export function setVersion(version) {
+    return {
+        type: VERSIONS_SET,
+        version: version
+    };
+}
+
+export function fetchVersions() {
+  return dispatch => {
+    dispatch(fetchingVersions());
+    return fetch(`http://try.bro.org/versions.json`)
+      .then(response => response.json())
+      .then(json => dispatch(fetchedVersions(json)));
+  };
+}
+
+export const EXAMPLES_FETCHING  = 'EXAMPLES_FETCHING';
+export const EXAMPLES_FETCHED   = 'EXAMPLES_FETCHED';
+export const EXAMPLES_SET       = 'EXAMPLES_SET';
+export const EXAMPLES_LOAD      = 'EXAMPLES_LOAD';
+export const EXAMPLE_HIDE      = 'EXAMPLE_HIDE';
+export const EXAMPLE_SHOW      = 'EXAMPLE_SHOW';
+
+
+export function fetchingExamples() {
+    return {
+        type: EXAMPLES_FETCHING,
+    };
+}
+
+export function fetchExamples() {
+  return dispatch => {
+    dispatch(fetchingExamples());
+    return fetch(`http://try.bro.org/static/examples/examples.json`)
+      .then(response => response.json())
+      .then(json => dispatch(fetchedExamples(json)));
+  };
+}
+
+export function fetchedExamples(examples) {
+    return {
+        type: EXAMPLES_FETCHED,
+        examples: examples
+    };
+}
+
+export function loadExample(example, run=false) {
+  return dispatch => {
+    return fetch(`http://try.bro.org/static/examples/${example}.json`)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(fetchedExample(json));
+        dispatch(setCode(json.sources));
+        if (json.pcaps.length)
+            dispatch(pcapSelected(json.pcaps[0]))
+        if(run)
+            dispatch(execSubmit());
+      });
+  };
+}
+
+export function fetchedExample(example) {
+    return {
+        type: EXAMPLES_LOAD,
+        example
+    };
+}
+export function hideExample() {
+    return {
+        type: EXAMPLE_HIDE,
+    };
+}
+export function showExample() {
+    return {
+        type: EXAMPLE_SHOW,
+    };
+}
+
+export const CODE_SET = 'CODE_SET';
+export const CODE_SELECT_FILE = 'CODE_SELECT_FILE';
+export const CODE_ADD_FILE = 'CODE_ADD_FILE';
+export const CODE_RENAME_FILE = 'CODE_RENAME_FILE';
+export const CODE_EDIT_FILE = 'CODE_EDIT_FILE';
+
+export function setCode(sources) {
+    return {
+        type: CODE_SET,
+        sources
+    }
+}
+
+export function codeSelectFile(name) {
+    return {
+        type: CODE_SELECT_FILE,
+        name
+    }
+}
+
+export function codeAddFile() {
+    return {
+        type: CODE_ADD_FILE,
+    }
+}
+export function codeRenameFile(new_name) {
+    return {
+        type: CODE_RENAME_FILE,
+        new_name,
+    }
+}
+
+export function codeEditFile(name, contents) {
+    return {
+        type: CODE_EDIT_FILE,
+        name,
+        contents
+    }
+}
+
+export const EXEC_SUBMIT = 'EXEC_SUBMIT'
+export const EXEC_RUNNING = 'EXEC_RUNNING'
+export const EXEC_COMPLETE = 'EXEC_COMPLETE'
+
+export const EXEC_FETCHING_FILES = 'EXEC_FETCHING_FILES'
+export const EXEC_FETCHED_FILES = 'EXEC_FETCHED_FILES'
+
+export const EXEC_RESET = 'EXEC_RESET'
+
+export function execReset(){
+    return {
+        type: EXEC_RESET
+    }
+}
+
+export function execSubmit(pcap_uploaded) {
+    return (dispatch, getState) => {
+        const state = getState();
+        const sources = state.code.sources;
+        const version = state.versions.version;
+        const pcap = state.pcap.pcap;
+        const pcapfile = state.pcap.file;
+        if (pcapfile !== null && pcap_uploaded !== true) {
+            return upload_and_reexec(dispatch, pcapfile);
+        }
+        var opts =  {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                sources: sources,
+                version: version,
+                pcap: pcap
+            })
+        };
+        dispatch(execRunning());
+        return fetch('http://try.bro.org/run', opts)
+            .then(response => response.json())
+            .then(json => {
+                dispatch(execComplete(json));
+                dispatch(execFetchFiles(json.job));
+                tbhistory.push({ pathname: '/trybro/saved/' + json.job});
+            });
+    };
+}
+
+function upload_and_reexec(dispatch, file) {
+    var reader = new FileReader();
+    reader.onloadend = function () {
+        var checksum = md5(reader.result, {encoding: 'binary'});
+        check_or_upload_pcap(dispatch, file, checksum);
+    }
+    reader.readAsBinaryString(file);
+}
+
+function check_or_upload_pcap(dispatch, file, checksum){
+    fetch('http://try.bro.org/pcap/' + checksum)
+        .then(response => response.json())
+        .then(response => {
+            if (response.status) {
+                //pcap already exists on server
+                dispatch(pcapSelected(checksum));
+                dispatch(execSubmit(true));
+            } else {
+                upload_pcap(dispatch, file, checksum);
+            }
+        });
+}
+
+function upload_pcap(dispatch, file, checksum) {
+    var xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener('progress', function(e) {
+        if (e.lengthComputable) {
+            var percentage = Math.round((e.loaded * 100) / e.total);
+            dispatch(pcapProgress(percentage));
+        }
+    }, false);
+    xhr.upload.addEventListener('load', function(e){
+        dispatch(pcapUploaded(checksum));
+        dispatch(execSubmit(true));
+    }, false);
+
+    var fd = new FormData();
+    fd.append('pcap', file);
+
+    xhr.open('POST', 'http://try.bro.org/pcap/upload/' + checksum, true);
+    xhr.send(fd);
+}
+
+export function execFetchFiles(job) {
+    return dispatch => {
+        dispatch(execFetchingFiles())
+        return fetch(`http://try.bro.org/files/${job}.json`)
+            .then(response => response.json())
+            .then(json => dispatch(execFetchedFiles(json.files)));
+    }
+}
+export function execFetchingFiles() {
+    return {
+        type: EXEC_FETCHING_FILES
+    }
+}
+
+export function execFetchedFiles(files) {
+    return {
+        type: EXEC_FETCHED_FILES,
+        files
+    }
+}
+
+export function execRunning() {
+    return {
+        type: EXEC_RUNNING
+    }
+}
+
+export function execComplete(response) {
+    return {
+        type: EXEC_COMPLETE,
+        response
+    }
+}
+
+export const PCAP_SELECTED = 'PCAP_SELECTED'
+export const PCAP_FILE_CHANGED = 'PCAP_FILE_CHANGED'
+export const PCAP_UPLOAD_PROGRESS = 'PCAP_UPLOAD_PROGRESS'
+export const PCAP_UPLOADED = 'PCAP_UPLOADED'
+
+export function pcapSelected(pcap) {
+    return {
+        type: PCAP_SELECTED,
+        pcap
+    }
+}
+
+
+export function pcapFileChanged(file) {
+    return {
+        type: PCAP_FILE_CHANGED,
+        file
+    }
+}
+
+export function pcapProgress(pct) {
+    return {
+        type: PCAP_UPLOAD_PROGRESS,
+        pct
+    }
+}
+export function pcapUploaded(checksum) {
+    return {
+        type: PCAP_UPLOADED,
+        checksum
+    }
+}
+
+export function loadSaved(job, autorun) {
+    return dispatch => {
+        return fetch(`http://try.bro.org/saved/${job}`)
+            .then(response => response.json())
+            .then(json => {
+                dispatch(setCode(json.sources));
+                dispatch(setVersion(json.version));
+                dispatch(pcapSelected(json.pcap));
+                if (autorun)
+                    dispatch(execSubmit());
+            });
+    }
+}
+
+
+import { parse } from 'query-string'
+
+export function handleLocationChange(dispatch, location, initial=false) {
+    console.log('Location is now', location);
+    var match = /\/trybro\/saved\/(\d+)/.exec(location.path);
+    if (match) {
+        var job = match[1];
+        return dispatch(loadSaved(job, initial));
+    }
+    const query = parse(location.search);
+    if(query) {
+        var q = query;
+        if (q.pcap)
+            dispatch(pcapSelected(q.pcap));
+        if (q.version)
+            dispatch(setVersion(q.version));
+        if (q.example)
+            dispatch(loadExample(q.example, q.run));
+    }
+    if(location.path === '/' && Object.keys(location.query).length == 0 && location.hash === '')
+        tbhistory.push({query: {example: 'hello'}});
+}
