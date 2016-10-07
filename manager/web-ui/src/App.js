@@ -187,8 +187,8 @@ class BroFileViewerTableTable extends Component {
             <tbody className="Pointer">
                 {file.rows.map((r, id) =>
                     <tr key={id} onClick={() => onRowSelected(file, r, id)}>
-                        {r.map((h, cid) =>
-                            <td key={id + ' ' + cid}>{h}</td>
+                        {r.map((c, cid) =>
+                            <td key={id + ' ' + cid}><div className="overflow">{c}</div></td>
                         )}
                     </tr>
                 )}
