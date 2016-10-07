@@ -139,7 +139,6 @@ export function codeEditFile(name, contents) {
     }
 }
 
-export const EXEC_SUBMIT = 'EXEC_SUBMIT'
 export const EXEC_RUNNING = 'EXEC_RUNNING'
 export const EXEC_COMPLETE = 'EXEC_COMPLETE'
 
