@@ -295,7 +295,7 @@ var TextMessage = ({header, text, className}) => {
     );
 }
 
-class App extends Component {
+export class App extends Component {
     componentDidMount() {
         console.log('App mounted!');
         this.props.dispatch(fetchVersions());
