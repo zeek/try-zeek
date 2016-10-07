@@ -3,6 +3,10 @@ import './App.css';
 
 import {connect} from 'react-redux';
 
+import brace from 'brace';
+import 'brace/mode/perl';
+import 'brace/theme/github';
+
 import AceEditor from 'react-ace';
 
 import { fetchVersions, setVersion } from './actions';
@@ -73,6 +77,7 @@ class BroEditor extends Component {
                     width="100%"
                     showPrintMargin={false}
                     mode="perl"
+                    theme="github"
                     name={c.name}
                     value={c.content}
                     annotations={this.props.errors[c.name]}
