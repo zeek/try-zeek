@@ -17,7 +17,8 @@ import {Grid, Row, Col} from 'react-bootstrap';
 import {Table} from 'react-bootstrap';
 import {Modal} from 'react-bootstrap';
 
-import { tbhistory } from './tbhistory';
+import queryString from 'query-string'
+import { setHistoryToExample } from './tbhistory';
 
 var DropDown = ({options, includeBlank, selected, onChange}) => {
     if(includeBlank) {
@@ -305,7 +306,7 @@ class App extends Component {
         this.props.dispatch(setVersion(version))
     }
     exampleSelected = (example) => {
-        tbhistory.push({query: {example: example}});
+        setHistoryToExample(example);
         this.props.dispatch(execReset())
     }
     hideExample = () => {

@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 
-import { tbhistory } from './tbhistory';
+import { tbhistory, setHistoryToExample } from './tbhistory';
 import md5 from 'md5';
 
 export const VERSIONS_FETCHING  = 'VERSIONS_FETCHING';
@@ -311,16 +311,16 @@ export function loadSaved(job, autorun) {
 }
 
 
-import { parse } from 'query-string'
+import queryString from 'query-string'
 
 export function handleLocationChange(dispatch, location, initial=false) {
     console.log('Location is now', location);
-    var match = /\/trybro\/saved\/(\d+)/.exec(location.path);
+    var match = /\/trybro\/saved\/(\d+)/.exec(location.pathname);
     if (match) {
         var job = match[1];
         return dispatch(loadSaved(job, initial));
     }
-    const query = parse(location.search);
+    const query = queryString.parse(location.search);
     if(query) {
         var q = query;
         if (q.pcap)
@@ -330,6 +330,7 @@ export function handleLocationChange(dispatch, location, initial=false) {
         if (q.example)
             dispatch(loadExample(q.example, q.run));
     }
-    if(location.path === '/' && Object.keys(location.query).length === 0 && location.hash === '')
-        tbhistory.push({query: {example: 'hello'}});
+    if(location.pathname === '/' && Object.keys(query).length === 0 && location.hash === '') {
+        setHistoryToExample('hello');
+    }
 }
