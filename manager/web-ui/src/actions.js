@@ -31,7 +31,7 @@ export function setVersion(version) {
 export function fetchVersions() {
   return dispatch => {
     dispatch(fetchingVersions());
-    return fetch(`http://try.bro.org/versions.json`)
+    return fetch(`/versions.json`)
       .then(response => response.json())
       .then(json => dispatch(fetchedVersions(json)));
   };
@@ -54,7 +54,7 @@ export function fetchingExamples() {
 export function fetchExamples() {
   return dispatch => {
     dispatch(fetchingExamples());
-    return fetch(`http://try.bro.org/static/examples/examples.json`)
+    return fetch(`/static/examples/examples.json`)
       .then(response => response.json())
       .then(json => dispatch(fetchedExamples(json)));
   };
@@ -69,7 +69,7 @@ export function fetchedExamples(examples) {
 
 export function loadExample(example, run=false) {
   return dispatch => {
-    return fetch(`http://try.bro.org/static/examples/${example}.json`)
+    return fetch(`/static/examples/${example}.json`)
       .then(response => response.json())
       .then(json => {
         dispatch(fetchedExample(json));
@@ -176,7 +176,7 @@ export function execSubmit(pcap_uploaded) {
             })
         };
         dispatch(execRunning());
-        return fetch('http://try.bro.org/run', opts)
+        return fetch('/run', opts)
             .then(response => response.json())
             .then(json => {
                 dispatch(execComplete(json));
@@ -196,7 +196,7 @@ function upload_and_reexec(dispatch, file) {
 }
 
 function check_or_upload_pcap(dispatch, file, checksum){
-    fetch('http://try.bro.org/pcap/' + checksum)
+    fetch('/pcap/' + checksum)
         .then(response => response.json())
         .then(response => {
             if (response.status) {
@@ -225,14 +225,14 @@ function upload_pcap(dispatch, file, checksum) {
     var fd = new FormData();
     fd.append('pcap', file);
 
-    xhr.open('POST', 'http://try.bro.org/pcap/upload/' + checksum, true);
+    xhr.open('POST', '/pcap/upload/' + checksum, true);
     xhr.send(fd);
 }
 
 export function execFetchFiles(job) {
     return dispatch => {
         dispatch(execFetchingFiles())
-        return fetch(`http://try.bro.org/files/${job}.json`)
+        return fetch(`/files/${job}.json`)
             .then(response => response.json())
             .then(json => dispatch(execFetchedFiles(json.files)));
     }
@@ -298,7 +298,7 @@ export function pcapUploaded(checksum) {
 
 export function loadSaved(job, autorun) {
     return dispatch => {
-        return fetch(`http://try.bro.org/saved/${job}`)
+        return fetch(`/saved/${job}`)
             .then(response => response.json())
             .then(json => {
                 dispatch(setCode(json.sources));
