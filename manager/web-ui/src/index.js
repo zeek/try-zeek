@@ -24,12 +24,12 @@ const createStoreWithMiddleware = applyMiddleware(
 
 const store = createStoreWithMiddleware(tryBroApp);
 
-handleLocationChange(store.dispatch, tbhistory.location, true)
 tbhistory.listen(function (location, action) {
     console.log(action, location);
     if(action !== 'REPLACE')
         handleLocationChange(store.dispatch, location, false)
 })
+handleLocationChange(store.dispatch, tbhistory.location, true)
 
 let rootElement = document.getElementById('root');
 render(
