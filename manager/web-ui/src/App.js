@@ -38,7 +38,7 @@ var DropDown = ({options, includeBlank, selected, onChange}) => {
 
 
 class BroVersions extends Component {
-    change = v => this.props.OnVersionChanged(v);
+    change = v => this.props.onVersionChanged(v);
     render() {
         const { version, versions } = this.props.versions;
         return (
