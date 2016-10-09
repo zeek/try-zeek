@@ -55,7 +55,7 @@ export function fetchingExamples() {
 export function fetchExamples() {
   return dispatch => {
     dispatch(fetchingExamples());
-    return fetch(`http://192.168.59.103/static/examples/examples.json`)
+    return fetch(`/static/examples/examples.json`)
       .then(response => response.json())
       .then(json => dispatch(fetchedExamples(json)));
   };
