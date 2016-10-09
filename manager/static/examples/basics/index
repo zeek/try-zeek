@@ -1,8 +1,9 @@
 loading
 functions
 variables
-primitive_datatypes
+primitive-datatypes
 operators
+control-flow
 loops
 exercise1
 switches
