@@ -80,7 +80,7 @@ function examples(state = initialExampleState, action) {
     });
   case EXAMPLE_SELECTED:
     var ex = state.examples.filter((e) => {
-        return e.path == action.path;
+        return e.path === action.path;
     })[0];
     if (ex === undefined) {
         return state;
