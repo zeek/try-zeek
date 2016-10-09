@@ -1,7 +1,5 @@
 title: Raising a Notice
 pcaps: 
-pred: filter-logs 
-succ: sumstats 
 
 Raising a Notice
 =====================

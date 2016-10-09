@@ -1,7 +1,5 @@
 title: Intel
 pcaps: http.pcap
-pred: sumstats3
-succ: congrats
 
 The Intel Framework
 ====================
@@ -27,10 +25,4 @@ all seen matches. As always the uid allows you to investigate further which conn
 
 It is also possible to raise notices based on intel data. To see how this works have a look at the 
 documentation mentioned above.
-
-
-
-
-
-This is about intel. and stuff.
 
