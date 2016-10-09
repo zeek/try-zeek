@@ -23,6 +23,16 @@ def main_first_sort_key(f):
 def redirect_example_links(source):
     return source.replace("http://try.bro.org/example/", "#/trybro?example=")
 
+def clean_path(path):
+    if path.startswith("./"):
+        path = path[2:]
+    if path == '.':
+        path = ''
+    return path
+
+def fix_path(path):
+    return clean_path(path).replace("/", "-")
+
 def pack(example):
     sources = []
     for fn in os.listdir(example):
@@ -38,7 +48,8 @@ def pack(example):
 
     packed_example = {
         'sources': sources,
-        'path': example,
+        'path': fix_path(example),
+        'parent': clean_path(os.path.dirname(example))
     }
 
     full_help_filename = os.path.join(example, HELP_FILE)
@@ -71,7 +82,7 @@ def pack_recursive(e):
     if 'index' in directory_children:
         index = read_index(os.path.join(e, "index"))
         children = { f: pack_recursive(os.path.join(e, f)) for f in index }
-        example = { "path": e, "index": index, "children": children, "child_count": len(children)}
+        example = { "path": fix_path(e), "index": index, "children": children, "child_count": len(children)}
     else:
         example = pack(e)
 

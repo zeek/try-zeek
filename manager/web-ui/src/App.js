@@ -50,6 +50,18 @@ class BroVersions extends Component {
     }
 };
 
+//TODO: simpler way of doing this?
+var ExampleDropDown = ({examples, includeBlank, selected, onChange}) => {
+    var cur_selected = selected ? selected.path: '';
+    return (
+        <select value={cur_selected} onChange={(e) => onChange(e.target.value)}>
+          {examples.map(ex =>
+            <option key={ex.path} value={ex.path}>{ex.parent ? ex.parent + ':' : ''} {ex.title}</option>
+          )}
+        </select>
+    );
+}
+
 class BroEditor extends Component {
     handleCodeChanged(file, c) {
         this.props.onCodeChanged(file, c);
@@ -101,13 +113,13 @@ class BroExampleReadme extends Component {
             return null;
         }
         var markup = {__html: example.html }
-        var pred = example.pred ? <Pager.Item previous onClick={() => onChange(example.pred)}>Previous is {example.pred} </Pager.Item> : null;
-        var succ = example.succ ? <Pager.Item next     onClick={() => onChange(example.succ)}>Next is {example.succ} </Pager.Item> : null;
+        var prev = example.prev ? <Pager.Item previous onClick={() => onChange(example.prev.path)}>Previous is {example.prev.title} </Pager.Item> : null;
+        var next = example.next ? <Pager.Item next     onClick={() => onChange(example.next.path)}>Next is {example.next.title} </Pager.Item> : null;
         return (
             <div>
                 <Pager>
-                    {pred}
-                    {succ}
+                    {prev}
+                    {next}
                 </Pager>
                 <div dangerouslySetInnerHTML={markup} />
             </div>
@@ -303,8 +315,8 @@ var TextMessage = ({header, text, className}) => {
 export class App extends Component {
     componentDidMount() {
         console.log('App mounted!');
-        this.props.dispatch(fetchVersions());
         this.props.dispatch(fetchExamples());
+        this.props.dispatch(fetchVersions());
     }
     versionSelected = (version) => {
         this.props.dispatch(setVersion(version))
@@ -375,7 +387,7 @@ export class App extends Component {
                     </Row>
                  </Row>
              </Grid>;
-        var loadLine = <span> Load Example: <DropDown includeBlank={true} options={examples.examples} selected={examples.name} onChange={this.exampleSelected}/> </span>;
+        var loadLine = <span> Load Example: <ExampleDropDown examples={examples.examples} selected={examples.example} onChange={this.exampleSelected}/> </span>;
 
         var showText = null
         if ( examples.example && examples.example.html)

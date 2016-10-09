@@ -40,7 +40,8 @@ export function fetchVersions() {
 export const EXAMPLES_FETCHING  = 'EXAMPLES_FETCHING';
 export const EXAMPLES_FETCHED   = 'EXAMPLES_FETCHED';
 export const EXAMPLES_SET       = 'EXAMPLES_SET';
-export const EXAMPLES_LOAD      = 'EXAMPLES_LOAD';
+
+export const EXAMPLE_SELECTED  = 'EXAMPLE_SELECTED';
 export const EXAMPLE_HIDE      = 'EXAMPLE_HIDE';
 export const EXAMPLE_SHOW      = 'EXAMPLE_SHOW';
 
@@ -54,7 +55,7 @@ export function fetchingExamples() {
 export function fetchExamples() {
   return dispatch => {
     dispatch(fetchingExamples());
-    return fetch(`/static/examples/examples.json`)
+    return fetch(`http://192.168.59.103/static/examples/examples.json`)
       .then(response => response.json())
       .then(json => dispatch(fetchedExamples(json)));
   };
@@ -68,26 +69,31 @@ export function fetchedExamples(examples) {
 }
 
 export function loadExample(example, run=false) {
-  return dispatch => {
-    return fetch(`/static/examples/${example}.json`)
-      .then(response => response.json())
-      .then(json => {
-        dispatch(fetchedExample(json));
-        dispatch(setCode(json.sources));
-        if (json.pcaps.length)
-            dispatch(pcapSelected(json.pcaps[0]))
-        if(run)
-            dispatch(execSubmit());
-      });
-  };
+    return (dispatch, getState) => {
+        const state = getState();
+        if (!state.examples.fetched) {
+            dispatch(fetchExamples()).then(() => {
+                dispatch(selectExample(example, run));
+            });
+        } else {
+            dispatch(selectExample(example, run));
+        }
+    }
 }
 
-export function fetchedExample(example) {
-    return {
-        type: EXAMPLES_LOAD,
-        example
+export function selectExample(example, run=false) {
+    return (dispatch, getState) => {
+        dispatch({ type: EXAMPLE_SELECTED, path: example})
+        const state = getState();
+        example = state.examples.example;
+        dispatch(setCode(example.sources));
+        if (example.pcaps.length)
+            dispatch(pcapSelected(example.pcaps[0]))
+        if(run)
+            dispatch(execSubmit());
     };
-}
+};
+
 export function hideExample() {
     return {
         type: EXAMPLE_HIDE,
