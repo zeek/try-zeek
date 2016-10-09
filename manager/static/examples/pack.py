@@ -65,12 +65,6 @@ def read_index(fn):
     with open(fn) as f:
         return f.read().split()
 
-def name_to_title(name):
-    """>>> name_to_title("foo-bar")
-        Foo Bar
-    """
-    return name.replace("-", " ").title()
-
 def pack_recursive(e):
 
     directory_children = os.listdir(e)
@@ -82,7 +76,7 @@ def pack_recursive(e):
         index = ["0"]
         children = { "0": pack(e) }
 
-    example = { "path": e, "name": name_to_title(e), "index": index, "children": children, "child_count": len(children)}
+    example = { "path": e, "index": index, "children": children, "child_count": len(children)}
     return example
 
 def main():
