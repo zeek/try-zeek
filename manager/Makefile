@@ -1,4 +1,7 @@
 all:
+	make -C web-ui
+	cp web-ui/build/*.* static/
+	rsync -avP web-ui/build/static/ static/
 	docker build -t broplatform/trybro ./
 
 run: all
