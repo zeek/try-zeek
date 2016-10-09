@@ -68,22 +68,48 @@ def read_index(fn):
 def pack_recursive(e):
 
     directory_children = os.listdir(e)
-    print "example:", e, "children:", directory_children
     if 'index' in directory_children:
         index = read_index(os.path.join(e, "index"))
         children = { f: pack_recursive(os.path.join(e, f)) for f in index }
+        example = { "path": e, "index": index, "children": children, "child_count": len(children)}
     else:
-        index = ["0"]
-        children = { "0": pack(e) }
+        example = pack(e)
 
-    example = { "path": e, "index": index, "children": children, "child_count": len(children)}
     return example
+
+    add_next(examples)
+
+def flatten(examples, flat=None):
+    if flat is None:
+        flat = []
+    if 'index' in examples:
+        for i in examples['index']:
+            flatten(examples['children'][i], flat)
+    else:
+        flat.append(examples)
+
+    return flat
+
+def add_next_and_prev(flattened):
+    prev = None
+    for f in flattened:
+        f['prev'] = prev
+        prev = {'path': f['path'], 'title': f['title']}
+
+    next = None
+    for f in reversed(flattened):
+        f['next'] = next
+        next = {'path': f['path'], 'title': f['title']}
+
 
 def main():
     examples = pack_recursive(".")
+    flat = flatten(examples)
+
+    add_next_and_prev(flat)
 
     with open("examples.json", 'w') as f:
-        json.dump(examples, f)
+        json.dump(flat, f)
 
 if __name__ == "__main__":
     main()
