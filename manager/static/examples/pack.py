@@ -38,7 +38,7 @@ def pack(example):
 
     packed_example = {
         'sources': sources,
-        'name': example,
+        'path': example,
     }
 
     full_help_filename = os.path.join(example, HELP_FILE)
@@ -61,14 +61,32 @@ def pack(example):
 
     return packed_example
 
+def read_index(fn):
+    with open(fn) as f:
+        return f.read().split()
+
+def name_to_title(name):
+    """>>> name_to_title("foo-bar")
+        Foo Bar
+    """
+    return name.replace("-", " ").title()
+
+def pack_recursive(e):
+
+    directory_children = os.listdir(e)
+    print "example:", e, "children:", directory_children
+    if 'index' in directory_children:
+        index = read_index(os.path.join(e, "index"))
+        children = { f: pack_recursive(os.path.join(e, f)) for f in index }
+    else:
+        index = ["0"]
+        children = { "0": pack(e) }
+
+    example = { "path": e, "name": name_to_title(e), "index": index, "children": children, "child_count": len(children)}
+    return example
+
 def main():
-    examples = []
-    for x in sorted(glob.glob("*/main.bro")):
-        example = os.path.dirname(x)
-        jsfile = example + ".json"
-        examples.append(example)
-        with open(jsfile, 'w') as f:
-            json.dump(pack(example), f)
+    examples = pack_recursive(".")
 
     with open("examples.json", 'w') as f:
         json.dump(examples, f)
