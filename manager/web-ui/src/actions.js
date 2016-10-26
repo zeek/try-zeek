@@ -3,6 +3,9 @@ import fetch from 'isomorphic-fetch';
 import { tbhistory, setHistoryToExample } from './tbhistory';
 import md5 from 'md5';
 
+const API_HOST = process.env.REACT_APP_TRY_BRO_API_HOST ? process.env.REACT_APP_TRY_BRO_API_HOST : ''; 
+
+
 export const VERSIONS_FETCHING  = 'VERSIONS_FETCHING';
 export const VERSIONS_FETCHED   = 'VERSIONS_FETCHED';
 export const VERSIONS_SET       = 'VERSIONS_SET';
@@ -31,7 +34,7 @@ export function setVersion(version) {
 export function fetchVersions() {
   return dispatch => {
     dispatch(fetchingVersions());
-    return fetch(`/versions.json`)
+    return fetch(`${API_HOST}/versions.json`)
       .then(response => response.json())
       .then(json => dispatch(fetchedVersions(json)));
   };
@@ -55,7 +58,7 @@ export function fetchingExamples() {
 export function fetchExamples() {
   return dispatch => {
     dispatch(fetchingExamples());
-    return fetch(`/static/examples/examples.json`)
+    return fetch(`${API_HOST}/static/examples/examples.json`)
       .then(response => response.json())
       .then(json => dispatch(fetchedExamples(json)));
   };
@@ -182,7 +185,7 @@ export function execSubmit(pcap_uploaded) {
             })
         };
         dispatch(execRunning());
-        return fetch('/run', opts)
+        return fetch(`${API_HOST}/run`, opts)
             .then(response => response.json())
             .then(json => {
                 dispatch(execComplete(json));
@@ -202,7 +205,7 @@ function upload_and_reexec(dispatch, file) {
 }
 
 function check_or_upload_pcap(dispatch, file, checksum){
-    fetch('/pcap/' + checksum)
+    fetch(`${API_HOST}/pcap` + checksum)
         .then(response => response.json())
         .then(response => {
             if (response.status) {
@@ -238,7 +241,7 @@ function upload_pcap(dispatch, file, checksum) {
 export function execFetchFiles(job) {
     return dispatch => {
         dispatch(execFetchingFiles())
-        return fetch(`/files/${job}.json`)
+        return fetch(`${API_HOST}/files/${job}.json`)
             .then(response => response.json())
             .then(json => dispatch(execFetchedFiles(json.files)));
     }
@@ -304,7 +307,7 @@ export function pcapUploaded(checksum) {
 
 export function loadSaved(job, autorun) {
     return dispatch => {
-        return fetch(`/saved/${job}`)
+        return fetch(`${API_HOST}/saved/${job}`)
             .then(response => response.json())
             .then(json => {
                 dispatch(setCode(json.sources));
