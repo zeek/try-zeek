@@ -234,7 +234,7 @@ function upload_pcap(dispatch, file, checksum) {
     var fd = new FormData();
     fd.append('pcap', file);
 
-    xhr.open('POST', '/pcap/upload/' + checksum, true);
+    xhr.open('POST', `${API_HOST}/pcap/upload/${checksum}`, true);
     xhr.send(fd);
 }
 
