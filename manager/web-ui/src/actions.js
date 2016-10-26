@@ -205,7 +205,7 @@ function upload_and_reexec(dispatch, file) {
 }
 
 function check_or_upload_pcap(dispatch, file, checksum){
-    fetch(`${API_HOST}/pcap` + checksum)
+    fetch(`${API_HOST}/pcap/${checksum}`)
         .then(response => response.json())
         .then(response => {
             if (response.status) {
