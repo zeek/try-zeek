@@ -366,7 +366,7 @@ export class App extends Component {
 
         return (
             <Row> <Col sm={12}>
-                Load Example: <ExampleDropDown examples={examples.examples} selected={examples.example} onChange={this.exampleSelected}/>
+                Example: <ExampleDropDown examples={examples.examples} selected={examples.example} onChange={this.exampleSelected}/>
                 { ' ' }
                 {showHide}
             </Col> </Row>
