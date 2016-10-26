@@ -113,15 +113,15 @@ class BroExampleReadme extends Component {
             return null;
         }
         var markup = {__html: example.html }
-        var prev = example.prev ? <Pager.Item previous onClick={() => onChange(example.prev.path)}>Previous is {example.prev.title} </Pager.Item> : null;
-        var next = example.next ? <Pager.Item next     onClick={() => onChange(example.next.path)}>Next is {example.next.title} </Pager.Item> : null;
+        var prev = example.prev ? <Pager.Item previous onClick={() => onChange(example.prev.path)}>Previous </Pager.Item> : null;
+        var next = example.next ? <Pager.Item next     onClick={() => onChange(example.next.path)}>Next </Pager.Item> : null;
         return (
             <div>
                 <Pager>
                     {prev}
                     {next}
                 </Pager>
-                <div dangerouslySetInnerHTML={markup} />
+                <div dangerouslySetInnerHTML={markup} style={{height:"500px", overflowY:"auto"}} />
             </div>
         )
     }
@@ -359,13 +359,14 @@ export class App extends Component {
         const { examples } = this.props;
         var showHide = null;
         if ( examples.example && examples.example.html && examples.hidden)
-            showHide = <span onClick={this.showExample} style={{cursor:'pointer'}}><Glyphicon glyph="eye-open" />Show text</span>;
+            showHide = <Button onClick={this.showExample} style={{cursor:'pointer'}}>Show Text <Glyphicon glyph="eye-open" /></Button>;
         else
-            showHide = <span onClick={this.hideExample} style={{cursor:'pointer'}}><Glyphicon glyph="remove" />Hide text</span>;
+            showHide = <Button onClick={this.hideExample} style={{cursor:'pointer'}}>Hide Text <Glyphicon glyph="remove" /></Button>;
 
         return (
             <Row> <Col sm={12}>
                 Load Example: <ExampleDropDown examples={examples.examples} selected={examples.example} onChange={this.exampleSelected}/>
+                { ' ' }
                 {showHide}
             </Col> </Row>
         );
