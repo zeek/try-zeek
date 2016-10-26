@@ -226,10 +226,12 @@ function upload_pcap(dispatch, file, checksum) {
             dispatch(pcapProgress(percentage));
         }
     }, false);
-    xhr.upload.addEventListener('load', function(e){
-        dispatch(pcapUploaded(checksum));
-        dispatch(execSubmit(true));
-    }, false);
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            dispatch(pcapUploaded(checksum));
+            dispatch(execSubmit(true));
+        }
+    };
 
     var fd = new FormData();
     fd.append('pcap', file);
