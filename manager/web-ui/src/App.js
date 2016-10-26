@@ -44,6 +44,7 @@ class BroVersions extends Component {
         return (
             <span>
                 Bro Version
+                { ' ' }
                 <DropDown options={versions} selected={version} onChange={this.change} />
             </span>
         );
@@ -117,7 +118,7 @@ class BroExampleReadme extends Component {
         var next = example.next ? <Pager.Item next     onClick={() => onChange(example.next.path)}>Next </Pager.Item> : null;
         return (
             <div>
-                <Pager>
+                <Pager style={{marginTop: 0}}>
                     {prev}
                     {next}
                 </Pager>
@@ -393,7 +394,7 @@ export class App extends Component {
                         <Col sm={12} >
                         <BroVersions versions={versions} onVersionChanged={this.versionSelected} />
                         { '  ' }
-                        Use PCAP: <DropDown includeBlank={true} options={pcap.available} selected={pcap.pcap} onChange={this.pcapChanged}/>
+                        Use PCAP <DropDown includeBlank={true} options={pcap.available} selected={pcap.pcap} onChange={this.pcapChanged}/>
                         { '  ' }
                         Or { ' ' }
                         <label>
