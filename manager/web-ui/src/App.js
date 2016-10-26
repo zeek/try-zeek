@@ -432,6 +432,7 @@ export class App extends Component {
         return (
             <Grid fluid={true}>
                 {this.renderLoadLine()}
+                <br/>
                 {this.renderCodeRow()}
                 <TextMessage header='Errors' text={exec.stderr} className="alert alert-danger" />
                 <TextMessage header='Output' text={exec.stdout} />
