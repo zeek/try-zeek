@@ -44,11 +44,24 @@ class BroVersions extends Component {
         return (
             <span>
                 Bro Version
+                { ' ' }
                 <DropDown options={versions} selected={version} onChange={this.change} />
             </span>
         );
     }
 };
+
+//TODO: simpler way of doing this?
+var ExampleDropDown = ({examples, includeBlank, selected, onChange}) => {
+    var cur_selected = selected ? selected.path: '';
+    return (
+        <select value={cur_selected} onChange={(e) => onChange(e.target.value)}>
+          {examples.map(ex =>
+            <option key={ex.path} value={ex.path}>{ex.parent ? ex.parent + ':' : ''} {ex.title}</option>
+          )}
+        </select>
+    );
+}
 
 class BroEditor extends Component {
     handleCodeChanged(file, c) {
@@ -101,15 +114,15 @@ class BroExampleReadme extends Component {
             return null;
         }
         var markup = {__html: example.html }
-        var pred = example.pred ? <Pager.Item previous onClick={() => onChange(example.pred)}>Previous is {example.pred} </Pager.Item> : null;
-        var succ = example.succ ? <Pager.Item next     onClick={() => onChange(example.succ)}>Next is {example.succ} </Pager.Item> : null;
+        var prev = example.prev ? <Pager.Item previous onClick={() => onChange(example.prev.path)}>Previous </Pager.Item> : null;
+        var next = example.next ? <Pager.Item next     onClick={() => onChange(example.next.path)}>Next </Pager.Item> : null;
         return (
             <div>
-                <Pager>
-                    {pred}
-                    {succ}
+                <Pager style={{marginTop: 0}}>
+                    {prev}
+                    {next}
                 </Pager>
-                <div dangerouslySetInnerHTML={markup} />
+                <div dangerouslySetInnerHTML={markup} style={{height:"500px", overflowY:"auto"}} />
             </div>
         )
     }
@@ -303,8 +316,8 @@ var TextMessage = ({header, text, className}) => {
 export class App extends Component {
     componentDidMount() {
         console.log('App mounted!');
-        this.props.dispatch(fetchVersions());
         this.props.dispatch(fetchExamples());
+        this.props.dispatch(fetchVersions());
     }
     versionSelected = (version) => {
         this.props.dispatch(setVersion(version))
@@ -343,6 +356,23 @@ export class App extends Component {
         this.props.dispatch(pcapFileChanged(f));
     }
 
+    renderLoadLine() {
+        const { examples } = this.props;
+        var showHide = null;
+        if ( examples.example && examples.example.html && examples.hidden)
+            showHide = <Button onClick={this.showExample} style={{cursor:'pointer'}}>Show Text <Glyphicon glyph="eye-open" /></Button>;
+        else
+            showHide = <Button onClick={this.hideExample} style={{cursor:'pointer'}}>Hide Text <Glyphicon glyph="remove" /></Button>;
+
+        return (
+            <Row> <Col sm={12}>
+                Example: <ExampleDropDown examples={examples.examples} selected={examples.example} onChange={this.exampleSelected}/>
+                { ' ' }
+                {showHide}
+            </Col> </Row>
+        );
+    }
+
     renderCodeRow() {
         const { versions, examples, code, pcap, exec } = this.props;
         var editor = <BroEditor
@@ -364,7 +394,7 @@ export class App extends Component {
                         <Col sm={12} >
                         <BroVersions versions={versions} onVersionChanged={this.versionSelected} />
                         { '  ' }
-                        Use PCAP: <DropDown includeBlank={true} options={pcap.available} selected={pcap.pcap} onChange={this.pcapChanged}/>
+                        Use PCAP <DropDown includeBlank={true} options={pcap.available} selected={pcap.pcap} onChange={this.pcapChanged}/>
                         { '  ' }
                         Or { ' ' }
                         <label>
@@ -375,20 +405,12 @@ export class App extends Component {
                     </Row>
                  </Row>
              </Grid>;
-        var loadLine = <span> Load Example: <DropDown includeBlank={true} options={examples.examples} selected={examples.name} onChange={this.exampleSelected}/> </span>;
 
-        var showText = null
-        if ( examples.example && examples.example.html)
-            showText = <span onClick={this.showExample} style={{cursor:'pointer'}}><Glyphicon glyph="eye-open" />Show text</span>;
-
-        var hideText = <span onClick={this.hideExample} style={{cursor:'pointer'}}><Glyphicon glyph="remove" />Hide text</span>;
 
         if(examples.example && examples.example.html && !examples.hidden) {
             return (
                  <Row className="show-grid">
                      <Col sm={4}>
-                         {loadLine}
-                         {hideText}
                          <BroExampleReadme example={examples.example} onChange={this.exampleSelected} />
                      </Col>
                      <Col sm={8}>
@@ -400,8 +422,6 @@ export class App extends Component {
             return (
                 <Row className="show-grid">
                     <Col sm={12}>
-                        {loadLine}
-                        {showText} <br/>
                         {editorBox}
                     </Col>
                 </Row>
@@ -412,6 +432,8 @@ export class App extends Component {
         const { exec } = this.props;
         return (
             <Grid fluid={true}>
+                {this.renderLoadLine()}
+                <br/>
                 {this.renderCodeRow()}
                 <TextMessage header='Errors' text={exec.stderr} className="alert alert-danger" />
                 <TextMessage header='Output' text={exec.stdout} />

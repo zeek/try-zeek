@@ -23,6 +23,16 @@ def main_first_sort_key(f):
 def redirect_example_links(source):
     return source.replace("http://try.bro.org/example/", "#/trybro?example=")
 
+def clean_path(path):
+    if path.startswith("./"):
+        path = path[2:]
+    if path == '.':
+        path = ''
+    return path
+
+def fix_path(path):
+    return clean_path(path).replace("/", "-")
+
 def pack(example):
     sources = []
     for fn in os.listdir(example):
@@ -38,7 +48,8 @@ def pack(example):
 
     packed_example = {
         'sources': sources,
-        'name': example,
+        'path': fix_path(example),
+        'parent': clean_path(os.path.dirname(example))
     }
 
     full_help_filename = os.path.join(example, HELP_FILE)
@@ -61,17 +72,55 @@ def pack(example):
 
     return packed_example
 
+def read_index(fn):
+    with open(fn) as f:
+        return f.read().split()
+
+def pack_recursive(e):
+
+    directory_children = os.listdir(e)
+    if 'index' in directory_children:
+        index = read_index(os.path.join(e, "index"))
+        children = { f: pack_recursive(os.path.join(e, f)) for f in index }
+        example = { "path": fix_path(e), "index": index, "children": children, "child_count": len(children)}
+    else:
+        example = pack(e)
+
+    return example
+
+    add_next(examples)
+
+def flatten(examples, flat=None):
+    if flat is None:
+        flat = []
+    if 'index' in examples:
+        for i in examples['index']:
+            flatten(examples['children'][i], flat)
+    else:
+        flat.append(examples)
+
+    return flat
+
+def add_next_and_prev(flattened):
+    prev = None
+    for f in flattened:
+        f['prev'] = prev
+        prev = {'path': f['path'], 'title': f['title']}
+
+    next = None
+    for f in reversed(flattened):
+        f['next'] = next
+        next = {'path': f['path'], 'title': f['title']}
+
+
 def main():
-    examples = []
-    for x in sorted(glob.glob("*/main.bro")):
-        example = os.path.dirname(x)
-        jsfile = example + ".json"
-        examples.append(example)
-        with open(jsfile, 'w') as f:
-            json.dump(pack(example), f)
+    examples = pack_recursive(".")
+    flat = flatten(examples)
+
+    add_next_and_prev(flat)
 
     with open("examples.json", 'w') as f:
-        json.dump(examples, f)
+        json.dump(flat, f)
 
 if __name__ == "__main__":
     main()

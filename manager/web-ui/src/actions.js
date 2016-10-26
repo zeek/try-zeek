@@ -3,6 +3,9 @@ import fetch from 'isomorphic-fetch';
 import { tbhistory, setHistoryToExample } from './tbhistory';
 import md5 from 'md5';
 
+const API_HOST = process.env.REACT_APP_TRY_BRO_API_HOST ? process.env.REACT_APP_TRY_BRO_API_HOST : ''; 
+
+
 export const VERSIONS_FETCHING  = 'VERSIONS_FETCHING';
 export const VERSIONS_FETCHED   = 'VERSIONS_FETCHED';
 export const VERSIONS_SET       = 'VERSIONS_SET';
@@ -31,7 +34,7 @@ export function setVersion(version) {
 export function fetchVersions() {
   return dispatch => {
     dispatch(fetchingVersions());
-    return fetch(`/versions.json`)
+    return fetch(`${API_HOST}/versions.json`)
       .then(response => response.json())
       .then(json => dispatch(fetchedVersions(json)));
   };
@@ -40,7 +43,8 @@ export function fetchVersions() {
 export const EXAMPLES_FETCHING  = 'EXAMPLES_FETCHING';
 export const EXAMPLES_FETCHED   = 'EXAMPLES_FETCHED';
 export const EXAMPLES_SET       = 'EXAMPLES_SET';
-export const EXAMPLES_LOAD      = 'EXAMPLES_LOAD';
+
+export const EXAMPLE_SELECTED  = 'EXAMPLE_SELECTED';
 export const EXAMPLE_HIDE      = 'EXAMPLE_HIDE';
 export const EXAMPLE_SHOW      = 'EXAMPLE_SHOW';
 
@@ -54,7 +58,7 @@ export function fetchingExamples() {
 export function fetchExamples() {
   return dispatch => {
     dispatch(fetchingExamples());
-    return fetch(`/static/examples/examples.json`)
+    return fetch(`${API_HOST}/static/examples/examples.json`)
       .then(response => response.json())
       .then(json => dispatch(fetchedExamples(json)));
   };
@@ -68,26 +72,31 @@ export function fetchedExamples(examples) {
 }
 
 export function loadExample(example, run=false) {
-  return dispatch => {
-    return fetch(`/static/examples/${example}.json`)
-      .then(response => response.json())
-      .then(json => {
-        dispatch(fetchedExample(json));
-        dispatch(setCode(json.sources));
-        if (json.pcaps.length)
-            dispatch(pcapSelected(json.pcaps[0]))
-        if(run)
-            dispatch(execSubmit());
-      });
-  };
+    return (dispatch, getState) => {
+        const state = getState();
+        if (!state.examples.fetched) {
+            dispatch(fetchExamples()).then(() => {
+                dispatch(selectExample(example, run));
+            });
+        } else {
+            dispatch(selectExample(example, run));
+        }
+    }
 }
 
-export function fetchedExample(example) {
-    return {
-        type: EXAMPLES_LOAD,
-        example
+export function selectExample(example, run=false) {
+    return (dispatch, getState) => {
+        dispatch({ type: EXAMPLE_SELECTED, path: example})
+        const state = getState();
+        example = state.examples.example;
+        dispatch(setCode(example.sources));
+        if (example.pcaps.length)
+            dispatch(pcapSelected(example.pcaps[0]))
+        if(run)
+            dispatch(execSubmit());
     };
-}
+};
+
 export function hideExample() {
     return {
         type: EXAMPLE_HIDE,
@@ -176,7 +185,7 @@ export function execSubmit(pcap_uploaded) {
             })
         };
         dispatch(execRunning());
-        return fetch('/run', opts)
+        return fetch(`${API_HOST}/run`, opts)
             .then(response => response.json())
             .then(json => {
                 dispatch(execComplete(json));
@@ -196,7 +205,7 @@ function upload_and_reexec(dispatch, file) {
 }
 
 function check_or_upload_pcap(dispatch, file, checksum){
-    fetch('/pcap/' + checksum)
+    fetch(`${API_HOST}/pcap/${checksum}`)
         .then(response => response.json())
         .then(response => {
             if (response.status) {
@@ -217,22 +226,24 @@ function upload_pcap(dispatch, file, checksum) {
             dispatch(pcapProgress(percentage));
         }
     }, false);
-    xhr.upload.addEventListener('load', function(e){
-        dispatch(pcapUploaded(checksum));
-        dispatch(execSubmit(true));
-    }, false);
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            dispatch(pcapUploaded(checksum));
+            dispatch(execSubmit(true));
+        }
+    };
 
     var fd = new FormData();
     fd.append('pcap', file);
 
-    xhr.open('POST', '/pcap/upload/' + checksum, true);
+    xhr.open('POST', `${API_HOST}/pcap/upload/${checksum}`, true);
     xhr.send(fd);
 }
 
 export function execFetchFiles(job) {
     return dispatch => {
         dispatch(execFetchingFiles())
-        return fetch(`/files/${job}.json`)
+        return fetch(`${API_HOST}/files/${job}.json`)
             .then(response => response.json())
             .then(json => dispatch(execFetchedFiles(json.files)));
     }
@@ -298,7 +309,7 @@ export function pcapUploaded(checksum) {
 
 export function loadSaved(job, autorun) {
     return dispatch => {
-        return fetch(`/saved/${job}`)
+        return fetch(`${API_HOST}/saved/${job}`)
             .then(response => response.json())
             .then(json => {
                 dispatch(setCode(json.sources));

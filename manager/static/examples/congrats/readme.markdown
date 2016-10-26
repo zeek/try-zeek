@@ -1,7 +1,5 @@
 title: Congrats
 pcaps:
-pred: intel
-succ: 
 
 Congratulations
 ==========================

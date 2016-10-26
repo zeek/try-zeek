@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { VERSIONS_FETCHING, VERSIONS_FETCHED, VERSIONS_SET } from './actions';
-import { EXAMPLES_FETCHING, EXAMPLES_FETCHED, EXAMPLES_LOAD, EXAMPLE_HIDE, EXAMPLE_SHOW } from './actions';
+import { EXAMPLES_FETCHING, EXAMPLES_FETCHED, EXAMPLE_SELECTED, EXAMPLE_HIDE, EXAMPLE_SHOW } from './actions';
 import { CODE_SET, CODE_ADD_FILE, CODE_SELECT_FILE, CODE_RENAME_FILE, CODE_EDIT_FILE } from './actions';
 import { EXEC_RUNNING, EXEC_COMPLETE, EXEC_FETCHING_FILES, EXEC_FETCHED_FILES, EXEC_RESET } from './actions';
 import { PCAP_SELECTED, PCAP_FILE_CHANGED, PCAP_UPLOAD_PROGRESS, PCAP_UPLOADED } from './actions';
@@ -14,9 +14,9 @@ const initialVersionState = {
 
 const initialExampleState = {
     fetching: false,
+    fetched: false,
     examples: [],
     example: null,
-    name: null,
     hidden: false
 }
 const initialCodeState = {
@@ -76,13 +76,18 @@ function examples(state = initialExampleState, action) {
     return Object.assign({}, state, {
       fetching: false,
       examples: action.examples,
+      fetched: true,
     });
-  case EXAMPLES_LOAD:
-    return Object.assign({}, state, {
-      fetching: false,
-      example: action.example,
-      name: action.example.name
-    });
+  case EXAMPLE_SELECTED:
+    var ex = state.examples.filter((e) => {
+        return e.path === action.path;
+    })[0];
+    if (ex === undefined) {
+        return state;
+    }
+    return { ...state,
+        example: ex,
+    }
   case EXAMPLE_HIDE:
     return Object.assign({}, state, {
       hidden: true,
