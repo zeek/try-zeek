@@ -355,6 +355,22 @@ export class App extends Component {
         this.props.dispatch(pcapFileChanged(f));
     }
 
+    renderLoadLine() {
+        const { examples } = this.props;
+        var showHide = null;
+        if ( examples.example && examples.example.html && examples.hidden)
+            showHide = <span onClick={this.showExample} style={{cursor:'pointer'}}><Glyphicon glyph="eye-open" />Show text</span>;
+        else
+            showHide = <span onClick={this.hideExample} style={{cursor:'pointer'}}><Glyphicon glyph="remove" />Hide text</span>;
+
+        return (
+            <Row> <Col sm={12}>
+                Load Example: <ExampleDropDown examples={examples.examples} selected={examples.example} onChange={this.exampleSelected}/>
+                {showHide}
+            </Col> </Row>
+        );
+    }
+
     renderCodeRow() {
         const { versions, examples, code, pcap, exec } = this.props;
         var editor = <BroEditor
@@ -387,20 +403,12 @@ export class App extends Component {
                     </Row>
                  </Row>
              </Grid>;
-        var loadLine = <span> Load Example: <ExampleDropDown examples={examples.examples} selected={examples.example} onChange={this.exampleSelected}/> </span>;
 
-        var showText = null
-        if ( examples.example && examples.example.html)
-            showText = <span onClick={this.showExample} style={{cursor:'pointer'}}><Glyphicon glyph="eye-open" />Show text</span>;
-
-        var hideText = <span onClick={this.hideExample} style={{cursor:'pointer'}}><Glyphicon glyph="remove" />Hide text</span>;
 
         if(examples.example && examples.example.html && !examples.hidden) {
             return (
                  <Row className="show-grid">
                      <Col sm={4}>
-                         {loadLine}
-                         {hideText}
                          <BroExampleReadme example={examples.example} onChange={this.exampleSelected} />
                      </Col>
                      <Col sm={8}>
@@ -412,8 +420,6 @@ export class App extends Component {
             return (
                 <Row className="show-grid">
                     <Col sm={12}>
-                        {loadLine}
-                        {showText} <br/>
                         {editorBox}
                     </Col>
                 </Row>
@@ -424,6 +430,7 @@ export class App extends Component {
         const { exec } = this.props;
         return (
             <Grid fluid={true}>
+                {this.renderLoadLine()}
                 {this.renderCodeRow()}
                 <TextMessage header='Errors' text={exec.stderr} className="alert alert-danger" />
                 <TextMessage header='Output' text={exec.stdout} />
