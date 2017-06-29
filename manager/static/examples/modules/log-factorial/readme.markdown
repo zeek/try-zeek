@@ -6,7 +6,7 @@ Writing a Module: Logging
 
 Often a new module creates new data that you may want to collect in a new log file, too.
 Manipulating Logs in Bro is a useful tool and is more than just adding more log-files or fields.
-We use the case of the factorila module to introduce you to the [logging framework](https://www.bro.org/sphinx/frameworks/logging.html)
+We use the case of the factorial module to introduce you to the [logging framework](https://www.bro.org/sphinx/frameworks/logging.html)
 
 Again we first look into factorial.bro.
 In the export section you find a new line that uses `redef` to add a new value named `LOG`
