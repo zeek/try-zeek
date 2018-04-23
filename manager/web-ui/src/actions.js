@@ -2,6 +2,7 @@ import fetch from 'isomorphic-fetch';
 
 import { tbhistory, setHistoryToExample } from './tbhistory';
 import md5 from 'md5';
+import queryString from 'query-string'
 
 const API_HOST = process.env.REACT_APP_TRY_BRO_API_HOST ? process.env.REACT_APP_TRY_BRO_API_HOST : ''; 
 
@@ -322,7 +323,6 @@ export function loadSaved(job, autorun) {
 }
 
 
-import queryString from 'query-string'
 
 export function handleLocationChange(dispatch, location, initial=false) {
     console.log('Location is now', location);

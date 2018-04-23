@@ -2,20 +2,21 @@
   "name": "try-bro",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "react-scripts": "0.6.1"
-  },
   "dependencies": {
+    "ajv-keywords": "^3.1.0",
     "bootstrap": "^3.3.7",
     "history": "^4.3.0",
     "isomorphic-fetch": "^2.2.1",
     "md5": "^2.2.1",
     "query-string": "^4.2.3",
-    "react": "^15.3.2",
-    "react-ace": "^3.6.0",
-    "react-bootstrap": "^0.30.5",
-    "react-dom": "^15.3.2",
+    "react": "^16.3.1",
+    "react-ace": "^6.1.0",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.3.1",
+    "react-overlays": "^0.8.3",
     "react-redux": "^4.4.5",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.4",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.0",
     "redux-thunk": "^2.1.0"
