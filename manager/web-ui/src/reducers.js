@@ -20,7 +20,7 @@ const initialExampleState = {
     hidden: false
 }
 const initialCodeState = {
-    sources: [{name:'main.bro', src:''}],
+    sources: [{name:'main.bro', content:''}],
     current: 'main.bro',
     newCounter: 1
 }
