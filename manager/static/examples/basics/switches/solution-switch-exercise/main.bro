@@ -1,7 +1,7 @@
 event bro_init() 
     { 
     local result = 0;
-    local input = "The Bro Network Security Monitor";
+    local input = "The Zeek Network Security Monitor";
     for ( c in input )
         {
         switch ( c ) 

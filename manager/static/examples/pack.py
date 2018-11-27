@@ -21,7 +21,7 @@ def main_first_sort_key(f):
         return (1, f['name'])
 
 def redirect_example_links(source):
-    return source.replace("http://try.bro.org/example/", "#/trybro?example=")
+    return source.replace("http://try.zeek.org/example/", "#/trybro?example=")
 
 def clean_path(path):
     if path.startswith("./"):

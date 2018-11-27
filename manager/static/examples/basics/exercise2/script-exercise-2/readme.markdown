@@ -5,8 +5,8 @@ order:
 Exercise
 ==========================
 
-By now we have all basic concepts of the Bro scripting language.
-To finish the first part of your journey into the Bro language solve the following exercise.
+By now we have all basic concepts of the Zeek scripting language.
+To finish the first part of your journey into the Zeek language solve the following exercise.
 
 Consider the following list of subnets as your given local subnets:
 

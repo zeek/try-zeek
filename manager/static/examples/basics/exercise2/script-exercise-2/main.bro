@@ -1,6 +1,6 @@
 event bro_init()
 	{
-	print "use all the Bro types";
+	print "use all the Zeek types";
 	}
 
 event bro_done()

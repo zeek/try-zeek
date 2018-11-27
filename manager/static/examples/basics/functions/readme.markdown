@@ -16,10 +16,10 @@ within the bro\_init event.
 What do we see here?
 
 Input parameters are specified within parentheses in a comma separated list. The return value follows after the colon.
-All parameters in this function are of type 'string'. We will see more about types in Bro in the next 
-[lesson](http://try.bro.org/example/primitive_datatypes).
+All parameters in this function are of type 'string'. We will see more about types in Zeek in the next 
+[lesson](http://try.zeek.org/example/primitive_datatypes).
 
-The second argument in this example is optional. This is because of the [attribute](https://www.bro.org/sphinx/script-reference/attributes.html) 
+The second argument in this example is optional. This is because of the [attribute](https://www.zeek.org/sphinx/script-reference/attributes.html) 
 &default. In the example here the default value would be '\*' in case the second parameter is missing.
 
 Another element seen here is the '+'-operator that concatenates the strings in this case.

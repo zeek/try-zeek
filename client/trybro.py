@@ -7,7 +7,7 @@ import sys
 import time
 import hashlib
 
-DEFAULT_HOST="http://try.bro.org/"
+DEFAULT_HOST="http://try.zeek.org/"
 HOST = os.getenv("TRYBRO_HOST", DEFAULT_HOST)
 
 DEFAULT_VERSION="2.4.1"
@@ -69,7 +69,7 @@ def run(files, version=DEFAULT_VERSION, pcap=None, link=False):
         pcap = maybe_upload_pcap(pcap)
     res = run_code(files, version, pcap=pcap)
     if link:
-        sys.stdout.write("http://try.bro.org/#/trybro/saved/%s\n\n" % res['job'])
+        sys.stdout.write("http://try.zeek.org/#/trybro/saved/%s\n\n" % res['job'])
     sys.stdout.write(res['stdout'])
     get_files(res["job"])
 

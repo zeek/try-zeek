@@ -16,5 +16,5 @@ Next Exercise
 Sumstats becomes especially useful if used with thresholds. Write a sumstats script 
 that counts the DNS lookups and writes a notice if a host does more than 10 DNS lookups.
 Have a look at the available SumStat 
-[functions](https://www.bro.org/sphinx/scripts/base/frameworks/sumstats/main.bro.html?highlight=sumstats#type-SumStats::SumStat)
+[functions](https://www.zeek.org/sphinx/scripts/base/frameworks/sumstats/main.bro.html?highlight=sumstats#type-SumStats::SumStat)
 to find out how to work with thresholds.

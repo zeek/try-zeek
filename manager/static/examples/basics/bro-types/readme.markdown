@@ -1,14 +1,14 @@
-title: Bro Datatypes
+title: Zeek Datatypes
 pcaps: 
 
-Bro Datatypes
+Zeek Datatypes
 ===================
 
-As a network monitoring system Bro has its focus on networks and includes some data types 
+As a network monitoring system Zeek has its focus on networks and includes some data types 
 specifically helpful when working with networks.
 
 * `time` - an absolute point in time. The built-in function
-  `network_time` returns Bro's notion of *now* (which is derived from
+  `network_time` returns Zeek's notion of *now* (which is derived from
   the packets it analyzes). The only way to create an
   arbitrary time value is via the `double_to_time(d)`, with `d`
   being a variable of type `double` representing seconds since the

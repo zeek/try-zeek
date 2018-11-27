@@ -1,5 +1,5 @@
 event bro_init()
 	{
-	print "Time to figure out why Bro is special";
+	print "Time to figure out why Zeek is special";
 	}
 

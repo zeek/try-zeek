@@ -6,7 +6,7 @@ $.fn.trybro = function() {
         var code = $(this).parent().find(".bro_source").text()
         var res = $(this).parent().find(".bro_result");
         res.text("running...");
-        $.post("http://try.bro.org/run_simple", {code: code}, function(data) {
+        $.post("http://try.zeek.org/run_simple", {code: code}, function(data) {
             var out = data.files['stdout.log'];
             var err = data.files['stderr.log'];
             if(err) {

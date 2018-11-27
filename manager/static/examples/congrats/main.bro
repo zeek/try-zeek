@@ -1,6 +1,6 @@
 event bro_init()
 	{
-	print "Congratulations on your first lesson in Bro Script!";
+	print "Congratulations on your first lesson in Zeek Scripting!";
 	}
 
 event bro_done()

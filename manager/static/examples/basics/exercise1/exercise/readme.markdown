@@ -7,7 +7,7 @@ Exercise
 Now that we have types, operators, functions, loops and logic control we can 
 go into a first exercise.
 
-As you have seen, Bro supports pattern matching. 
+As you have seen, Zeek supports pattern matching. 
 Pattern matching can be a powerful tool especially in the area of network debugging and security.
 Finding specific things in logs is an efficient way to make a change in many situations.
 

@@ -5,8 +5,8 @@ Event
 ===================
 
 We introduced events briefly in the first example to be able to do anything 
-with the Bro language. Events are actually a special flavor of functions 
-but are essential to how Bro works.
+with the Zeek language. Events are actually a special flavor of functions 
+but are essential to how Zeek works.
 They differ from functions in the following ways:
 
 * They may be scheduled and executed at a later time, so that their
@@ -18,9 +18,9 @@ They differ from functions in the following ways:
   event, all handler bodies for that event are executed in order of
   `&priority`.
 
-In the Bro documentation is a detailed chapter about Bro's event engine, how Bro and the scripts
-interact, and what role the `event` plays in a Bro script. Please [read](https://www.bro.org/sphinx-git/scripting/index.html#the-event-queue-and-event-handlers).
-A reference for predefined events not related to protocol or file analysis is [here](https://www.bro.org/sphinx/scripts/base/bif/event.bif.bro.html).
+In the Zeek documentation is a detailed chapter about Zeek's event engine, how Zeek and the scripts
+interact, and what role the `event` plays in a Zeek script. Please [read](https://www.zeek.org/sphinx-git/scripting/index.html#the-event-queue-and-event-handlers).
+A reference for predefined events not related to protocol or file analysis is [here](https://www.zeek.org/sphinx/scripts/base/bif/event.bif.bro.html).
 
 This example shows how to define and trigger a custom event.
 
@@ -32,9 +32,9 @@ When this handler is called it will increment `n` from `0` to `1`.
 * The next handler for the same event sets the priority to 10. This handler will print the string "myevent"
 and the current values of the variables `s` and `n`.
 * Next we see the already familiar `bro_init` event that is executed
-once when Bro starts. It schedules the event twice.
+once when Zeek starts. It schedules the event twice.
 The first execution is a 'a soon as possible"
-schedule, the `schedule 5 sec {}` executes either in 5 seconds or upon Bro shutting down, whichever 
+schedule, the `schedule 5 sec {}` executes either in 5 seconds or upon Zeek shutting down, whichever 
 happens first.
 
 Run the code and follow the order in which the events are executed. 

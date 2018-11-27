@@ -9,13 +9,13 @@ and writes the result to a log file.
 
 As said before a module is a semantic entity. This means also that all variables and
 functions that you want to use outside of that entity need to be made available.
-In Bro this is done through an `export` block.
+In Zeek this is done through an `export` block.
 
-In the example here you see two bro files. One is the module-script factorial.bro, 
+In the example here you see two Zeek files. One is the module-script factorial.bro, 
 one is main.bro, the script that uses the module the resulting values. You can simply click on the 
-tabs with the file names to switch between the bro-files.
+tabs with the file names to switch between the Zeek-files.
 
-Lets have a closer look on the code. 
+Let's have a closer look on the code. 
 The first line declares that this is a module named Factor.
 We will come back to this later. 
 The next thing is the export environment. Every record, variable, and function

@@ -12,6 +12,6 @@ In order to do this we need to evaluate the threshold first, once it is crossed 
 Within this platform we can only write it to the notice.log but in reality it can of course be sent as
 an email to warn the security admin about suspicious behavior.
 
-A more advanced sumstats example is the script [scan.bro](https://www.bro.org/sphinx/_downloads/scan.bro).
+A more advanced sumstats example is the script [scan.bro](https://www.zeek.org/sphinx/_downloads/scan.bro).
 This script uses more than one reducer and looks for scanning of ports and IP addresses at the same time.
 
