@@ -98,6 +98,7 @@ class BroEditor extends Component {
                         this.handleCodeChanged(c.name, contents)
                     }}
                     editorProps={{$blockScrolling: true}}
+                    setOptions={{useSoftTabs: false}}
                 />
               </Tab>
               )}
