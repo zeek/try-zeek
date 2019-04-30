@@ -12,7 +12,7 @@ RUN make -C web-ui
 FROM      ubuntu:xenial
 MAINTAINER Justin Azoff <justin.azoff@gmail.com>
 
-RUN rm /var/lib/apt/lists/*list -vf && apt-get update && apt-get dist-upgrade -yq #2018-11-29
+RUN rm /var/lib/apt/lists/*list -vf && apt-get update && apt-get dist-upgrade -yq #2019-04-30
 RUN apt-get update && apt-get install -yq python-pip python-dev
 RUN apt-get update && apt-get install -yq redis-server nginx supervisor gearman-job-server rsync
 
