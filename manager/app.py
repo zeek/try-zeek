@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, make_response
-from flask.ext.jsonpify import jsonify
+from flask_jsonpify import jsonify
 import hashlib
 
 import backend
