@@ -4,10 +4,10 @@ import './App.css';
 import {connect} from 'react-redux';
 
 import brace from 'brace';
-import 'brace/mode/perl';
-import 'brace/theme/github';
+import 'brace/theme/tomorrow';
 
 import AceEditor from 'react-ace';
+import ZeekMode from './ZeekMode.js'
 
 import { fetchVersions, setVersion } from './actions';
 import { fetchExamples, hideExample, showExample } from './actions';
@@ -89,8 +89,8 @@ class BroEditor extends Component {
                 <AceEditor
                     width="100%"
                     showPrintMargin={false}
-                    mode="perl"
-                    theme="github"
+                    mode="zeek"
+                    theme="tomorrow"
                     name={c.name}
                     value={c.content}
                     annotations={this.props.errors[c.name]}

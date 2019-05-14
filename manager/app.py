@@ -19,6 +19,10 @@ app = FlaskStaticCors(__name__)
 def favicon():
     return app.send_static_file("favicon.ico")
 
+@app.route('/mode-zeek.js')
+def zeek_mode():
+    return app.send_static_file("mode-zeek.js")
+
 @app.route("/")
 def index():
     return app.send_static_file("index.html")
