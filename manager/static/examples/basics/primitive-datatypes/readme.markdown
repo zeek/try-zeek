@@ -14,7 +14,7 @@ certain situations.
 
 The full reference on types in Zeek can be found [here](https://www.zeek.org/sphinx/script-reference/types.html).
 For now, look through the simple types. Most of the types should be familiar from other programming languages,
-e.g., `bool`, `double`, `int`, `count`, `string`, `pattern` (a regular expression using [flex's syntax](http://flex.sourceforge.net/manual/Patterns.html)).
+e.g., `bool`, `double`, `int`, `count`, `string`, `pattern` (a regular expression using [flex's syntax](http://westes.github.io/flex/manual/Patterns.html)).
 But Zeek as a network monitoring system introduces also a set of domain-specific types that are explained 
 in the [reference](https://www.zeek.org/sphinx/script-reference/types.html).
 Examples are `time`, `interval`, `port`, `addr`, and `subnet`.
