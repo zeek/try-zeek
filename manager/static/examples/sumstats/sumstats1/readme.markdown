@@ -26,14 +26,14 @@ The "if" line is there to ensure real DNS requests (via port 53) that are also n
 This specific case would quickly kill the memory of your Zeek system, because it collects
 every unique DNS request for every host it can see, so one option would be to limit this to port
 53, non-empty requests and only local hosts. 
-If it is a real request we want to observe something, that is where the sumstats observer is used. 
+If it is a real request where we want to observe something, that is where the sumstats observer is used. 
 The string dns.lookup is an arbitrary name, it could be something else. The principle is that a stream
 of information is observed (counted), the stream gets a name to later be addressed by.
 The next part is the key, in this case the host which sends the request. To know the actual unique request
 also the query string needs to be part of the key.
 
 Now there is a stream that is observed, the next step is to reduce (i.e. summarize) the stream and then do 
-something with it. The reducer  gets a variable name, r1 in this case, is attached to the stream named
+something with it. The reducer gets a variable name, r1 in this case, is attached to the stream named
 dns.lookup and also needs at least one reducing function that is applied on the stream.
 In this example the method used is "UNIQUE".
 More than one calculation method can be applied, they are all listed in the 
