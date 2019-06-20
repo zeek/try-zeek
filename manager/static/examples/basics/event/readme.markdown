@@ -18,7 +18,7 @@ They differ from functions in the following ways:
   event, all handler bodies for that event are executed in order of
   `&priority`.
 
-In the Zeek documentation is a detailed chapter about Zeek's event engine, how Zeek and the scripts
+In the Zeek documentation, there is a detailed chapter about Zeek's event engine, how Zeek and the scripts
 interact, and what role the `event` plays in a Zeek script. Please [read](https://www.zeek.org/sphinx-git/scripting/index.html#the-event-queue-and-event-handlers).
 A reference for predefined events not related to protocol or file analysis is [here](https://www.zeek.org/sphinx/scripts/base/bif/event.bif.bro.html).
 
