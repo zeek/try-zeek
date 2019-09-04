@@ -21,6 +21,9 @@ RUN sed -i "s/daemonize yes/daemonize no/" /etc/redis/redis.conf
 RUN mkdir -p /var/log/supervisor
 RUN mkdir /brostuff
 
+# Add the certs for Nginx to use
+RUN mkdir -p /root/certs
+
 ADD requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
@@ -46,5 +49,6 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log
 RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
 VOLUME /var/lib/redis
-EXPOSE  80
+EXPOSE 80/tcp
+EXPOSE 443/tcp
 CMD ["/usr/bin/supervisord"]
