@@ -1,4 +1,4 @@
-event bro_init()
+event zeek_init()
     {
     local x: set[string] = { "one", "two", "three" };
     add x["four"];

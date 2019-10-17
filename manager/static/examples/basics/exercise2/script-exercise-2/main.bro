@@ -1,9 +1,9 @@
-event bro_init()
+event zeek_init()
 	{
 	print "use all the Zeek types";
 	}
 
-event bro_done()
+event zeek_done()
 	{
 	print "and tell me what you learned";
 	}

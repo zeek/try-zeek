@@ -5,7 +5,7 @@ type MyRecord: record {
 	d: int &optional;
 };
 
-event bro_init() 
+event zeek_init() 
 	{ 
 	local x = MyRecord($a = "vvvvvv", $b = 6, $c = F, $d = -13);
 	if ( x?$d )

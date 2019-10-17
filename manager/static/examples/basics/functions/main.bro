@@ -5,7 +5,7 @@ function emphasize(s: string, p: string &default = "*"): string
 	}
 
 
-event bro_init() 
+event zeek_init() 
 	{ 
 	# Function calls.
 	print emphasize("yes");

@@ -17,7 +17,7 @@ hook myhook(s: string) &priority = -5
 	print "not going to happen", s;
 	}
 
-event bro_init() 
+event zeek_init() 
 	{
 	local ret: bool = hook myhook("hi");
 	if ( ret )

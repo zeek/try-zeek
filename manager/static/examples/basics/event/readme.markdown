@@ -31,7 +31,7 @@ If omitted, &priority is implicitly 0. In the example the priority is `-10` and 
 When this handler is called it will increment `n` from `0` to `1`.
 * The next handler for the same event sets the priority to 10. This handler will print the string "myevent"
 and the current values of the variables `s` and `n`.
-* Next we see the already familiar `bro_init` event that is executed
+* Next we see the already familiar `zeek_init` event that is executed
 once when Zeek starts. It schedules the event twice.
 The first execution is a 'a soon as possible"
 schedule, the `schedule 5 sec {}` executes either in 5 seconds or upon Zeek shutting down, whichever 

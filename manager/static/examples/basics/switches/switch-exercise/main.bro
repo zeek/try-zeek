@@ -1,4 +1,4 @@
-event bro_init() 
+event zeek_init() 
 	{ 
 	print "write a switch to count vowels!";
 	}

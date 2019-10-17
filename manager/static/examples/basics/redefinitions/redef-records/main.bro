@@ -9,7 +9,7 @@ redef record MyRecord += {
 	#e: bool; # Not allowed, must be &optional or &default.
 };
 
-event bro_init() 
+event zeek_init() 
 	{
 	print MyRecord();
 	print MyRecord($c=T);

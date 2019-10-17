@@ -33,7 +33,7 @@ event connection_state_remove(c: connection)
     	}
     }
 
-event bro_done() 
+event zeek_done() 
     {
     print fmt("Saw %d new connections", my_count);
     print "These IPs are considered local";

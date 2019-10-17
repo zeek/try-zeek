@@ -16,9 +16,9 @@ down a bit to get to the output.
 In this simple example you can see already a specialty of Zeek, the "event". Zeek is event-driven.
 This means you can control any execution by making it dependent on an event trigger. 
 Our example here would not work without an event to be triggered so we use the two events that are always raised,
-	bro_init()
+	zeek_init()
 and 
-	bro_done()
+	zeek_done()
  
 The first is executed when Zeek is started, the second when Zeek terminates, so we can use these for example
 when no traffic is actually analyzed as we do for our basic examples

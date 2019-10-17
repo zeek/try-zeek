@@ -1,4 +1,4 @@
-event bro_init() 
+event zeek_init() 
 	{ 
 	local x: table[count] of string = { [1] = "one", 
 	                                    [3] = "three",

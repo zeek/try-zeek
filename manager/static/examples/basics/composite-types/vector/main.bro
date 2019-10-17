@@ -1,4 +1,4 @@
-event bro_init() 
+event zeek_init() 
 	{ 
 	local x: vector of string = { "one", "two", "three" };
 	print x; # [one, two, three]

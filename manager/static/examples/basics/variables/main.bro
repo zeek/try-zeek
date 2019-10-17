@@ -1,6 +1,6 @@
 global x = "Hello";
 
-event bro_init()
+event zeek_init()
 	{
 	print x;
 	
@@ -12,7 +12,7 @@ event bro_init()
 	print z;
 	}
 
-event bro_done()
+event zeek_done()
 	{
 	x = "Bye";
 	print x;

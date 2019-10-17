@@ -1,4 +1,4 @@
-event bro_init() 
+event zeek_init() 
     { 
     local result = "";
 
@@ -34,7 +34,7 @@ function fizzbuzz(i: count)
         fizzbuzz(i + 1);
     }
 
-event bro_done() 
+event zeek_done() 
     {
     fizzbuzz(1);
     }

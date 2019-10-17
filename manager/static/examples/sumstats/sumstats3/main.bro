@@ -7,7 +7,7 @@ redef enum Notice::Type +=
 
 const excessive_limit: double = 10  &redef;
 
-event bro_init()
+event zeek_init()
     {
     local r1 = SumStats::Reducer($stream="dns.lookup", $apply=set(SumStats::SUM));
     SumStats::create([$name="dns.requests",

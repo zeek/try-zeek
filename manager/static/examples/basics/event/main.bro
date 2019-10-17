@@ -12,15 +12,15 @@ event myevent(s: string) &priority = 10
 	print "myevent", s, n;
 	}
 
-event bro_init()
+event zeek_init()
 	{
-	print "bro_init()";
+	print "zeek_init()";
 	event myevent("hi");
 	schedule 5 sec { myevent("bye") };
 	}
 
-event bro_done()
+event zeek_done()
 	{
-	print "bro_done()";
+	print "zeek_done()";
 	}
 

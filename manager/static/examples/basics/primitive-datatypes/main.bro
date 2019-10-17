@@ -1,4 +1,4 @@
-event bro_init() 
+event zeek_init() 
 	{
 	local x : string = "two";
 	local y : int = 10000000000000000000000000000000000000000000000000;

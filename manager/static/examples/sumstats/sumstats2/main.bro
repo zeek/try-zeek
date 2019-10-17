@@ -1,5 +1,5 @@
 @load base/frameworks/sumstats
-event bro_init()
+event zeek_init()
     {
     local r1 = SumStats::Reducer($stream="dns.lookup", $apply=set(SumStats::HLL_UNIQUE, SumStats::SAMPLE), $num_samples=5);
     SumStats::create([$name="dns.requests.unique",

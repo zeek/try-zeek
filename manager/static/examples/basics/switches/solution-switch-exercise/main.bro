@@ -1,4 +1,4 @@
-event bro_init() 
+event zeek_init() 
     { 
     local result = 0;
     local input = "The Zeek Network Security Monitor";

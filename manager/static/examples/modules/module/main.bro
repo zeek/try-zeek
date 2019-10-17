@@ -1,9 +1,9 @@
-event bro_init()
+event zeek_init()
 	{
 	print "Welcome back!";
 	}
 
-event bro_done()
+event zeek_done()
 	{
 	print "Ready to write a module?";
 	}

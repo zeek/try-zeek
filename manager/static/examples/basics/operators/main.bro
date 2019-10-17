@@ -1,4 +1,4 @@
-event bro_init() 
+event zeek_init() 
 	{ 
 	print "Try to figure out what happens if ";
 	print "you use numbers as strings and compare them with 'ints'";
@@ -6,7 +6,7 @@ event bro_init()
 	print "need to look them up all them time in later exercises.";
 	}
 
-event bro_done() 
+event zeek_done() 
 	{ 
 	print "Well done!"; 
 	}

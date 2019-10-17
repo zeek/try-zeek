@@ -1,4 +1,4 @@
-event bro_init()
+event zeek_init()
 	{
 	print "Time to figure out why Zeek is special";
 	}

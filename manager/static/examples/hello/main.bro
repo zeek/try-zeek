@@ -1,9 +1,9 @@
-event bro_init()
+event zeek_init()
 	{
 	print "Hello, World!";
 	}
 
-event bro_done()
+event zeek_done()
 	{
 	print "Goodbye, World!";
 	}

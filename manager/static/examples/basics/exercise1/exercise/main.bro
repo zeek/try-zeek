@@ -1,9 +1,9 @@
-event bro_init() 
+event zeek_init() 
 	{ 
 	print "find meeeeeee!";
 	}
 
-event bro_done() 
+event zeek_done() 
 	{
 	print "fizz buzz";
 	}
