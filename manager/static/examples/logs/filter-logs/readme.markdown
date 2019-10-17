@@ -17,7 +17,7 @@ modulo function. Find more details on dynamically determining log paths
 
 Now run the code example. You see that there are now two log-files, one called `num` and `factorial_num`.
 Lets look at the code. In the module *factorial.bro* we add a new function, the `path_func` we
-are going to use. Again the function is also added to the export section. The function returns wether a number is in
+are going to use. Again, the function is also added to the export section. The function returns whether a number is in
 our modulo-5 category or not and then returns a string accordingly. The strings returned are the names of the two new log files. 
 In *main.bro* you will find that we added more lines to `zeek_init`. We create a
 filter called *split-mod5s*, add that new filter and remove the `default` filter.

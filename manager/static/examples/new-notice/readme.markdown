@@ -14,11 +14,11 @@ It can't send an email. Please run the code example and have a look at the new l
 Apart from the message itself it tells you the name of the notice. This is especially useful for aggregated summaries.
 
 Lets have a look on the code. Start with factorial.bro. We append a new notice type value in the export section.
-For this example we asy that *120* is an interesting value we want to be notified about. So we make it a constant that
+For this example we say that *120* is an interesting value we want to be notified about. So we make it a constant that
 can be changed to something else later.
 Now the Factor moudle can be asked to rais a notice.
 
-In main.bro every time the factorial is computed we ask if it is an interesting result.
+In main.bro, every time the factorial is computed we ask if it is an interesting result.
 If so, the notice is raised. The fields `msg` and `sub` are given. You can put any text there that will later help you
 to find out what you need. The Notice Framework can be a little confusing. It is easier to handle if you
 remind yourself that it is simply a function.

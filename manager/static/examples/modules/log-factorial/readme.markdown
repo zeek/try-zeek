@@ -8,9 +8,9 @@ Often a new module creates new data that you may want to collect in a new log fi
 Manipulating Logs in Zeek is a useful tool and is more than just adding more log-files or fields.
 We use the case of the factorial module to introduce you to the [logging framework](https://www.zeek.org/sphinx/frameworks/logging.html)
 
-Again we first look into factorial.bro.
+Again, we first look into factorial.bro.
 In the export section you find a new line that uses `redef` to add a new value named `LOG`
-to the `Log::ID` enumerable. This enumerable is part of Zeek's logging frame work. You can find details
+to the `Log::ID` enumerable. This enumerable is part of Zeek's logging framework. You can find details
 [here](https://www.zeek.org/sphinx-git/scripts/base/frameworks/logging/main.bro.html).
 
 The next step is to create a record that contains the columns of the future log file. The record
