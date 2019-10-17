@@ -191,7 +191,7 @@ export function execSubmit(pcap_uploaded) {
             .then(json => {
                 dispatch(execComplete(json));
                 dispatch(execFetchFiles(json.job));
-                tbhistory.push({ pathname: '/trybro/saved/' + json.job});
+                tbhistory.push({ pathname: '/tryzeek/saved/' + json.job});
             });
     };
 }
@@ -326,7 +326,7 @@ export function loadSaved(job, autorun) {
 
 export function handleLocationChange(dispatch, location, initial=false) {
     console.log('Location is now', location);
-    var match = /\/trybro\/saved\/(\d+)/.exec(location.pathname);
+    var match = /\/(?:trybro|tryzeek)\/saved\/(\d+)/.exec(location.pathname);
     if (match) {
         var job = match[1];
         return dispatch(loadSaved(job, initial));
