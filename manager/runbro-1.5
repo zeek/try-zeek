@@ -17,6 +17,13 @@ const use_dpd = T;
 @load brolite
 redef log_rotate_interval = 0secs;
 redef local_nets += { 0.0.0.0/0 };
+
+@ifndef(zeek_init)
+global zeek_init: event();
+global zeek_done: event();
+event bro_init() { event zeek_init() ; }
+event bro_done() { event zeek_done() ; }
+@endif
 EOF
 
 chown nobody . *
