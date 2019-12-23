@@ -7,7 +7,7 @@ import sys
 import time
 import hashlib
 
-DEFAULT_HOST="http://try.zeek.org/"
+DEFAULT_HOST="https://try.zeek.org/"
 HOST = os.getenv("TRYBRO_HOST", DEFAULT_HOST)
 
 DEFAULT_VERSION="2.5.5"
