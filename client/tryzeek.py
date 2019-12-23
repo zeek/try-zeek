@@ -10,7 +10,7 @@ import hashlib
 DEFAULT_HOST="https://try.zeek.org/"
 HOST = os.getenv("TRYBRO_HOST", DEFAULT_HOST)
 
-DEFAULT_VERSION="2.5.5"
+DEFAULT_VERSION="3.0.0"
 
 def md5(s):
     m = hashlib.md5()
