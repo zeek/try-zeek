@@ -1,0 +1,20 @@
+[Unit]
+Description=TryZeek
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+#ExecStartPre=-/usr/bin/docker kill trybro
+#ExecStartPre=-/usr/bin/docker rm trybro
+#ExecStartPre=/usr/bin/docker pull broplatform/trybro
+ExecStartPre=/usr/bin/docker pull broplatform/bro:3.0.0
+WorkingDirectory=/root/try-zeek
+RemainAfterExit=yes
+Type=oneshot
+Environment=TRYZEEK_DATA=/srv/tryzeek_data
+ExecStart=docker-compose up -d --scale worker=4
+ExecStop=docker-compose down
+
+[Install]
+WantedBy=multi-user.target
