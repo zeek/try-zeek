@@ -1,8 +1,0 @@
-:443 {
-    log stdout
-    gzip
-    proxy / api:8000
-    tls {
-        max_certs 10
-    }
-}

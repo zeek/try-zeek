@@ -4,6 +4,8 @@ services:
     image: redis
     networks:
       - backend
+    volumes:
+      - ${TRYZEEK_DATA:-./tryzeek_data}:/data
   gearman:
     build: containers/gearman
     networks:
@@ -39,9 +41,14 @@ services:
       - frontend
 
   proxy:
-    build: containers/${CADDY:-caddy-tls}
+    image: abiosoft/caddy
+    environment:
+      - ACME_AGREE=true
+      - ENABLE_TELEMETRY=false
+      - CADDYPATH=/etc/caddycerts
     volumes:
       - $HOME/.caddy:/etc/caddycerts
+      - ./containers/caddy/Caddyfile.${CADDY-tls}:/etc/Caddyfile
     networks:
       - frontend
     ports:

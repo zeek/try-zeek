@@ -1,0 +1,5 @@
+:80, :443
+log stdout
+gzip
+proxy / api:8000
+header / -Server
