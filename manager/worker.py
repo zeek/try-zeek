@@ -27,6 +27,24 @@ def get_bro_versions():
     versions = [t.replace("broplatform/bro:", "") for t in tags if '_' not in t]
     return sorted(versions)
 
+def get_pcap(checksum):
+    pcap_key = "pcaps:%s" % checksum
+    r.expire(pcap_key, 60*60)
+    return r.get(pcap_key)
+
+def get_pcap_with_retry(checksum):
+    """There is an annoying race condition where POST /pcap/upload is returning as soon as the pcap is sent, but before
+    the request is complete and redis has actually saved it. then run_code
+    doesn't find it. so for now, retry here and see if it shows up"""
+
+    for x in range(10):
+        contents = get_pcap(checksum)
+        if contents:
+            return contents
+        time.sleep(0.1)
+    return None
+
+
 def remove_container(container):
     time.sleep(1)
     with r.lock("docker", 5) as lck:
