@@ -6,6 +6,7 @@ run:
 	CADDY=notls docker-compose build proxy
 	CADDY=notls docker-compose up -d
 	docker-compose logs -f
-run-prod: all
-	TRYZEEK_DATA=/srv/trybro_data docker-compose up -d
+
+run-prod: build
+	TRYZEEK_DATA=/srv/trybro_data docker-compose up -d --scale worker=4
 	docker-compose logs -f
