@@ -1,0 +1,53 @@
+version: '3'
+services:
+  redis:
+    image: redis
+    networks:
+      - backend
+  gearman:
+    build: containers/gearman
+    networks:
+      - backend
+
+  worker:
+    build: manager
+    command: ./worker.py
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /brostuff:/brostuff
+    deploy:
+      replicas: 5
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - redis
+      - gearman
+    networks:
+      - backend
+
+  api:
+    build: manager
+    command: gunicorn -w 4 -b 0.0.0.0 app:app --log-file - --max-requests 500 --timeout 10
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - redis
+      - gearman
+    networks:
+      - backend
+      - frontend
+
+  proxy:
+    build: containers/${CADDY:-caddy-tls}
+    volumes:
+      - $HOME/.caddy:/etc/caddycerts
+    networks:
+      - frontend
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+
+networks:
+  backend:
+  frontend:

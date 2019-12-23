@@ -23,8 +23,8 @@ local_data.gm_client = None
 def get_client():
     if local_data.gm_client is not None:
         return local_data.gm_client
-    local_data.gm_client = client = JsonClient(['localhost:4730'])
+    local_data.gm_client = client = JsonClient(['gearman:4730'])
     return client
 
 def get_worker():
-    return JsonWorker(['localhost:4730'])
+    return JsonWorker(['gearman:4730'])

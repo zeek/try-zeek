@@ -1,6 +1,6 @@
 import datetime
 from redis import Redis
-r = Redis()
+r = Redis(host="redis")
 
 def log_execution(version):
     date = datetime.datetime.today().strftime("%Y-%m-%d")
