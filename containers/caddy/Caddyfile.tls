@@ -1,7 +1,9 @@
 :443
 log stdout
 gzip
-proxy / api:8000
+proxy / api:8000 {
+    transparent
+}
 tls {
     max_certs 10
 }
