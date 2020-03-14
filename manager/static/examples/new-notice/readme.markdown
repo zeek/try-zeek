@@ -7,7 +7,7 @@ Raising a Notice
 One of the easiest ways to customize Zeek is writing a local notice policy.
 Apart from looking into log files you can ask Zeek to send you emails, either for a 
 certain situation or aggregated summary emails about warnings etc.
-This feature is given through the [Notice Framework](https://www.zeek.org/sphinx/frameworks/notice.html).
+This feature is given through the [Notice Framework](https://docs.zeek.org/en/current/frameworks/notice.html).
 
 In this lesson we start by creating a new notice. In Try.Zeek the notice can only be made into a log file.
 It can't send an email. Please run the code example and have a look at the new log-file.

@@ -12,7 +12,7 @@ a scanner activity. To many users this framework appears difficult to use. This 
 is meant to change that.
 
 Alongside this tutorial you can read the 
-[documentation](https://www.zeek.org/sphinx/frameworks/sumstats.html) 
+[documentation](https://docs.zeek.org/en/current/frameworks/sumstats.html) 
 explaining the terminology used for the Sumstats framework. This tutorial follows (in parts)
 the live tutorial Seth Hall gave at BroCon 2014, which is available as Youtube 
 [video](https://youtu.be/9YsenekNaSI)
@@ -37,9 +37,9 @@ something with it. The reducer gets a variable name, r1 in this case, is attache
 dns.lookup and also needs at least one reducing function that is applied on the stream.
 In this example the method used is "UNIQUE".
 More than one calculation method can be applied, they are all listed in the 
-[sumstats reference](https://www.zeek.org/sphinx/scripts/base/frameworks/sumstats/main.bro.html#type-SumStats::Calculation).
+[sumstats reference](https://docs.zeek.org/en/current/scripts/base/frameworks/sumstats/main.bro.html#type-SumStats::Calculation).
 There can also be more than one reducer, an example for this is explained in the documentation for
-[MIME type statistics](https://www.zeek.org/sphinx/mimestats/index.html).
+[MIME type statistics](https://docs.zeek.org/en/current/mimestats/index.html).
 
 The third step is to link the reducer to a SumStats to finally do something with it.
 The SumStats also gets a name to reference later. An epoch is assigned, in this case 6 hours. 
@@ -54,4 +54,4 @@ Comment out the two lines within the epoch\_result and directly print result. Yo
 all fields available to print out.
 
 Exercise: Use the heuristic version of the unique calculation, HLL\_UNIQUE, you find it 
-in the [documentation](https://www.zeek.org/sphinx/scripts/base/frameworks/sumstats/main.bro.html#type-SumStats::Calculation). Then take a sample of size 5. For the solution go to the next page.
+in the [documentation](https://docs.zeek.org/en/current/scripts/base/frameworks/sumstats/main.bro.html#type-SumStats::Calculation). Then take a sample of size 5. For the solution go to the next page.
