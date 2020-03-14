@@ -9,7 +9,7 @@ The Intel Framework provides an interface to feed your own intelligence data int
 "Intelligence data is critical to the process of monitoring for security purposes. There is always data which will be discovered through the incident response process and data which is shared through private communities. The goals of Zeek's Intelligence Framework are to consume that data, make it available for matching, and provide infrastructure around improving performance, memory utilization, and generally making all of this easier." 
 
 Find the whole documentation on the Intelligence Framework on 
-our [website](https://www.zeek.org/sphinx/frameworks/intel.html). 
+our [website](https://docs.zeek.org/en/current/frameworks/intel.html). 
 You will also find details on input formats etc.
 
 Run the example given. Have a look at the extra file "intel-1.dat".

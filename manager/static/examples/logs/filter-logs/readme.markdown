@@ -13,7 +13,7 @@ For this we go back to the factorial module. The goal now is to split the loggin
 one log-file that are divisible evenly by 5, the others to a second log-file. 
 Which record is sent to which log-file is decided dynamically based on the 
 modulo function. Find more details on dynamically determining log paths 
-[here](https://www.zeek.org/sphinx/frameworks/logging.html#determine-log-path-dynamically).
+[here](https://docs.zeek.org/en/current/frameworks/logging.html#determine-log-path-dynamically).
 
 Now run the code example. You see that there are now two log-files, one called `num` and `factorial_num`.
 Lets look at the code. In the module *factorial.bro* we add a new function, the `path_func` we

@@ -22,7 +22,7 @@ and
  
 The first is executed when Zeek is started, the second when Zeek terminates, so we can use these for example
 when no traffic is actually analyzed as we do for our basic examples
-(see [here](https://www.zeek.org/sphinx/scripts/base/bif/event.bif.bro.html) for more on these basic events).
+(see [here](https://docs.zeek.org/en/current/scripts/base/bif/event.bif.bro.html) for more on these basic events).
 In this tutorial we will come back to events in the lesson about [complex data types](http://try.zeek.org/example/events).
 
 Other than that, all this script does is sending warm greetings to new Zeek users by printing to STDOUT.
@@ -32,6 +32,6 @@ Try.Zeek allows you to hide the text if you want to script console to be full wi
 Every example can be run with a pcap file, you can select one below the script area. You can also
 upload your own pcap-examples. Select a pcap and click run again. Below the print-output you will find tabs
 with the familar log-file names. You can click on each row inside a log file and get more details. If Zeek logs are not yet
-familiar to you please go to the documentation on [log files](https://www.zeek.org/sphinx/script-reference/log-files.html).
+familiar to you please go to the documentation on [log files](https://docs.zeek.org/en/current/script-reference/log-files.html).
 
 When you are ready you can just click on next below and start the next example.

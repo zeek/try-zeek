@@ -9,5 +9,5 @@ Welcome in the world of Zeek. We hope you enjoyed this little journey.
 
 Feedback is more than welcome, please write to [info@zeek.org](info@zeek.org).
 
-To find more resources to learn Zeek click [here](https://www.zeek.org/documentation/index.html).
-Or go back to the [Tutorial Index](https://www.zeek.org/documentation/tutorials/index.html).
+To find more resources to learn Zeek visit the [Zeek web site](https://www.zeek.org).
+Or go back to the [Tutorial Index](https://old.zeek.org/documentation/tutorials/index.html).

@@ -11,7 +11,7 @@ and will be assigned its initial
 value each time the function body is executed. 
 
 The reference on declaring variables, constants, functions etc is found 
-[here](https://www.zeek.org/sphinx/script-reference/statements.html).
+[here](https://docs.zeek.org/en/current/script-reference/statements.html).
 More on types and all things that can be declared will follow in later lessons of this
 tutorial.
 
