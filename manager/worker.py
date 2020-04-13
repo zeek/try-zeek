@@ -186,7 +186,7 @@ def run_code(gearman_worker, gearman_job):
 def _remove_container(gearman_worker, gearman_job):
     print "remove_container", gearman_job.data
     container = gearman_job.data["container"]
-    return _remove_container(container)
+    return remove_container(container)
 
 def _get_bro_versions(gearman_worker, gearman_job):
     print "getting bro versions"
