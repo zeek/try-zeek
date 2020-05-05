@@ -1,10 +1,10 @@
 <html>
 <style type="text/css">
-.bro_source {
+.zeek_source {
     background: #eee;
     padding: 1em;
 }
-.bro_result {
+.zeek_result {
     background: #eee;
 }
 
@@ -15,30 +15,30 @@
 
 <p> Hello World!</p>
 
-<pre class="bro_source">
-event bro_init() {
+<pre class="zeek_source">
+event zeek_init() {
     print "Hello, World!";
 }
 </pre>
 
 <p>Hello and goodbye!</p>
 
-<pre class="bro_source">
-event bro_init() { 
+<pre class="zeek_source">
+event zeek_init() { 
     print "Hello, World!"; 
 }
 
-event bro_done() { 
+event zeek_done() { 
     print "Goodbye, World!"; 
 }
 </pre>
 
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="trybro_embed.js"></script>
+<script src="tryzeek_embed.js"></script>
 <script type="text/javascript">
 $(function() {
-    $(".bro_source").trybro();
+    $(".zeek_source").tryzeek();
 });
 </script>
 
