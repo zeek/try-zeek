@@ -24,7 +24,7 @@ def read_file(fn):
 def run_code(files, version=DEFAULT_VERSION, pcap=None):
     main, rest = files[0], files[1:]
     sources = [
-        {"name": "main.bro", "content": read_file(main)}
+        {"name": "main.zeek", "content": read_file(main)}
     ]
 
     for fn in rest:
@@ -41,7 +41,7 @@ def run_code(files, version=DEFAULT_VERSION, pcap=None):
     return res
 
 def maybe_upload_pcap(pcap):
-    with open(pcap) as f:
+    with open(pcap, 'rb') as f:
         contents = f.read()
     checksum = md5(contents)
 

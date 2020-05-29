@@ -12,7 +12,7 @@ export function parse_errors(stderr)
         var text = match[4];
 
         filename = filename.replace(/^[/.]+/,'')
-        filename = filename.replace('trybro.bro', 'main.bro');
+        filename = filename.replace('try.zeek', 'main.zeek');
 
         var errors_for_this_file = errors[filename] || [];
         errors_for_this_file.push({

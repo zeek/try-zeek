@@ -37,7 +37,7 @@ something with it. The reducer gets a variable name, r1 in this case, is attache
 dns.lookup and also needs at least one reducing function that is applied on the stream.
 In this example the method used is "UNIQUE".
 More than one calculation method can be applied, they are all listed in the 
-[sumstats reference](https://docs.zeek.org/en/current/scripts/base/frameworks/sumstats/main.bro.html#type-SumStats::Calculation).
+[sumstats reference](https://docs.zeek.org/en/current/scripts/base/frameworks/sumstats/main.zeek.html#type-SumStats::Calculation).
 There can also be more than one reducer, an example for this is explained in the documentation for
 [MIME type statistics](https://docs.zeek.org/en/current/mimestats/index.html).
 
@@ -54,4 +54,4 @@ Comment out the two lines within the epoch\_result and directly print result. Yo
 all fields available to print out.
 
 Exercise: Use the heuristic version of the unique calculation, HLL\_UNIQUE, you find it 
-in the [documentation](https://docs.zeek.org/en/current/scripts/base/frameworks/sumstats/main.bro.html#type-SumStats::Calculation). Then take a sample of size 5. For the solution go to the next page.
+in the [documentation](https://docs.zeek.org/en/current/scripts/base/frameworks/sumstats/main.zeek.html#type-SumStats::Calculation). Then take a sample of size 5. For the solution go to the next page.

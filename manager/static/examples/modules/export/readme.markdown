@@ -12,7 +12,7 @@ functions that you want to use outside of that entity need to be made available.
 In Zeek this is done through an `export` block.
 
 In the example here you see two Zeek files. One is the module-script factorial.bro, 
-one is main.bro, the script that uses the module the resulting values. You can simply click on the 
+one is main.zeek, the script that uses the module the resulting values. You can simply click on the 
 tabs with the file names to switch between the Zeek-files.
 
 Let's have a closer look on the code. 
@@ -28,7 +28,7 @@ later.
 The second part is the function implementation that simply computes the factorial of 
 a given *n*.
 
-Now switch tabs and looks at main.bro. The first line is the already 
+Now switch tabs and looks at main.zeek. The first line is the already 
 known `load`-statement. This time it loads factorial.bro. 
 Inside the event we define a vector of length 9, our *n*s that we will
 give to the function as parameters.

@@ -18,7 +18,7 @@ For this example we say that *120* is an interesting value we want to be notifie
 can be changed to something else later.
 Now the Factor moudle can be asked to rais a notice.
 
-In main.bro, every time the factorial is computed we ask if it is an interesting result.
+In main.zeek, every time the factorial is computed we ask if it is an interesting result.
 If so, the notice is raised. The fields `msg` and `sub` are given. You can put any text there that will later help you
 to find out what you need. The Notice Framework can be a little confusing. It is easier to handle if you
 remind yourself that it is simply a function.

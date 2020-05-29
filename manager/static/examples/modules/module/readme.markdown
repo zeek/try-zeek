@@ -22,7 +22,7 @@ the setup of Modules. We've already talked about
 [loading scripts](http://try.zeek.org/examples/loading). If you have a look into the
 [Zeek Script Packages](https://docs.zeek.org/en/current/script-reference/packages.html)
 you will find that each Module consists at least of two files, `__load__.bro` and
-`main.bro`. The first one should list all files that are part of the module (also `main.bro`)
+`main.zeek`. The first one should list all files that are part of the module (also `main.zeek`)
 The directory name in which all those files are collected gives the name to the module.
 When loading a module Zeek will look into this directory expecting the `__load__.bro` script.
 In this tutorial we will not use this convention most of the time since we keep all examples in Try.Zeek.

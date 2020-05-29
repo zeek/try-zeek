@@ -53,7 +53,7 @@ def run_code(sources, pcap, version=BRO_VERSION):
 
 def run_code_simple(stdin, version=BRO_VERSION):
     sources = [
-        {"name": "main.bro", "content": stdin}
+        {"name": "main.zeek", "content": stdin}
     ]
     job_id, stdout = run_code(sources, pcap=None, version=version)
     files = get_files_json(job_id)

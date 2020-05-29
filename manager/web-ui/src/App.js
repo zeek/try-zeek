@@ -70,7 +70,7 @@ class BroEditor extends Component {
     handleSelect(key) {
         if(key === 'ADD') {
             this.props.onAddFile();
-        } else if(this.props.code.current === key && this.props.code.current !== 'main.bro') {
+        } else if(this.props.code.current === key && this.props.code.current !== 'main.zeek') {
             var new_name = prompt(`Rename ${this.props.code.current} to`, this.props.code.current);
             if (new_name && new_name !== '' && new_name !== this.props.code.current)
                 this.props.onRenameFile(new_name);

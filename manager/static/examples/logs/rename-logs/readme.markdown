@@ -10,8 +10,8 @@ A stream has one or more filters attached to it (a stream without any filters wi
 When a stream is created, it automatically gets a default filter attached to it. 
 This default filter can be removed or replaced, or other filters can be added to the stream. 
 This is accomplished by using either the 
-[Log::add_filter](https://docs.zeek.org/en/current/scripts/base/frameworks/logging/main.bro.html#id-Log::add_filter) 
-or [Log::remove_filter](https://docs.zeek.org/en/current/scripts/base/frameworks/logging/main.bro.html#id-Log::remove_filter) 
+[Log::add_filter](https://docs.zeek.org/en/current/scripts/base/frameworks/logging/main.zeek.html#id-Log::add_filter) 
+or [Log::remove_filter](https://docs.zeek.org/en/current/scripts/base/frameworks/logging/main.zeek.html#id-Log::remove_filter) 
 function. The default filter writes all fields to the logfile that carry the `&log` attribute.
 In this tutorial we will show you how to use filters to do such tasks as rename a log file, 
 split the output into multiple files, control which records are written, and set a custom rotation interval.

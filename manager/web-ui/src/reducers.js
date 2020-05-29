@@ -20,8 +20,8 @@ const initialExampleState = {
     hidden: false
 }
 const initialCodeState = {
-    sources: [{name:'main.bro', content:''}],
-    current: 'main.bro',
+    sources: [{name:'main.zeek', content:''}],
+    current: 'main.zeek',
     newCounter: 1
 }
 
@@ -110,7 +110,7 @@ function code(state = initialCodeState, action) {
       newCounter: 1
     });
   case CODE_ADD_FILE:
-    var new_filename = `new-${state.newCounter}.bro`;
+    var new_filename = `new-${state.newCounter}.zeek`;
     return Object.assign({}, state, {
       sources: [...state.sources, {name: new_filename, content: '#'}],
       current: new_filename,

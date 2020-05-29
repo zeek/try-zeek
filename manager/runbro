@@ -17,8 +17,10 @@ fi
 
 
 chown nobody . *
-mv main.bro trybro.bro
-cat <<EOF > __pre.bro
+#Try both, just in case
+mv main.zeek try.zeek || mv main.bro try.zeek
+
+cat <<EOF > __pre.zeek
 redef Site::local_nets += { 0.0.0.0/0 };
 @ifndef(zeek_init)
 global zeek_init: event();
@@ -27,7 +29,7 @@ event bro_init() { event zeek_init() ; }
 event bro_done() { event zeek_done() ; }
 @endif
 EOF
-su -s /bin/sh nobody -c "/usr/bin/timeout -k 2 15 $PROG -C $opts local  __pre.bro ./trybro.bro > stdout.log 2> stderr.log"
+su -s /bin/sh nobody -c "/usr/bin/timeout -k 2 15 $PROG -C $opts local  __pre.zeek ./try.zeek > stdout.log 2> stderr.log"
 
 #remove harmless message
 grep -v 'NB-DNS' stderr.log | grep -v 'issue DNS request' > tmp.log
