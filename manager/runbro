@@ -1,5 +1,6 @@
 #!/bin/sh
 
+export ZEEK_DNS_FAKE=1
 export BRO_DNS_FAKE=1
 
 PROG=/bro/bin/bro
