@@ -74,6 +74,7 @@ def really_run_code(job_id, sources, pcap=None, version=BRO_VERSION):
 
     file_output = run_code_docker(sources, pcap, version)
 
+    stdout=""
     for f, txt in file_output.items():
         if not f.endswith(".log"): continue
         r.hset(files_key, f, txt)
