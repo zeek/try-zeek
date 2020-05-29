@@ -22,7 +22,7 @@ and
  
 The first is executed when Zeek is started, the second when Zeek terminates, so we can use these for example
 when no traffic is actually analyzed as we do for our basic examples
-(see [here](https://docs.zeek.org/en/current/scripts/base/bif/event.bif.bro.html) for more on these basic events).
+(see [here](https://docs.zeek.org/en/current/scripts/base/bif/event.bif.zeek.html) for more on these basic events).
 In this tutorial we will come back to events in the lesson about [complex data types](http://try.zeek.org/example/events).
 
 Other than that, all this script does is sending warm greetings to new Zeek users by printing to STDOUT.

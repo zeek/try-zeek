@@ -13,7 +13,7 @@ In this lesson we start by creating a new notice. In Try.Zeek the notice can onl
 It can't send an email. Please run the code example and have a look at the new log-file.
 Apart from the message itself it tells you the name of the notice. This is especially useful for aggregated summaries.
 
-Lets have a look on the code. Start with factorial.bro. We append a new notice type value in the export section.
+Lets have a look on the code. Start with factorial.zeek. We append a new notice type value in the export section.
 For this example we say that *120* is an interesting value we want to be notified about. So we make it a constant that
 can be changed to something else later.
 Now the Factor moudle can be asked to rais a notice.

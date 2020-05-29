@@ -8,7 +8,7 @@ Often a new module creates new data that you may want to collect in a new log fi
 Manipulating Logs in Zeek is a useful tool and is more than just adding more log-files or fields.
 We use the case of the factorial module to introduce you to the [logging framework](https://docs.zeek.org/en/current/frameworks/logging.html)
 
-Again, we first look into factorial.bro.
+Again, we first look into factorial.zeek.
 In the export section you find a new line that uses `redef` to add a new value named `LOG`
 to the `Log::ID` enumerable. This enumerable is part of Zeek's logging framework. You can find details
 [here](https://docs.zeek.org/en/current/scripts/base/frameworks/logging/main.zeek.html).

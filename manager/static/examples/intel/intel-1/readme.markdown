@@ -17,7 +17,7 @@ This the source intel data that you feed into Zeek.
 
 As you can see the script to read an intel data file and make Zeek
 notify you if it sees a match is very simple at the start.
-The "seen"-policy needs to be loaded. In a real setup, this would be done in the local.bro file.
+The "seen"-policy needs to be loaded. In a real setup, this would be done in the local.zeek file.
 The second step is to tell Zeek where to find the file and its name. 
 
 Please have a look at the results. You can notice a new log-file called intel.log which contains

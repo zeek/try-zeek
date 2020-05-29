@@ -20,7 +20,7 @@ They differ from functions in the following ways:
 
 In the Zeek documentation, there is a detailed chapter about Zeek's event engine, how Zeek and the scripts
 interact, and what role the `event` plays in a Zeek script. Please [read](https://docs.zeek.org/en/current/scripting/index.html#the-event-queue-and-event-handlers).
-A reference for predefined events not related to protocol or file analysis is [here](https://docs.zeek.org/en/current/scripts/base/bif/event.bif.bro.html).
+A reference for predefined events not related to protocol or file analysis is [here](https://docs.zeek.org/en/current/scripts/base/bif/event.bif.zeek.html).
 
 This example shows how to define and trigger a custom event.
 
