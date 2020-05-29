@@ -15,7 +15,7 @@ HELP_FILE = "readme.markdown"
 MULTI_VALUE_FIELDS = ['pcaps']
 
 def main_first_sort_key(f):
-    if f['name'] == 'zeek.bro':
+    if f['name'] == 'main.zeek':
         return (0, '')
     else:
         return (1, f['name'])
