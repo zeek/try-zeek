@@ -25,12 +25,12 @@ value in a record field to be missing. The list of all attributes is found [here
 Now please switch to the file main.zeek. At the beginning of our script we need to create the new logging
 stream. [Log::create\_stream](https://docs.zeek.org/en/current/scripts/base/frameworks/logging/main.zeek.html?highlight=log%3A%3Acreate_stream#id-Log::create_stream) does exactly this. 
 The necessary parameters are of course the module's `LOG` value, and the record that holds the logging fields. 
-The variable `$path` tells Zeek how it should name the new log-file. Note that the Log stream needs to be initialized within the bro\_init event.
+The variable `$path` tells Zeek how it should name the new log-file. Note that the Log stream needs to be initialized within the zeek\_init event.
 
 The next step looks very similar to the one before, but instead of printing the results to Stdout we now 
 write to the new log, using the [Log::write](https://docs.zeek.org/en/current/scripts/base/frameworks/logging/main.zeek.html?highlight=log%3A%3Awrite#id-Log::write) function.
 
-One more note on writing to logs: In this example we wrote all results within bro\_done, in a real world example this
+One more note on writing to logs: In this example we wrote all results within zeek\_done, in a real world example this
 is usually done inside an event handler that has to do with the log-file.
 
 

@@ -16,9 +16,9 @@ The solution is one possible way to solve this exercise.
 * The duration of a connection - expressed as an interval - can be retrieved when the connection ends. 
   The event [connection\_state\_remove](https://docs.zeek.org/en/current/scripts/base/bif/event.bif.zeek.html?highlight=connection_state_remove#id-connection_state_remove)
   is triggered when a connection is about to be removed from memory. Then we can simply ask for the duration.
-* At the very end inside the bro\_done event we compute the rest. Print the number of connections stored in my\_count
+* At the very end inside the zeek\_done event we compute the rest. Print the number of connections stored in my\_count
   and use a for-loop to print out a list of all unique IPs and if they are local or external IPs.
   In this example we simply define which subnets are considered local. This does not mean that the list is complete. In a real
-  world example this should be verified and documented in [networks.cfg](https://docs.zeek.org/en/current/components/broctl/README.html).
+  world example this should be verified and documented in [networks.cfg](https://github.com/zeek/zeekctl/blob/master/doc/zeekctl.rst).
 
 

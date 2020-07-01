@@ -11,7 +11,7 @@ elements that are explained later.
 This example function takes one string argument and another optional string argument.
 It returns a string. 
 The function is declared and implemented at the same time. The function is then called 
-within the bro\_init event.
+within the zeek\_init event.
 
 What do we see here?
 
