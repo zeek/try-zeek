@@ -43,7 +43,7 @@ class BroVersions extends Component {
         const { version, versions } = this.props.versions;
         return (
             <span>
-                Bro Version
+                Zeek Version
                 { ' ' }
                 <DropDown options={versions} selected={version} onChange={this.change} />
             </span>
