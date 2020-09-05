@@ -27,11 +27,60 @@ In this tutorial we will come back to events in the lesson about [complex data t
 
 Other than that, all this script does is sending warm greetings to new Zeek users by printing to STDOUT.
 
-Try.Zeek allows you to hide the text if you want to script console to be full width. Find the button "hide" and give it a try.
+Try.Zeek allows you to hide the text if you want to script console to be full width. Find the button "Hide Text" and give it a try.
 
 Every example can be run with a pcap file, you can select one below the script area. You can also
 upload your own pcap-examples. Select a pcap and click run again. Below the print-output you will find tabs
 with the familar log-file names. You can click on each row inside a log file and get more details. If Zeek logs are not yet
 familiar to you please go to the documentation on [log files](https://docs.zeek.org/en/current/script-reference/log-files.html).
 
-When you are ready you can just click on next below and start the next example.
+When you are ready you can just click on next above to start the next example, or jump directly to a topic in the following list
+
+Basics
+======
+ * [Loading Scripts](#/?example=basics-loading)
+ * [Functions](#/?example=basics-functions)
+ * [Functions](#/?example=basics-functions)
+ * [Variables](#/?example=basics-variables)
+ * [Primitive Datatypes](#/?example=basics-primitive-datatypes)
+ * [Operators](#/?example=basics-operators)
+ * [If](#/?example=basics-control-flow-if)
+ * [For Loops](#/?example=basics-loops-for)
+ * [Loops: While](#/?example=basics-loops-while)
+ * [Exercise](#/?example=basics-exercise1-exercise)
+ * [Exercise 1: Solution](#/?example=basics-exercise1-solution)
+ * [The switch statement](#/?example=basics-switches-switch)
+ * [Switch Exercise](#/?example=basics-switches-switch-exercise)
+ * [Switch Exercise: Solution](#/?example=basics-switches-solution-switch-exercise)
+ * [Event](#/?example=basics-event)
+ * [hook](#/?example=basics-hook)
+ * [Set](#/?example=basics-composite-types-set)
+ * [Table](#/?example=basics-composite-types-table)
+ * [Vector](#/?example=basics-composite-types-vector)
+ * [record](#/?example=basics-composite-types-record)
+ * [Redefinitions](#/?example=basics-redefinitions-redef-records)
+ * [Zeek Datatypes](#/?example=basics-bro-types)
+ * [Exercise](#/?example=basics-exercise2-script-exercise-2)
+ * [Exercise 2](#/?example=basics-exercise2-solution-script-exercise-2)
+
+Modules
+=======
+ * [Writing a Module](#/?example=modules-module)
+ * [Writing a Module: Export](#/?example=modules-export)
+ * [Writing a Module: Logging](#/?example=modules-log-factorial)
+
+Logs
+====
+ * [Filtering Logs](#/?example=logs-filter-logs)
+ * [Rename Logs](#/?example=logs-rename-logs)
+ * [Raising a Notice](#/?example=new-notice)
+
+Sumstats
+========
+ * [The Summary Statistics Framework](#/?example=sumstats-sumstats1)
+ * [SumStats Exercise Solution](#/?example=sumstats-sumstats2)
+ * [SumStats Exercise Solution](#/?example=sumstats-sumstats3)
+
+Intel
+=====
+ * [Intel](#/?example=intel-intel-1)
