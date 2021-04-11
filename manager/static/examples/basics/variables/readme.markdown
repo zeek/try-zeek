@@ -5,7 +5,7 @@ Variables
 ===========
 
 You can assign arbitrary data to a variable in order to store it for later use.
-A `local' variable differs from a `global' in that its 
+A `local` variable differs from a `global` in that its 
 scope is restricted to the body of a function 
 and will be assigned its initial 
 value each time the function body is executed. 
