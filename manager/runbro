@@ -3,10 +3,11 @@
 export ZEEK_DNS_FAKE=1
 export BRO_DNS_FAKE=1
 
-PROG=/bro/bin/bro
-if [ -x /zeek/bin/zeek ] ; then
-    PROG=/zeek/bin/zeek
-fi
+for prog in /bro/bin/bro /bro/bin/zeek /usr/local/zeek/bin/zeek ; do
+    if [ -x $prog ] ; then
+        PROG=$prog
+    fi
+done
 
 cd /brostuff/*/ || exit 1
 opts=""
