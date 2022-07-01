@@ -15,7 +15,7 @@ mock==1.0.1
 redis==2.10.3
 requests==2.2.1
 six==1.5.2
-supervisor==3.0b2
+supervisor==3.0.1
 urllib3==1.26.5
 websocket-client==0.11.0
 wsgiref==0.1.2
