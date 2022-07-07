@@ -13,7 +13,7 @@ itsdangerous==0.24
 meld3==0.6.10
 mock==1.0.1
 redis==2.10.3
-requests==2.2.1
+requests==2.20.0
 six==1.5.2
 supervisor==3.0b2
 urllib3==1.26.5
