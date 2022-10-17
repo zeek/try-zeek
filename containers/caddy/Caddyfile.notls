@@ -1,7 +1,16 @@
-:80, :443
-log stdout
-gzip
-proxy / api:8000 {
-    transparent
+{
+    auto_https off
 }
-header / -Server
+
+servers :80 {
+	reverse_proxy {
+	    to api:8000
+        }
+	header -Server
+
+	log {
+	    output stdout
+	    format console
+	}
+	encode gzip
+}
