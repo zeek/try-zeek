@@ -3,7 +3,7 @@ import { VERSIONS_FETCHING, VERSIONS_FETCHED, VERSIONS_SET } from './actions';
 import { EXAMPLES_FETCHING, EXAMPLES_FETCHED, EXAMPLE_SELECTED, EXAMPLE_HIDE, EXAMPLE_SHOW } from './actions';
 import { CODE_SET, CODE_ADD_FILE, CODE_SELECT_FILE, CODE_RENAME_FILE, CODE_EDIT_FILE } from './actions';
 import { EXEC_RUNNING, EXEC_COMPLETE, EXEC_FETCHING_FILES, EXEC_FETCHED_FILES, EXEC_RESET } from './actions';
-import { PCAP_SELECTED, PCAP_FILE_CHANGED, PCAP_UPLOAD_PROGRESS, PCAP_UPLOADED } from './actions';
+import { PCAP_FETCHING, PCAP_FETCHED, PCAP_SELECTED, PCAP_FILE_CHANGED, PCAP_UPLOAD_PROGRESS, PCAP_UPLOADED } from './actions';
 import { parse_errors } from './broutil';
 
 const initialVersionState = {
@@ -39,7 +39,9 @@ const initialExecState = {
 const initialPcapState = {
     pcap: null,
     file: null,
-    available: ['exercise_traffic.pcap', 'ssh.pcap','http.pcap','sumstat.pcap'],
+    fetching: null,
+    fetched: false,
+    available: [],
     uploaded: false,
     uploading: false,
     upload_progress: null,
@@ -195,8 +197,18 @@ function exec(state = initialExecState, action) {
 
 function pcap(state = initialPcapState, action) {
     switch (action.type) {
+    case PCAP_FETCHING:
+        return Object.assign({}, state, {
+          fetching: true,
+        });
+    case PCAP_FETCHED:
+        return Object.assign({}, state, {
+          fetching: false,
+	  fetched: true,
+          available: action.available,
+        });
     case PCAP_SELECTED:
-        return { ...initialPcapState,
+        return { ...state,
             pcap: action.pcap,
         }
     case PCAP_FILE_CHANGED:

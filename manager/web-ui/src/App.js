@@ -13,7 +13,7 @@ import { fetchVersions, setVersion } from './actions';
 import { fetchExamples, hideExample, showExample } from './actions';
 import { codeAddFile, codeSelectFile, codeRenameFile, codeEditFile } from './actions';
 import { execReset, execSubmit } from './actions';
-import { pcapSelected, pcapFileChanged } from './actions';
+import { fetchPcaps, pcapSelected, pcapFileChanged } from './actions';
 
 import {Glyphicon, Tab, Tabs, Button, ButtonGroup} from 'react-bootstrap';
 import {Pager} from 'react-bootstrap';
@@ -319,6 +319,7 @@ export class App extends Component {
         console.log('App mounted!');
         this.props.dispatch(fetchExamples());
         this.props.dispatch(fetchVersions());
+        this.props.dispatch(fetchPcaps());
     }
     versionSelected = (version) => {
         this.props.dispatch(setVersion(version))

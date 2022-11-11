@@ -275,10 +275,34 @@ export function execComplete(response) {
     }
 }
 
+export const PCAP_FETCHING = 'PCAP_FETCHING'
+export const PCAP_FETCHED = 'PCAP_FETCHED'
 export const PCAP_SELECTED = 'PCAP_SELECTED'
 export const PCAP_FILE_CHANGED = 'PCAP_FILE_CHANGED'
 export const PCAP_UPLOAD_PROGRESS = 'PCAP_UPLOAD_PROGRESS'
 export const PCAP_UPLOADED = 'PCAP_UPLOADED'
+
+export function fetchPcaps() {
+  return dispatch => {
+    dispatch(fetchingPcaps());
+    return fetch(`${API_HOST}/pcaps.json`)
+      .then(response => response.json())
+      .then(json => dispatch(fetchedPcaps(json)));
+  };
+}
+
+export function fetchingPcaps() {
+    return {
+        type: PCAP_FETCHING,
+    };
+}
+
+export function fetchedPcaps(pcap_data) {
+    return {
+        type: PCAP_FETCHED,
+        available: pcap_data.available,
+    };
+}
 
 export function pcapSelected(pcap) {
     return {
@@ -286,7 +310,6 @@ export function pcapSelected(pcap) {
         pcap
     }
 }
-
 
 export function pcapFileChanged(file) {
     return {
