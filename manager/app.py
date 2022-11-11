@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, redirect, make_response
 from flask_jsonpify import jsonify
+import glob
 import hashlib
+import os
 
 import backend
 import metrics
-
-from flask import Flask
 
 class FlaskStaticCors(Flask):
     def send_static_file(self, filename):
@@ -104,6 +104,12 @@ def has_pcap(checksum):
 @app.route("/example/<name>")
 def example(name):
     return redirect("/#/trybro?example=%s" % name)
+
+@app.route("/pcaps.json")
+def pcap_list():
+    paths = glob.glob(os.path.join(app.static_folder, "pcaps/*.pcap"))
+    pcaps = map(os.path.basename, paths)
+    return cors_jsonify(available=pcaps)
 
 def md5(s):
     m = hashlib.md5()
