@@ -204,12 +204,14 @@ function pcap(state = initialPcapState, action) {
     case PCAP_FETCHED:
         return Object.assign({}, state, {
           fetching: false,
-	  fetched: true,
+          fetched: true,
           available: action.available,
         });
     case PCAP_SELECTED:
         return { ...state,
             pcap: action.pcap,
+            file: null,
+            uploaded: false
         }
     case PCAP_FILE_CHANGED:
         return { ...state,
