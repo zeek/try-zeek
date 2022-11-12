@@ -7,7 +7,7 @@ def reader(f, max_rows=None):
         k,v = line[1:].split(None, 1)
         headers[k] = v
 
-    sep = headers['separator'].decode("string-escape")
+    sep = headers['separator'].encode().decode("unicode_escape")
 
     for k,v in headers.items():
         if sep in v or k in ('fields', 'types'):
@@ -26,7 +26,7 @@ def reader(f, max_rows=None):
         rows.append(parts)
 
     if max_rows and len(rows) > max_rows:
-        mid = max_rows / 2
+        mid = max_rows // 2
         rows = rows[:mid] + rows[-mid:]
 
     return {

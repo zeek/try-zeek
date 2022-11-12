@@ -9,19 +9,19 @@ RUN cd web-ui && npm install
 ADD web-ui web-ui
 RUN make -C web-ui
 
-FROM      debian:buster-slim
+FROM      debian:bullseye-slim
 MAINTAINER Justin Azoff <justin.azoff@gmail.com>
 
 RUN apt-get update && \
     apt-get dist-upgrade -yq && \
-    apt-get install -yq python-pip python-dev rsync && \
+    apt-get install -yq python3-pip python3-dev rsync && \
     rm /var/lib/apt/lists/*list -vf && \
     true
 
 RUN mkdir /brostuff
 
 ADD requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 ADD . /src
 WORKDIR /src

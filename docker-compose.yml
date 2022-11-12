@@ -7,14 +7,10 @@ services:
       - backend
     volumes:
       - ${TRYZEEK_DATA:-./tryzeek_data}:/data
-  gearman:
-    build: containers/gearman
-    networks:
-      - backend
 
   worker:
     build: manager
-    command: ./worker.py
+    command: rq worker --with-scheduler --url redis://redis
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /brostuff:/brostuff
@@ -23,7 +19,6 @@ services:
       replicas: 5
     depends_on:
       - redis
-      - gearman
     networks:
       - backend
 
@@ -33,7 +28,6 @@ services:
     restart: always
     depends_on:
       - redis
-      - gearman
     networks:
       - backend
       - frontend
