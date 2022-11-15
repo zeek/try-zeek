@@ -39,15 +39,14 @@ services:
       - frontend
 
   proxy:
-    image: abiosoft/caddy
+    image: caddy
     restart: always
     environment:
       - ACME_AGREE=true
       - ENABLE_TELEMETRY=false
-      - CADDYPATH=/etc/caddycerts
     volumes:
-      - $HOME/.caddy:/etc/caddycerts
-      - ./containers/caddy/Caddyfile.${CADDY-tls}:/etc/Caddyfile
+      - $HOME/.caddy:/data
+      - ./containers/caddy/Caddyfile.${CADDY-tls}:/etc/caddy/Caddyfile
     networks:
       - frontend
     ports:

@@ -1,11 +1,21 @@
-:443
-log stdout
-gzip
-proxy / api:8000 {
-    transparent
+{
+    on_demand_tls {
+        interval 1d
+        burst 5
+    }
 }
-tls {
-    max_certs 10
-}
+servers :443 {
+    tls {
+        on_demand
+    }
+    reverse_proxy {
+        to api:8000
+    }
+    header -Server
 
-header / -Server
+    log {
+        output stdout
+        format console
+    }
+    encode gzip
+}
