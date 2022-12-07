@@ -22,13 +22,6 @@ r_raw = get_redis_raw()
 background_tasks = set()
 
 
-def fire_and_forget(f):
-    def wrapped(*args, **kwargs):
-        return asyncio.get_event_loop().run_in_executor(None, f, *args, *kwargs)
-
-    return wrapped
-
-
 def read_fn(fn):
     with open(fn) as f:
         return f.read()
@@ -58,24 +51,6 @@ def get_pcap_with_retry(checksum):
         time.sleep(0.1)
     return None
 
-
-@fire_and_forget
-def remove_container_ff(container):
-    return remove_container(container)
-
-
-def remove_container(container):
-    time.sleep(1)
-    with r.lock("docker", 5) as lck:
-        c = docker.Client()
-        for x in range(5):
-            try :
-                c.remove_container(container)
-                return "removed %r" % container
-            except Exception as e:
-                print("Failed to remove container:")
-                traceback.print_exc()
-                time.sleep(2)
 
 BRO_VERSIONS = get_bro_versions()
 #Set the default bro version to the most recent version, unless that is master
@@ -187,7 +162,7 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
             raise
         finally:
             print("Removing Container")
-            remove_container_ff(container=container)
+            c.remove_container(container)
 
     files = {}
     for f in os.listdir(work_dir):
