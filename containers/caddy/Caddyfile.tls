@@ -1,21 +1,22 @@
 {
-    on_demand_tls {
-        interval 1d
-        burst 5
-    }
+	on_demand_tls {
+		interval 1d
+		burst 5
+	}
 }
-servers :443 {
-    tls {
-        on_demand
-    }
-    reverse_proxy {
-        to api:8000
-    }
-    header -Server
 
-    log {
-        output stdout
-        format console
-    }
-    encode gzip
+*:443 {
+	tls {
+		on_demand
+	}
+	reverse_proxy {
+		to api:8000
+	}
+	header -Server
+
+	log {
+		output stdout
+		format console
+	}
+	encode gzip
 }
