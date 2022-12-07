@@ -5,7 +5,7 @@
 	}
 }
 
-*:443 {
+{$SITE_ADDRESS} {
 	tls {
 		on_demand
 	}

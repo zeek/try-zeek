@@ -44,6 +44,7 @@ services:
     environment:
       - ACME_AGREE=true
       - ENABLE_TELEMETRY=false
+      - SITE_ADDRESS=${SITE_ADDRESS:-try.zeek.org:443, try.bro.org:443}
     volumes:
       - $HOME/.caddy:/data
       - ./containers/caddy/Caddyfile.${CADDY-tls}:/etc/caddy/Caddyfile
