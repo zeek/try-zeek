@@ -94,6 +94,9 @@ def really_run_code(job_id, sources, pcap=None, version=BRO_VERSION):
     return stdout
 
 def run_code_docker(sources, pcap=None, version=BRO_VERSION):
+    with tempfile.TemporaryDirectory(dir="/brostuff") as work_dir:
+        return _run_code_docker(sources, pcap=pcap, version=version, work_dir=work_dir)
+def _run_code_docker(sources, pcap, version, work_dir):
     if version not in BRO_VERSIONS:
         version = BRO_VERSION
 
@@ -101,7 +104,6 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
         s['content'] = s['content'].replace("\r\n", "\n")
         s['content'] = s['content'].rstrip() + "\n"
 
-    work_dir = tempfile.mkdtemp(dir="/brostuff")
     runbro_path = os.path.join(work_dir, "runbro")
     for s in sources:
         code_fn = os.path.join(work_dir, s['name'])
@@ -117,6 +119,7 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
     os.chmod(runbro_path, 0o755)
 
     binds = {work_dir: {"bind": work_dir, "mode": "rw"}}
+
     if pcap:
         dst = os.path.join(work_dir, "file.pcap")
         if '.' in pcap:
@@ -151,15 +154,12 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
             volumes=[work_dir],
         )
         print("Starting container..")
-        try :
+        try:
             c.start(container)
 
             print("Waiting..")
             c.wait(container)
 
-        except Exception as e:
-            shutil.rmtree(work_dir)
-            raise
         finally:
             print("Removing Container")
             c.remove_container(container)
@@ -171,5 +171,4 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
         txt = read_fn(full)
         if txt.strip() or 'stdout' in f:
             files[f] = txt
-    shutil.rmtree(work_dir)
     return files
