@@ -1,16 +1,16 @@
 {
-    auto_https off
+	auto_https off
 }
 
-servers :80 {
+*:80 {
 	reverse_proxy {
-	    to api:8000
-        }
+		to api:8000
+	}
 	header -Server
 
 	log {
-	    output stdout
-	    format console
+		output stdout
+		format console
 	}
 	encode gzip
 }
