@@ -1,7 +1,7 @@
 event zeek_init() 
 	{
 	local x : string = "two";
-	local y : int = 10000000000000000000000000000000000000000000000000;
+	local y : int = 10000000000000000000;
 	print "y is a large int:", y;
 	print "x is a short string:", x;
 	
