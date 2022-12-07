@@ -12,6 +12,8 @@ WorkingDirectory=/root/try-zeek
 RemainAfterExit=yes
 Type=oneshot
 Environment=TRYZEEK_DATA=/srv/tryzeek_data
+# Set this if you need a different SITE_ADDRESS that is used by caddy:
+# Environment=SITE_ADDRESS=try.zeek.example.com:443
 ExecStart=docker-compose up -d --scale worker=4
 ExecStop=docker-compose down
 

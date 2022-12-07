@@ -5,10 +5,7 @@
 	}
 }
 
-*:443 {
-	tls {
-		on_demand
-	}
+{$SITE_ADDRESS} {
 	reverse_proxy {
 		to api:8000
 	}
