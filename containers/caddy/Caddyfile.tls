@@ -6,9 +6,6 @@
 }
 
 {$SITE_ADDRESS} {
-	tls {
-		on_demand
-	}
 	reverse_proxy {
 		to api:8000
 	}
