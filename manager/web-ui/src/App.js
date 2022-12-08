@@ -15,9 +15,14 @@ import { codeAddFile, codeSelectFile, codeRenameFile, codeEditFile } from './act
 import { execReset, execSubmit } from './actions';
 import { fetchPcaps, pcapSelected, pcapFileChanged } from './actions';
 
-import {Glyphicon, Tab, Tabs, Button, ButtonGroup} from 'react-bootstrap';
-import {Pager} from 'react-bootstrap';
-import {Grid, Row, Col} from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid, regular } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- import styles to be used
+
+import {Tab, Tabs, Button, ButtonGroup} from 'react-bootstrap';
+import Pagination from 'react-bootstrap/Pagination';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import {Table} from 'react-bootstrap';
 import {Modal} from 'react-bootstrap';
 
@@ -80,7 +85,7 @@ class BroEditor extends Component {
     }
 
     render() {
-        var add_button = <span><Glyphicon glyph="plus" /> Add File</span>
+        var add_button = <span><FontAwesomeIcon icon={solid("plus")} /> Add File</span>
         return (
         <div>
             <Tabs animation={false} activeKey={this.props.code.current} onSelect={(e) => this.handleSelect(e)} id="Editor">
@@ -115,14 +120,14 @@ class BroExampleReadme extends Component {
             return null;
         }
         var markup = {__html: example.html }
-        var prev = example.prev ? <Pager.Item previous onClick={() => onChange(example.prev.path)}>Previous </Pager.Item> : null;
-        var next = example.next ? <Pager.Item next     onClick={() => onChange(example.next.path)}>Next </Pager.Item> : null;
+        var prev = example.prev ? <Pagination.Item previous onClick={() => onChange(example.prev.path)}>Previous </Pagination.Item> : null;
+        var next = example.next ? <Pagination.Item next     onClick={() => onChange(example.next.path)}>Next </Pagination.Item> : null;
         return (
             <div>
-                <Pager style={{marginTop: 0}}>
+                <Pagination style={{marginTop: 0}}>
                     {prev}
                     {next}
-                </Pager>
+                </Pagination>
                 <div dangerouslySetInnerHTML={markup} style={{height:"500px", overflowY:"auto"}} />
             </div>
         )
@@ -299,7 +304,7 @@ var RunButton = ({status, pcap, onClick}) => {
     if (status)
         return <Button disabled={true} bsStyle="primary">{status}</Button>;
 
-    return <Button bsStyle="primary" onClick={onClick}> <span>Run <Glyphicon glyph="play" /></span> </Button>;
+    return <Button bsStyle="primary" onClick={onClick}> <span>Run <FontAwesomeIcon icon={solid("play")} /></span> </Button>;
 }
 
 var TextMessage = ({header, text, className}) => {
@@ -362,9 +367,9 @@ export class App extends Component {
         const { examples } = this.props;
         var showHide = null;
         if ( examples.example && examples.example.html && examples.hidden)
-            showHide = <Button onClick={this.showExample} style={{cursor:'pointer'}}>Show Text <Glyphicon glyph="eye-open" /></Button>;
+            showHide = <Button onClick={this.showExample} style={{cursor:'pointer'}}>Show Text <FontAwesomeIcon icon={regular("eye")} /></Button>;
         else
-            showHide = <Button onClick={this.hideExample} style={{cursor:'pointer'}}>Hide Text <Glyphicon glyph="remove" /></Button>;
+            showHide = <Button onClick={this.hideExample} style={{cursor:'pointer'}}>Hide Text <FontAwesomeIcon icon={solid("xmark")} /></Button>;
 
         return (
             <Row> <Col sm={12}>
@@ -387,12 +392,12 @@ export class App extends Component {
 
 
         var editorBox = 
-            <Grid fluid={true}>
+            <Container fluid={true}>
                  <Row>
                      {editor}
                  </Row>
                  <Row>
-                    <Row className="show-grid">
+                    <Row className="show-container">
                         <Col sm={12} >
                         <BroVersions versions={versions} onVersionChanged={this.versionSelected} />
                         { '  ' }
@@ -406,12 +411,12 @@ export class App extends Component {
                         </Col>
                     </Row>
                  </Row>
-             </Grid>;
+             </Container>;
 
 
         if(examples.example && examples.example.html && !examples.hidden) {
             return (
-                 <Row className="show-grid">
+                 <Row className="show-container">
                      <Col sm={4}>
                          <BroExampleReadme example={examples.example} onChange={this.exampleSelected} />
                      </Col>
@@ -422,7 +427,7 @@ export class App extends Component {
             );
         } else {
             return (
-                <Row className="show-grid">
+                <Row className="show-container">
                     <Col sm={12}>
                         {editorBox}
                     </Col>
@@ -433,14 +438,14 @@ export class App extends Component {
     render() {
         const { exec } = this.props;
         return (
-            <Grid fluid={true}>
+            <Container fluid={true}>
                 {this.renderLoadLine()}
                 <br/>
                 {this.renderCodeRow()}
                 <TextMessage header='Errors' text={exec.stderr} className="alert alert-danger" />
                 <TextMessage header='Output' text={exec.stdout} />
                 <BroFileViewer job={exec.job} files={exec.files} />
-            </Grid>
+            </Container>
         );
     }
 }

@@ -3,28 +3,46 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "ajv-keywords": "^3.1.0",
-    "bootstrap": "^3.3.7",
-    "history": "^4.3.0",
-    "isomorphic-fetch": "^2.2.1",
-    "md5": "^2.2.1",
-    "query-string": "^4.2.3",
-    "react": "^16.3.1",
-    "react-ace": "^6.1.0",
-    "react-bootstrap": "^0.32.1",
-    "react-dom": "^16.3.1",
-    "react-overlays": "^0.8.3",
-    "react-redux": "^4.4.5",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.4",
-    "redux": "^3.6.0",
+    "@fortawesome/fontawesome-svg-core": "^6.2.0",
+    "@fortawesome/free-regular-svg-icons": "^6.2.0",
+    "@fortawesome/free-solid-svg-icons": "^6.2.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "ajv-keywords": "^5.1.0",
+    "babel-plugin-macros": "^3.1.0",
+    "bootstrap": "^5.2.2",
+    "brace": "^0.11.1",
+    "history": "^5.3.0",
+    "isomorphic-fetch": "^3.0.0",
+    "md5": "^2.3.0",
+    "query-string": "^7.1.1",
+    "react": "^18.2.0",
+    "react-ace": "^10.1.0",
+    "react-bootstrap": "^2.6.0",
+    "react-dom": "^18.2.0",
+    "react-overlays": "^5.2.1",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.4.3",
+    "react-scripts": "^5.0.1",
+    "redux": "^4.2.0",
     "redux-logger": "^2.7.0",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.4.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
