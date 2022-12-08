@@ -1,5 +1,5 @@
 title: Exercise
-pcaps: exercise\_traffic.pcap
+pcaps: exercise_traffic.pcap
 order:
 
 Exercise
