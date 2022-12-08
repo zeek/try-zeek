@@ -1,19 +1,26 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3 -u
+import asyncio
 import codecs
 import docker
-import gm
 import hashlib
 import json
 import os
-from redis import Redis
 import shutil
-import sys
 import time
 import tempfile
 import traceback
+import rq
+
+from common import get_cache_key, get_redis, get_redis_raw
 
 CACHE_EXPIRE = 60*10
 SOURCES_EXPIRE = 60*60*24*30
+
+r = get_redis()
+r_raw = get_redis_raw()
+
+background_tasks = set()
+
 
 def read_fn(fn):
     with open(fn) as f:
@@ -29,8 +36,8 @@ def get_bro_versions():
 
 def get_pcap(checksum):
     pcap_key = "pcaps:%s" % checksum
-    r.expire(pcap_key, 60*60)
-    return r.get(pcap_key)
+    r_raw.expire(pcap_key, 60*60)
+    return r_raw.get(pcap_key)
 
 def get_pcap_with_retry(checksum):
     """There is an annoying race condition where POST /pcap/upload is returning as soon as the pcap is sent, but before
@@ -45,29 +52,23 @@ def get_pcap_with_retry(checksum):
     return None
 
 
-def remove_container(container):
-    time.sleep(1)
-    with r.lock("docker", 5) as lck:
-        c = docker.Client()
-        for x in range(5):
-            try :
-                c.remove_container(container)
-                return "removed %r" % container
-            except Exception, e:
-                print "Failed to remove container:"
-                traceback.print_exc()
-                time.sleep(2)
-
 BRO_VERSIONS = get_bro_versions()
 #Set the default bro version to the most recent version, unless that is master
 BRO_VERSION = BRO_VERSIONS[-1]
 if BRO_VERSION == 'master' and len(BRO_VERSION) > 1:
     BRO_VERSION = BRO_VERSIONS[-2]
 
+def run_code(sources, pcap=None, version=BRO_VERSION):
+    job = rq.get_current_job()
+    if type(job) is bytes:
+        job = job.decode()
+    return really_run_code(job.id, sources, pcap=pcap, version=version)
+
+
 def really_run_code(job_id, sources, pcap=None, version=BRO_VERSION):
     if version not in BRO_VERSIONS:
         version = BRO_VERSION
-    cache_key = "cache:" + hashlib.sha1(json.dumps([sources,pcap,version])).hexdigest()
+    cache_key = get_cache_key(sources, pcap, version)
     stdout_key = 'stdout:%s' % job_id
     files_key = 'files:%s' % job_id
     sources_key = 'sources:%s' % job_id
@@ -93,6 +94,9 @@ def really_run_code(job_id, sources, pcap=None, version=BRO_VERSION):
     return stdout
 
 def run_code_docker(sources, pcap=None, version=BRO_VERSION):
+    with tempfile.TemporaryDirectory(dir="/brostuff") as work_dir:
+        return _run_code_docker(sources, pcap=pcap, version=version, work_dir=work_dir)
+def _run_code_docker(sources, pcap, version, work_dir):
     if version not in BRO_VERSIONS:
         version = BRO_VERSION
 
@@ -100,7 +104,6 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
         s['content'] = s['content'].replace("\r\n", "\n")
         s['content'] = s['content'].rstrip() + "\n"
 
-    work_dir = tempfile.mkdtemp(dir="/brostuff")
     runbro_path = os.path.join(work_dir, "runbro")
     for s in sources:
         code_fn = os.path.join(work_dir, s['name'])
@@ -113,9 +116,10 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
         runbro_src = runbro_src_version_specific
 
     shutil.copy(runbro_src, runbro_path)
-    os.chmod(runbro_path, 0755)
+    os.chmod(runbro_path, 0o755)
 
     binds = {work_dir: {"bind": work_dir, "mode": "rw"}}
+
     if pcap:
         dst = os.path.join(work_dir, "file.pcap")
         if '.' in pcap:
@@ -126,16 +130,16 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
         else:
             contents = get_pcap_with_retry(pcap)
             if contents:
-                with open(dst, 'w') as f:
+                with open(dst, 'wb') as f:
                     f.write(contents)
 
     #docker run -v /brostuff/tmpWh0k1x:/brostuff/ -n --rm -t -i  bro_worker /bro/bin/bro /brostuff/code.bro
 
-    print "Connecting to docker...."
+    print("Connecting to docker....")
     with r.lock("docker", 5) as lck:
         c = docker.Client()
 
-        print "Creating Bro %s container.." % version
+        print("Creating Bro %s container.." % version)
         host_config = docker.utils.create_host_config(
             binds=binds,
             dns=["127.0.0.1"],
@@ -149,19 +153,16 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
             host_config=host_config,
             volumes=[work_dir],
         )
-        print "Starting container.."
-        try :
+        print("Starting container..")
+        try:
             c.start(container)
-        except Exception, e:
-            shutil.rmtree(work_dir)
-            gm.get_client().submit_job("remove_container", {"container": container}, background=True)
-            raise
 
-    print "Waiting.."
-    c.wait(container)
+            print("Waiting..")
+            c.wait(container)
 
-    print "Removing Container"
-    gm.get_client().submit_job("remove_container", {"container": container}, background=True)
+        finally:
+            print("Removing Container")
+            c.remove_container(container)
 
     files = {}
     for f in os.listdir(work_dir):
@@ -170,34 +171,4 @@ def run_code_docker(sources, pcap=None, version=BRO_VERSION):
         txt = read_fn(full)
         if txt.strip() or 'stdout' in f:
             files[f] = txt
-    shutil.rmtree(work_dir)
     return files
-
-
-
-def run_code(gearman_worker, gearman_job):
-    # job_id, sources, pcap, version
-    print "run_code", gearman_job.data
-    try:
-        return really_run_code(**gearman_job.data)
-    except:
-        traceback.print_exc()
-        return "Something went wrong :-("
-
-def _remove_container(gearman_worker, gearman_job):
-    print "remove_container", gearman_job.data
-    container = gearman_job.data["container"]
-    return remove_container(container)
-
-def _get_bro_versions(gearman_worker, gearman_job):
-    print "getting bro versions"
-    return get_bro_versions()
-
-if __name__ == "__main__":
-    r = Redis(host="redis")
-    sys.stdout = sys.stderr
-    gm_worker = gm.get_worker()
-    gm_worker.register_task('get_bro_versions', _get_bro_versions)
-    gm_worker.register_task('run_code', run_code)
-    gm_worker.register_task('remove_container', _remove_container)
-    gm_worker.work()

@@ -108,7 +108,7 @@ def example(name):
 @app.route("/pcaps.json")
 def pcap_list():
     paths = glob.glob(os.path.join(app.static_folder, "pcaps/*.pcap"))
-    pcaps = map(os.path.basename, paths)
+    pcaps = list(map(os.path.basename, paths))
     return cors_jsonify(available=pcaps)
 
 def md5(s):
