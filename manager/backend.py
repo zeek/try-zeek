@@ -30,7 +30,7 @@ BRO_VERSION = BRO_VERSIONS[-1]
 if BRO_VERSION == 'master' and len(BRO_VERSION) > 1:
     BRO_VERSION = BRO_VERSIONS[-2]
 
-print("Available Bro versions %r. Using %r as default" % (BRO_VERSIONS, BRO_VERSION))
+print("Available Zeek versions %r. Using %r as default" % (BRO_VERSIONS, BRO_VERSION))
 
 def get_job_id():
     bro_id = str(r.incr("trybro:id"))
