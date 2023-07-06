@@ -17,7 +17,7 @@ if [ -e file.pcap ]; then
 fi
 
 
-chown nobody . *
+chown nobody . ./*
 #Try both, just in case
 mv main.zeek try.zeek || mv main.bro try.zeek
 
