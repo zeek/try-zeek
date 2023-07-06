@@ -29,9 +29,9 @@ def read_fn(fn):
 
 def get_bro_versions():
     c = docker.Client()
-    images = c.images(name='zeekurity/zeek')
+    images = c.images(name='zeek/zeek')
     tags = [i['RepoTags'][0] for i in images]
-    versions = [t.replace("zeekurity/zeek:", "") for t in tags if '_' not in t]
+    versions = [t.replace("zeek/zeek:", "") for t in tags if '_' not in t]
     return sorted(versions)
 
 def get_pcap(checksum):
@@ -146,7 +146,7 @@ def _run_code_docker(sources, pcap, version, work_dir):
         network_mode="none",
         read_only=True,
     )
-    container = c.create_container('zeekurity/zeek:' + version,
+    container = c.create_container('zeek/zeek:' + version,
         working_dir=work_dir,
         command=runbro_path,
         host_config=host_config,
