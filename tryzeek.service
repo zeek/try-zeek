@@ -7,7 +7,6 @@ Requires=docker.service
 TimeoutStartSec=0
 #ExecStartPre=-/usr/bin/docker kill trybro
 #ExecStartPre=-/usr/bin/docker rm trybro
-ExecStartPre=/usr/bin/docker pull zeek/zeek:6.0.0
 WorkingDirectory=/root/try-zeek
 RemainAfterExit=yes
 Type=oneshot

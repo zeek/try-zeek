@@ -1,8 +1,11 @@
 import hashlib
 import json
+import os
+
 import redis
 import rq
 
+REDIS_HOST = os.environ.get("REDIS_HOST", "redis")
 
 def get_cache_key(sources, pcap, version):
     key = [sources, pcap, version]
@@ -12,12 +15,12 @@ def get_cache_key(sources, pcap, version):
     return cache_key
 
 
-def get_redis():
-    return redis.StrictRedis("redis", charset="utf-8", decode_responses=True)
+def get_redis() -> redis.StrictRedis:
+    return redis.StrictRedis(REDIS_HOST, charset="utf-8", decode_responses=True)
 
 
 def get_redis_raw():
-    return redis.Redis("redis")
+    return redis.Redis(REDIS_HOST)
 
 
 def get_rq():

@@ -10,6 +10,7 @@ import rq
 import metrics
 
 from common import get_cache_key, get_redis, get_redis_raw, get_rq
+from version import zeek_versions_from_redis
 
 r = get_redis()
 r_raw = get_redis_raw()
@@ -24,23 +25,17 @@ def wait_for_result(r):
         time.sleep(0.1)
     return r.result
 
-BRO_VERSIONS = wait_for_result(q.enqueue("worker.get_bro_versions"))
-#Set the default bro version to the most recent version, unless that is master
-BRO_VERSION = BRO_VERSIONS[-1]
-if BRO_VERSION == 'master' and len(BRO_VERSION) > 1:
-    BRO_VERSION = BRO_VERSIONS[-2]
-
-print("Available Zeek versions %r. Using %r as default" % (BRO_VERSIONS, BRO_VERSION))
-
 def get_job_id():
     bro_id = str(r.incr("trybro:id"))
     return bro_id
 
-def run_code(sources, pcap, version=BRO_VERSION):
+def run_code(sources, pcap, version=None):
     """Try to find a cached result for this submission
     If not found, submit a new job to the worker"""
-    if version not in BRO_VERSIONS:
-        version = BRO_VERSION
+    default_version, versions = zeek_versions_from_redis()
+    if version not in versions:
+        version = default_version
+
     metrics.log_execution(version)
     cache_key = get_cache_key(sources, pcap, version)
     job_id = r.get(cache_key)
@@ -62,7 +57,7 @@ def run_code(sources, pcap, version=BRO_VERSION):
                                        pcap=pcap, version=version, job_id=job_id))
     return job_id, result
 
-def run_code_simple(stdin, version=BRO_VERSION):
+def run_code_simple(stdin, version=None):
     sources = [
         {"name": "main.zeek", "content": stdin}
     ]

@@ -12,6 +12,7 @@ import traceback
 import rq
 
 from common import get_cache_key, get_redis, get_redis_raw
+from version import zeek_versions_from_redis
 
 CACHE_EXPIRE = 60*10
 SOURCES_EXPIRE = 60*60*24*30
@@ -52,22 +53,17 @@ def get_pcap_with_retry(checksum):
     return None
 
 
-BRO_VERSIONS = get_bro_versions()
-#Set the default bro version to the most recent version, unless that is master
-BRO_VERSION = BRO_VERSIONS[-1]
-if BRO_VERSION == 'master' and len(BRO_VERSION) > 1:
-    BRO_VERSION = BRO_VERSIONS[-2]
+def run_code(sources, pcap=None, version=None):
+    if not version:  # Assume backend.py set this properly.
+        raise RuntimeError("version is missing")
 
-def run_code(sources, pcap=None, version=BRO_VERSION):
     job = rq.get_current_job()
     if type(job) is bytes:
         job = job.decode()
     return really_run_code(job.id, sources, pcap=pcap, version=version)
 
 
-def really_run_code(job_id, sources, pcap=None, version=BRO_VERSION):
-    if version not in BRO_VERSIONS:
-        version = BRO_VERSION
+def really_run_code(job_id, sources, pcap, version):
     cache_key = get_cache_key(sources, pcap, version)
     stdout_key = 'stdout:%s' % job_id
     files_key = 'files:%s' % job_id
@@ -93,12 +89,14 @@ def really_run_code(job_id, sources, pcap=None, version=BRO_VERSION):
     r.expire(cache_key, CACHE_EXPIRE)
     return stdout
 
-def run_code_docker(sources, pcap=None, version=BRO_VERSION):
+def run_code_docker(sources, pcap=None, version=None):
     with tempfile.TemporaryDirectory(dir="/brostuff") as work_dir:
         return _run_code_docker(sources, pcap=pcap, version=version, work_dir=work_dir)
 def _run_code_docker(sources, pcap, version, work_dir):
-    if version not in BRO_VERSIONS:
-        version = BRO_VERSION
+    default_version, versions = zeek_versions_from_redis()
+    if version not in versions:
+        print(f"Warning: {version!r} not available, using {default_version!r}")
+        version = default_version
 
     for s in sources:
         s['content'] = s['content'].replace("\r\n", "\n")
