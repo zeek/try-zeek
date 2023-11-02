@@ -22,6 +22,18 @@ services:
     networks:
       - backend
 
+  version-updater:
+    build: manager
+    command: python3 version.py -i 4020
+    init: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    depends_on:
+      - redis
+    networks:
+      - backend
+
   api:
     build: manager
     command: gunicorn -w 4 -b 0.0.0.0 app:app --log-file - --max-requests 500 --timeout 20

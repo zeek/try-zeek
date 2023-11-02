@@ -57,7 +57,7 @@ def run():
 @app.route("/run_simple", methods=['GET', 'POST'])
 def run_simple():
     stdin = request.args.get("code") or request.form.get("code") or 'print "Huh?";'
-    version = request.args.get("version") or request.form.get("version") or backend.BRO_VERSION
+    version = request.args.get("version") or request.form.get("version")
 
     files = backend.run_code_simple(stdin, version=version)
     return cors_jsonify(files=files)
@@ -81,7 +81,8 @@ def files_json(job):
 
 @app.route("/versions.json")
 def versions():
-    return cors_jsonify(versions=backend.BRO_VERSIONS, default=backend.BRO_VERSION)
+    default_version, versions = backend.zeek_versions_from_redis()
+    return cors_jsonify(versions=versions, default=default_version)
 
 @app.route("/pcap/upload/<checksum>", methods=['OPTIONS'])
 def pcap_upload_options_for_cors(checksum):
