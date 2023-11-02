@@ -22,9 +22,9 @@ services:
     networks:
       - backend
 
-  version-update:
+  version-updater:
     build: manager
-    command: python3 version.py -i 300
+    command: python3 version.py -i 4020
     init: true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

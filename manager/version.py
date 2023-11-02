@@ -7,6 +7,7 @@ fetches all new tags using docker-py.
 """
 import argparse
 import logging
+import packaging.version
 import re
 import time
 import typing
@@ -38,8 +39,8 @@ def zeek_versions_from_redis() -> typing.Tuple[str, list[str]]:
     Return versions found in Redis as tuple (default, all).
     """
     redis = get_redis()
-    versions = sorted(redis.smembers(REDIS_VERSION_KEY))
-    default = versions[-1]
+    versions = sorted(redis.smembers(REDIS_VERSION_KEY), key=packaging.version.parse)
+    default = versions[-1] if len(versions) > 0 else None
     if versions == "master" and len(versions) > 1:
         return versions[-2]
 
@@ -52,31 +53,41 @@ def pull_new_tags():
 
     https://docs.docker.com/docker-hub/api/latest/#tag/repositories/paths/%7E1v2%7E1namespaces%7E1%7Bnamespace%7D%7E1repositories%7E1%7Brepository%7D%7E1tags/get
     """
-    response = requests.get(TAGS_URL, timeout=30)
-    response.raise_for_status()
+    # We only fetch the first page to avoid unnecessarily using up space.
+    max_page = 1
 
+    session = requests.Session()
     redis = get_redis()
     docker_client = docker.Client()
 
     _, known_versions = zeek_versions_from_redis()
-
     logger.info("known_versions: %s", known_versions)
-    for result in response.json()["results"]:
-        version = result["name"]
 
-        if not is_acceptable_zeek_version(version):
-            logger.debug("Ignoring tag %r", version)
-            continue
+    for page in range(1, max_page + 1):
+        logger.debug("Fetching tags, page %s", page)
+        response = session.get(TAGS_URL, params={"page": page}, timeout=30)
 
-        if version in known_versions:
-            logger.debug("Ignoring known tag %r", version)
-            continue
+        if response.status_code == 404:
+            logger.debug("No more pages")
+            break
 
-        logger.info("Pulling new image %s", version)
-        docker_client.pull(f"{NAMESPACE}/{REPO}", tag=version)
+        response.raise_for_status()
 
-        # Update Redis
-        redis.sadd(REDIS_VERSION_KEY, version)
+        for result in response.json()["results"]:
+            version = result["name"]
+
+            if not is_acceptable_zeek_version(version):
+                logger.debug("Ignoring image tag %r", version)
+                continue
+
+            if version in known_versions:
+                logger.debug("Ignoring known image tag %r", version)
+                continue
+
+            logger.info("Pulling new image %s", version)
+            docker_client.pull(f"{NAMESPACE}/{REPO}", tag=version)
+
+            redis.sadd(REDIS_VERSION_KEY, version)
 
 
 def sync_docker_versions_to_redis():
@@ -94,9 +105,10 @@ def sync_docker_versions_to_redis():
     versions = [t.replace("zeek/zeek:", "") for t in tags if "_" not in t]
     versions = [v for v in versions if is_acceptable_zeek_version(v)]
 
-    redis.sadd(REDIS_VERSION_KEY, *versions)
+    if versions:
+        redis.sadd(REDIS_VERSION_KEY, *versions)
 
-    # Also fetch all versions from Redis and remove those
+    # Now, also fetch all versions from Redis and remove those
     # not available to Docker anymore.
     _, redis_versions = zeek_versions_from_redis()
     for rv in redis_versions:
@@ -110,7 +122,7 @@ def main():
     Entry point.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--interval", type=int, default=5 * 60)
+    parser.add_argument("-i", "--interval", type=int, default=67 * 60)
     parser.add_argument("-l", "--log-level", type=str, default="info")
     args = parser.parse_args()
 
