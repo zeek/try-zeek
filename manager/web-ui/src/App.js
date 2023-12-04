@@ -278,10 +278,11 @@ class BroFileViewer extends Component {
         if(!files || Object.keys(files).length === 0) {
             return <div/>;
         }
+        let tab = files.hasOwnProperty("conn.log") ? "conn.log" : Object.keys(files)[0];
         return (
             <div>
                 <h2> Output Logs </h2>
-                <Tabs animation={false} bsStyle='pills' id="Output Logs">
+                <Tabs animation={false} bsStyle='pills' id="Output Logs" defaultActiveKey={tab} >
                 {Object.keys(files).map( (f) =>
                     <Tab title={f.replace(/.log$/, '')} key={f} eventKey={f}>
                         <BroFileViewerDetail file={files[f]} />
