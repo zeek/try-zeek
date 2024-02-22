@@ -2,6 +2,7 @@ import time
 import json
 import hashlib
 import traceback
+import uuid
 
 import redis
 
@@ -26,8 +27,7 @@ def wait_for_result(r):
     return r.result
 
 def get_job_id():
-    bro_id = str(r.incr("trybro:id"))
-    return bro_id
+    return uuid.uuid4().hex
 
 def run_code(sources, pcap, version=None):
     """Try to find a cached result for this submission

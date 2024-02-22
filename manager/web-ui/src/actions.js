@@ -349,7 +349,7 @@ export function loadSaved(job, autorun) {
 
 export function handleLocationChange(dispatch, location, initial=false) {
     console.log('Location is now', location);
-    var match = /\/(?:trybro|tryzeek)\/saved\/(\d+)/.exec(location.pathname);
+    var match = /\/(?:trybro|tryzeek)\/saved\/([0-9a-f]+)/.exec(location.pathname);
     if (match) {
         var job = match[1];
         return dispatch(loadSaved(job, initial));
