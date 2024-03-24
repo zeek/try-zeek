@@ -14,6 +14,7 @@ import { fetchExamples, hideExample, showExample } from './actions';
 import { codeAddFile, codeSelectFile, codeRenameFile, codeEditFile } from './actions';
 import { execReset, execSubmit } from './actions';
 import { fetchPcaps, pcapSelected, pcapFileChanged } from './actions';
+import { formatSubmit } from './actions';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid, regular } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- import styles to be used
@@ -359,6 +360,9 @@ export class App extends Component {
     runCode = () => {
         this.props.dispatch(execSubmit());
     }
+    formatCode = () => {
+        this.props.dispatch(formatSubmit());
+    }
     fileChanged = () => {
         var f = this.refs.file.files[0];
         this.props.dispatch(pcapFileChanged(f));
@@ -408,6 +412,8 @@ export class App extends Component {
                         <label>
                             <input type="file" ref="file" onChange={this.fileChanged} />
                         </label>
+                        <Button bsStyle="info" onClick={this.formatCode}> Format </Button>
+                        { ' ' }
                         <RunButton status={exec.status} pcap={pcap} onClick={this.runCode} />
                         </Col>
                     </Row>

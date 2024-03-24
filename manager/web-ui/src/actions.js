@@ -345,6 +345,27 @@ export function loadSaved(job, autorun) {
     }
 }
 
+export function formatSubmit() {
+    return (dispatch, getState) => {
+        const state = getState();
+        const sources = state.code.sources;
+        var opts =  {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                sources: sources,
+            })
+        };
+        return fetch(`${API_HOST}/format`, opts)
+            .then(response => response.json())
+            .then(json => {
+                dispatch(setCode(json.sources));
+            });
+    };
+}
 
 
 export function handleLocationChange(dispatch, location, initial=false) {
