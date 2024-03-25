@@ -157,6 +157,8 @@ export const EXEC_FETCHED_FILES = 'EXEC_FETCHED_FILES'
 
 export const EXEC_RESET = 'EXEC_RESET'
 
+export const EXEC_SET_ERRORS = 'EXEC_SET_ERRORS';
+
 export function execReset(){
     return {
         type: EXEC_RESET
@@ -275,6 +277,13 @@ export function execComplete(response) {
     }
 }
 
+export function setExecErrors(errors) {
+    return {
+        type: EXEC_SET_ERRORS,
+        errors
+    }
+}
+
 export const PCAP_FETCHING = 'PCAP_FETCHING'
 export const PCAP_FETCHED = 'PCAP_FETCHED'
 export const PCAP_SELECTED = 'PCAP_SELECTED'
@@ -363,6 +372,7 @@ export function formatSubmit() {
             .then(response => response.json())
             .then(json => {
                 dispatch(setCode(json.sources));
+                dispatch(setExecErrors(json.errors));
             });
     };
 }

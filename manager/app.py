@@ -119,11 +119,13 @@ def format():
     for src in sources:
         # If anything goes wrong, just leave it unchanged.
         try:
-            src['content'] = fmt(src['content'])
+            src['content'], error = fmt(src['content'])
+            if error:
+                errors[src['name']] = [error]
         except Exception as err:
             pass
 
-    return cors_jsonify(sources=sources)
+    return cors_jsonify(sources=sources, errors=errors)
 
 def md5(s):
     m = hashlib.md5()
