@@ -104,12 +104,13 @@ function examples(state = initialExampleState, action) {
 }
 
 function code(state = initialCodeState, action) {
+  console.log(state, action);
   switch (action.type) {
   case CODE_SET:
     return Object.assign({}, state, {
       sources: action.sources,
       current: action.sources[0].name,
-      newCounter: 1
+      newCounter: action.sources.length
     });
   case CODE_ADD_FILE:
     var new_filename = `new-${state.newCounter}.zeek`;

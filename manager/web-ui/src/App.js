@@ -412,7 +412,7 @@ export class App extends Component {
                         <label>
                             <input type="file" ref="file" onChange={this.fileChanged} />
                         </label>
-                        <Button bsStyle="info" onClick={this.formatCode}> Format </Button>
+                        <Button variant="secondary" onClick={this.formatCode}>Format</Button>
                         { ' ' }
                         <RunButton status={exec.status} pcap={pcap} onClick={this.runCode} />
                         </Col>
