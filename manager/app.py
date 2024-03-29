@@ -116,6 +116,7 @@ def pcap_list():
 @app.route("/format", methods=['POST'])
 def format():
     sources = request.json.get('sources', [])
+    errors = {}
     for src in sources:
         # If anything goes wrong, just leave it unchanged.
         try:
