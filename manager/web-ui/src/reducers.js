@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { VERSIONS_FETCHING, VERSIONS_FETCHED, VERSIONS_SET } from './actions';
 import { EXAMPLES_FETCHING, EXAMPLES_FETCHED, EXAMPLE_SELECTED, EXAMPLE_HIDE, EXAMPLE_SHOW } from './actions';
 import { CODE_SET, CODE_ADD_FILE, CODE_SELECT_FILE, CODE_RENAME_FILE, CODE_EDIT_FILE } from './actions';
-import { EXEC_RUNNING, EXEC_COMPLETE, EXEC_FETCHING_FILES, EXEC_FETCHED_FILES, EXEC_RESET } from './actions';
+import { EXEC_RUNNING, EXEC_COMPLETE, EXEC_FETCHING_FILES, EXEC_FETCHED_FILES, EXEC_RESET, EXEC_SET_ERRORS } from './actions';
 import { PCAP_FETCHING, PCAP_FETCHED, PCAP_SELECTED, PCAP_FILE_CHANGED, PCAP_UPLOAD_PROGRESS, PCAP_UPLOADED } from './actions';
 import { parse_errors } from './broutil';
 
@@ -104,12 +104,13 @@ function examples(state = initialExampleState, action) {
 }
 
 function code(state = initialCodeState, action) {
+  console.log(state, action);
   switch (action.type) {
   case CODE_SET:
     return Object.assign({}, state, {
       sources: action.sources,
       current: action.sources[0].name,
-      newCounter: 1
+      newCounter: action.sources.length
     });
   case CODE_ADD_FILE:
     var new_filename = `new-${state.newCounter}.zeek`;
@@ -189,6 +190,10 @@ function exec(state = initialExecState, action) {
             files: files,
             stderr: stderr,
             errors: parse_errors(stderr)
+        });
+    case EXEC_SET_ERRORS:
+        return Object.assign({}, state, {
+        errors: action.errors
         });
     default:
         return state;

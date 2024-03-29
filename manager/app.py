@@ -6,6 +6,7 @@ import os
 
 import backend
 import metrics
+from format import fmt
 
 class FlaskStaticCors(Flask):
     def send_static_file(self, filename):
@@ -111,6 +112,20 @@ def pcap_list():
     paths = glob.glob(os.path.join(app.static_folder, "pcaps/*.pcap"))
     pcaps = list(map(os.path.basename, paths))
     return cors_jsonify(available=pcaps)
+
+@app.route("/format", methods=['POST'])
+def format():
+    sources = request.json.get('sources', [])
+    for src in sources:
+        # If anything goes wrong, just leave it unchanged.
+        try:
+            src['content'], error = fmt(src['content'])
+            if error:
+                errors[src['name']] = [error]
+        except Exception as err:
+            pass
+
+    return cors_jsonify(sources=sources, errors=errors)
 
 def md5(s):
     m = hashlib.md5()
