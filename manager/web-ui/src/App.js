@@ -3,11 +3,11 @@ import './App.css';
 
 import {connect} from 'react-redux';
 
-import brace from 'brace';
+import 'brace';
 import 'brace/theme/tomorrow';
 
 import AceEditor from 'react-ace';
-import ZeekMode from './ZeekMode.js'
+import './ZeekMode.js'
 
 import { fetchVersions, setExecErrors, setVersion } from './actions';
 import { fetchExamples, hideExample, showExample } from './actions';
