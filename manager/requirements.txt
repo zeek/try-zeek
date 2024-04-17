@@ -10,7 +10,7 @@ docker-py==1.10.6
 docker-pycreds==0.4.0
 Flask==2.3.2
 Flask-Jsonpify==1.5.0
-gunicorn==20.1.0
+gunicorn==22.0.0
 html5lib==1.1
 idna==3.7
 importlib-metadata==5.0.0
