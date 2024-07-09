@@ -31,6 +31,6 @@ webencodings==0.5.1
 websocket-client==1.4.2
 Werkzeug==3.0.1
 wrapt==1.14.1
-zipp==3.10.0
+zipp==3.19.1
 tree-sitter==0.21.2
 zeekscript==1.2.8
