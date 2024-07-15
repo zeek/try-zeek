@@ -2,7 +2,7 @@
 	auto_https off
 }
 
-*:80 {
+:80 {
 	reverse_proxy {
 		to api:8000
 	}
