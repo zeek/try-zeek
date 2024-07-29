@@ -9,7 +9,7 @@ import 'brace/theme/tomorrow';
 import AceEditor from 'react-ace';
 import ZeekMode from './ZeekMode.js'
 
-import { fetchVersions, setVersion } from './actions';
+import { fetchVersions, setExecErrors, setVersion } from './actions';
 import { fetchExamples, hideExample, showExample } from './actions';
 import { codeAddFile, codeSelectFile, codeRenameFile, codeEditFile } from './actions';
 import { execReset, execSubmit } from './actions';
@@ -28,6 +28,7 @@ import {Table} from 'react-bootstrap';
 import {Modal} from 'react-bootstrap';
 
 import { setHistoryToExample } from './tbhistory';
+import { check_syntax } from './syntax_errors';
 
 var DropDown = ({options, includeBlank, selected, onChange}) => {
     if(includeBlank) {
@@ -352,6 +353,11 @@ export class App extends Component {
     }
     codeChanged = (name, contents) => {
         this.props.dispatch(codeEditFile(name, contents));
+        check_syntax(contents, "warning").then(errors => {
+            let result = new Object;
+            result[name] = errors;
+            this.props.dispatch(setExecErrors(result));
+        });
     }
     pcapChanged = (pcap) => {
         this.refs.file.value=null;

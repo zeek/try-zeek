@@ -3,8 +3,16 @@
 # VERSION               0.3
 
 FROM node as web-builder
+
+# Building the tree-sitter-zeek WASM output files requires emscripten.
+RUN apt-get update \
+ && apt-get install --no-install-recommends -qy emscripten \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 ADD web-ui/package.json web-ui/
 ADD web-ui/package-lock.json web-ui/
+ADD web-ui/tree-sitter-zeek web-ui/tree-sitter-zeek
+RUN mkdir web-ui/src # Output location for tree-sitter-zeek.wasm
 RUN cd web-ui && npm install
 ADD web-ui web-ui
 RUN make -C web-ui

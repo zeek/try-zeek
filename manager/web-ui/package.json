@@ -14,6 +14,7 @@
     "history": "^5.3.0",
     "isomorphic-fetch": "^3.0.0",
     "md5": "^2.3.0",
+    "path-browserify": "^1.0.1",
     "query-string": "^7.1.1",
     "react": "^18.2.0",
     "react-ace": "^10.1.0",
@@ -24,13 +25,15 @@
     "react-router-dom": "^6.4.3",
     "redux": "^4.2.0",
     "redux-logger": "^2.7.0",
-    "redux-thunk": "^2.4.2"
+    "redux-thunk": "^2.4.2",
+    "web-tree-sitter": "^0.22.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test --env=jsdom",
+    "eject": "craco eject",
+    "prepare": "cd tree-sitter-zeek && tree-sitter generate && tree-sitter build && tree-sitter build --wasm -o tree-sitter-zeek.wasm && mv tree-sitter-zeek.wasm ../src"
   },
   "browserslist": {
     "production": [
@@ -45,6 +48,7 @@
     ]
   },
   "devDependencies": {
-    "react-scripts": "^5.0.1"
+    "@craco/craco": "^7.1.0",
+    "tree-sitter-cli": "^0.22.2"
   }
 }
