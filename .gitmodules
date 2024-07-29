@@ -1,0 +1,3 @@
+[submodule "manager/web-ui/tree-sitter-zeek"]
+	path = manager/web-ui/tree-sitter-zeek
+	url = https://github.com/zeek/tree-sitter-zeek.git
