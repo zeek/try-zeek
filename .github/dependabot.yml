@@ -1,0 +1,8 @@
+# Copyright (c) 2020-2023 by the Zeek Project. See LICENSE for details.
+
+version: 2
+updates:
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "weekly"
