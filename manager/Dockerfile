@@ -9,7 +9,7 @@ RUN cd web-ui && npm install
 ADD web-ui web-ui
 RUN make -C web-ui
 
-FROM      debian:bullseye-slim
+FROM      debian:bookworm-slim
 MAINTAINER Justin Azoff <justin.azoff@gmail.com>
 
 RUN apt-get update && \
@@ -21,7 +21,7 @@ RUN apt-get update && \
 RUN mkdir /brostuff
 
 ADD requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+RUN pip3 install --break-system-packages -r requirements.txt
 
 ADD . /src
 WORKDIR /src
