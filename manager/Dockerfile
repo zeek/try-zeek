@@ -2,7 +2,7 @@
 #
 # VERSION               0.3
 
-FROM node AS web-builder
+FROM node:22.12 AS web-builder
 ADD web-ui/package.json web-ui/
 ADD web-ui/package-lock.json web-ui/
 RUN cd web-ui && npm install
