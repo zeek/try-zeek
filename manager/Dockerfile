@@ -2,15 +2,15 @@
 #
 # VERSION               0.3
 
-FROM node as web-builder
+FROM node:22.12 AS web-builder
 ADD web-ui/package.json web-ui/
 ADD web-ui/package-lock.json web-ui/
 RUN cd web-ui && npm install
 ADD web-ui web-ui
 RUN make -C web-ui
 
-FROM      debian:bullseye-slim
-MAINTAINER Justin Azoff <justin.azoff@gmail.com>
+FROM  debian:bookworm-slim
+LABEL org.opencontainers.image.authors="Justin Azoff <justin.azoff@gmail.com>"
 
 RUN apt-get update && \
     apt-get dist-upgrade -yq && \
@@ -21,7 +21,7 @@ RUN apt-get update && \
 RUN mkdir /brostuff
 
 ADD requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+RUN pip3 install --break-system-packages -r requirements.txt
 
 ADD . /src
 WORKDIR /src
