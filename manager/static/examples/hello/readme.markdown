@@ -77,9 +77,9 @@ Logs
 Sumstats
 ========
  * [The Summary Statistics Framework](#/?example=sumstats-sumstats1)
- * [SumStats Exercise Solution](#/?example=sumstats-sumstats2)
- * [SumStats Exercise Solution](#/?example=sumstats-sumstats3)
+ * [SumStats Exercise Solution Part 1](#/?example=sumstats-sumstats2)
+ * [SumStats Exercise Solution Part 2](#/?example=sumstats-sumstats3)
 
-Intel
-=====
+Intel Framework
+===============
  * [Intel](#/?example=intel-intel-1)
