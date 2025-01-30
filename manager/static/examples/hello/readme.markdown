@@ -40,7 +40,6 @@ Basics
 ======
  * [Loading Scripts](#/?example=basics-loading)
  * [Functions](#/?example=basics-functions)
- * [Functions](#/?example=basics-functions)
  * [Variables](#/?example=basics-variables)
  * [Primitive Datatypes](#/?example=basics-primitive-datatypes)
  * [Operators](#/?example=basics-operators)
