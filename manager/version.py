@@ -58,7 +58,7 @@ def pull_new_tags():
 
     session = requests.Session()
     redis = get_redis()
-    docker_client = docker.Client()
+    docker_client = docker.APIClient()
 
     _, known_versions = zeek_versions_from_redis()
     logger.info("known_versions: %s", known_versions)
@@ -95,7 +95,7 @@ def sync_docker_versions_to_redis():
     List locally available container images and store their tags in Redis.
     """
     redis = get_redis()
-    docker_client = docker.Client()
+    docker_client = docker.APIClient()
 
     images = docker_client.images(name="zeek/zeek")
     tags = []
