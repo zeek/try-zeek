@@ -29,7 +29,7 @@ supervisor==4.2.4
 urllib3==1.26.19
 webencodings==0.5.1
 websocket-client==1.4.2
-Werkzeug==3.0.6
+Werkzeug==3.1.4
 wrapt==1.14.1
 zipp==3.19.1
 zeekscript==1.2.9
