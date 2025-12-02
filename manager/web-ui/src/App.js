@@ -5,9 +5,9 @@ import {connect} from 'react-redux';
 
 import brace from 'brace';
 import 'brace/theme/tomorrow';
+import 'brace/mode/java';
 
 import AceEditor from 'react-ace';
-import ZeekMode from './ZeekMode.js'
 
 import { fetchVersions, setVersion } from './actions';
 import { fetchExamples, hideExample, showExample } from './actions';
