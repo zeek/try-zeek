@@ -26,7 +26,7 @@ requests==2.32.4
 rq==1.11.1
 six==1.16.0
 supervisor==4.2.4
-urllib3==1.26.19
+urllib3==2.5.0
 webencodings==0.5.1
 websocket-client==1.4.2
 Werkzeug==3.1.4
