@@ -28,13 +28,6 @@ def read_fn(fn):
         return f.read()
 
 
-def get_bro_versions():
-    c = docker.from_env()
-    images = c.images(name='zeek/zeek')
-    tags = [i['RepoTags'][0] for i in images]
-    versions = [t.replace("zeek/zeek:", "") for t in tags if '_' not in t]
-    return sorted(versions)
-
 def get_pcap(checksum):
     pcap_key = "pcaps:%s" % checksum
     r_raw.expire(pcap_key, 60*60)
