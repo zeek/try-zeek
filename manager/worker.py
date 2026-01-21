@@ -28,13 +28,6 @@ def read_fn(fn):
         return f.read()
 
 
-def get_bro_versions():
-    c = docker.Client()
-    images = c.images(name='zeek/zeek')
-    tags = [i['RepoTags'][0] for i in images]
-    versions = [t.replace("zeek/zeek:", "") for t in tags if '_' not in t]
-    return sorted(versions)
-
 def get_pcap(checksum):
     pcap_key = "pcaps:%s" % checksum
     r_raw.expire(pcap_key, 60*60)
@@ -134,17 +127,17 @@ def _run_code_docker(sources, pcap, version, work_dir):
     #docker run -v /brostuff/tmpWh0k1x:/brostuff/ -n --rm -t -i  bro_worker /bro/bin/bro /brostuff/code.bro
 
     print("Connecting to docker....")
-    c = docker.Client()
+    c = docker.from_env()
 
     print("Creating Bro %s container.." % version)
-    host_config = docker.utils.create_host_config(
+    host_config = c.api.create_host_config(
         binds=binds,
         dns=["127.0.0.1"],
         mem_limit="128m",
         network_mode="none",
         read_only=True,
     )
-    container = c.create_container('zeek/zeek:' + version,
+    container = c.api.create_container('zeek/zeek:' + version,
         working_dir=work_dir,
         command=runbro_path,
         host_config=host_config,
@@ -152,14 +145,14 @@ def _run_code_docker(sources, pcap, version, work_dir):
     )
     print("Starting container..")
     try:
-        c.start(container)
+        c.api.start(container)
 
         print("Waiting..")
-        c.wait(container)
+        c.api.wait(container)
 
     finally:
         print("Removing Container")
-        c.remove_container(container)
+        c.api.remove_container(container)
 
     files = {}
     for f in os.listdir(work_dir):
