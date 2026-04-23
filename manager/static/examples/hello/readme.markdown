@@ -1,17 +1,13 @@
 title: Hello World
-pcaps: 
+pcaps: http.pcap
 
 Hello World
 ============
 
-Welcome to our interactive Zeek tutorial.  (Note that "Zeek" is the
-new name of what used to be known as the "Bro" network monitoring system.
-The old "Bro" name still frequently appears in the system's documentation
-and workings, including in the names of events and the suffix used for
-script files.)
+Welcome to our interactive Zeek tutorial.
 
-Click run and see the Zeek magic happen. You may need to scroll
-down a bit to get to the output.
+Click run and see what happens when Zeek processes network traffic from a pcap file.
+You may need to scroll down a bit to get to the output.
 
 In this simple example you can see already a specialty of Zeek, the "event". Zeek is event-driven.
 This means you can control any execution by making it dependent on an event trigger. 
