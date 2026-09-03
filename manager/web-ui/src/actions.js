@@ -1,5 +1,3 @@
-import fetch from 'isomorphic-fetch';
-
 import { tbhistory, setHistoryToExample } from './tbhistory';
 import md5 from 'md5';
 import queryString from 'query-string'

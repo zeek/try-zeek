@@ -3,9 +3,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import tryBroApp from './reducers';
 
-jest.mock('isomorphic-fetch', () => () =>
-  Promise.resolve({ ok: true, json: () => Promise.resolve({}) }),
-);
+global.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
 
 function makeStore() {
   return createStore(tryBroApp, applyMiddleware(thunk));
