@@ -3,9 +3,9 @@ import './App.css';
 
 import {connect} from 'react-redux';
 
-import brace from 'brace';
-import 'brace/theme/tomorrow';
-import 'brace/mode/java';
+import 'ace-builds/src-noconflict/ace';
+import 'ace-builds/src-noconflict/theme-tomorrow';
+import 'ace-builds/src-noconflict/mode-java';
 
 import AceEditor from 'react-ace';
 
