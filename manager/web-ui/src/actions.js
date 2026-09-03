@@ -1,6 +1,5 @@
 import { tbhistory, setHistoryToExample } from './tbhistory';
 import md5 from 'md5';
-import queryString from 'query-string'
 
 const API_HOST = process.env.REACT_APP_TRY_BRO_API_HOST ? process.env.REACT_APP_TRY_BRO_API_HOST : ''; 
 
@@ -383,7 +382,7 @@ export function handleLocationChange(dispatch, location, initial=false) {
         var job = match[1];
         return dispatch(loadSaved(job, initial));
     }
-    const query = queryString.parse(location.search);
+    const query = Object.fromEntries(new URLSearchParams(location.search));
     if(query) {
         var q = query;
         if (q.pcap)
