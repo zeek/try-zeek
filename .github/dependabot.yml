@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /manager/web-ui
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    # Only bump runtime deps; devDependencies are build tooling whose
+    # transitive trees do not affect shipped code.
+    allow:
+      - dependency-type: production

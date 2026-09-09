@@ -3,9 +3,9 @@ import './App.css';
 
 import {connect} from 'react-redux';
 
-import brace from 'brace';
-import 'brace/theme/tomorrow';
-import 'brace/mode/java';
+import 'ace-builds/src-noconflict/ace';
+import 'ace-builds/src-noconflict/theme-tomorrow';
+import 'ace-builds/src-noconflict/mode-java';
 
 import AceEditor from 'react-ace';
 
@@ -17,7 +17,8 @@ import { fetchPcaps, pcapSelected, pcapFileChanged } from './actions';
 import { formatSubmit } from './actions';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid, regular } from '@fortawesome/fontawesome-svg-core/import.macro' // <-- import styles to be used
+import { faPlus, faPlay, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faEye } from '@fortawesome/free-regular-svg-icons'
 
 import {Tab, Tabs, Button, ButtonGroup} from 'react-bootstrap';
 import Pagination from 'react-bootstrap/Pagination';
@@ -86,7 +87,7 @@ class BroEditor extends Component {
     }
 
     render() {
-        var add_button = <span><FontAwesomeIcon icon={solid("plus")} /> Add File</span>
+        var add_button = <span><FontAwesomeIcon icon={faPlus} /> Add File</span>
         return (
         <div>
             <Tabs animation={false} activeKey={this.props.code.current} onSelect={(e) => this.handleSelect(e)} id="Editor">
@@ -306,7 +307,7 @@ var RunButton = ({status, pcap, onClick}) => {
     if (status)
         return <Button disabled={true} bsStyle="primary">{status}</Button>;
 
-    return <Button bsStyle="primary" onClick={onClick}> <span>Run <FontAwesomeIcon icon={solid("play")} /></span> </Button>;
+    return <Button bsStyle="primary" onClick={onClick}> <span>Run <FontAwesomeIcon icon={faPlay} /></span> </Button>;
 }
 
 var TextMessage = ({header, text, className}) => {
@@ -372,9 +373,9 @@ export class App extends Component {
         const { examples } = this.props;
         var showHide = null;
         if ( examples.example && examples.example.html && examples.hidden)
-            showHide = <Button onClick={this.showExample} style={{cursor:'pointer'}}>Show Text <FontAwesomeIcon icon={regular("eye")} /></Button>;
+            showHide = <Button onClick={this.showExample} style={{cursor:'pointer'}}>Show Text <FontAwesomeIcon icon={faEye} /></Button>;
         else
-            showHide = <Button onClick={this.hideExample} style={{cursor:'pointer'}}>Hide Text <FontAwesomeIcon icon={solid("xmark")} /></Button>;
+            showHide = <Button onClick={this.hideExample} style={{cursor:'pointer'}}>Hide Text <FontAwesomeIcon icon={faXmark} /></Button>;
 
         return (
             <Row> <Col sm={12}>
