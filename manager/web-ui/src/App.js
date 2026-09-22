@@ -30,12 +30,12 @@ import {Modal} from 'react-bootstrap';
 
 import { setHistoryToExample } from './tbhistory';
 
-var DropDown = ({options, includeBlank, selected, onChange}) => {
+var DropDown = ({options, includeBlank, selected, onChange, testid}) => {
     if(includeBlank) {
         options = ['', ...options];
     }
     return (
-        <select value={selected || ''} onChange={(e) => onChange(e.target.value)}>
+        <select data-testid={testid} value={selected || ''} onChange={(e) => onChange(e.target.value)}>
           {options.map ? options.map(opt =>
             <option key={opt} value={opt}>{opt}</option>
           ) : null}
@@ -52,7 +52,7 @@ class BroVersions extends Component {
             <span>
                 Zeek Version
                 { ' ' }
-                <DropDown options={versions} selected={version} onChange={this.change} />
+                <DropDown options={versions} selected={version} onChange={this.change} testid="version-select" />
             </span>
         );
     }
@@ -62,7 +62,7 @@ class BroVersions extends Component {
 var ExampleDropDown = ({examples, includeBlank, selected, onChange}) => {
     var cur_selected = selected ? selected.path: '';
     return (
-        <select value={cur_selected} onChange={(e) => onChange(e.target.value)}>
+        <select data-testid="example-select" value={cur_selected} onChange={(e) => onChange(e.target.value)}>
           {examples.map(ex =>
             <option key={ex.path} value={ex.path}>{ex.parent ? ex.parent + ':' : ''} {ex.title}</option>
           )}
@@ -89,7 +89,7 @@ class BroEditor extends Component {
     render() {
         var add_button = <span><FontAwesomeIcon icon={faPlus} /> Add File</span>
         return (
-        <div>
+        <div data-testid="editor">
             <Tabs animation={false} activeKey={this.props.code.current} onSelect={(e) => this.handleSelect(e)} id="Editor">
               {this.props.code.sources.map(c =>
               <Tab title={c.name} key={c.name} eventKey={c.name}>
@@ -122,10 +122,10 @@ class BroExampleReadme extends Component {
             return null;
         }
         var markup = {__html: example.html }
-        var prev = example.prev ? <Pagination.Item previous onClick={() => onChange(example.prev.path)}>Previous </Pagination.Item> : null;
-        var next = example.next ? <Pagination.Item next     onClick={() => onChange(example.next.path)}>Next </Pagination.Item> : null;
+        var prev = example.prev ? <Pagination.Item previous onClick={() => onChange(example.prev.path)} data-testid="example-prev">Previous </Pagination.Item> : null;
+        var next = example.next ? <Pagination.Item next     onClick={() => onChange(example.next.path)} data-testid="example-next">Next </Pagination.Item> : null;
         return (
-            <div>
+            <div data-testid="example-readme">
                 <Pagination style={{marginTop: 0}}>
                     {prev}
                     {next}
@@ -177,13 +177,13 @@ class BroFileViewerModal extends Component {
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-lg">
           <ButtonGroup>
-              <Button onClick={() => onPrev()} disabled={this.props.recordNum === 0}>Prev</Button>
-              <Button onClick={() => onNext()} disabled={this.props.recordNum === file.rows.length -1}>Next</Button>
+              <Button data-testid="modal-prev" onClick={() => onPrev()} disabled={this.props.recordNum === 0}>Prev</Button>
+              <Button data-testid="modal-next" onClick={() => onNext()} disabled={this.props.recordNum === file.rows.length -1}>Next</Button>
           </ButtonGroup>
           {rowStatus}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body data-testid="detail-modal">
           <BroFileViewerDetailTable record={record} />
         </Modal.Body>
         <Modal.Footer>
@@ -212,7 +212,7 @@ class BroFileViewerTableTable extends Component {
             </thead>
             <tbody className="Pointer">
                 {file.rows.map((r, id) =>
-                    <tr key={id} onClick={() => onRowSelected(file, r, id)}>
+                    <tr data-testid="log-row" key={id} onClick={() => onRowSelected(file, r, id)}>
                         {r.map((c, cid) =>
                             <td key={id + ' ' + cid}><div className="overflow">{c}</div></td>
                         )}
@@ -282,7 +282,7 @@ class BroFileViewer extends Component {
         }
         let tab = files.hasOwnProperty("conn.log") ? "conn.log" : Object.keys(files)[0];
         return (
-            <div>
+            <div data-testid="output-logs">
                 <h2> Output Logs </h2>
                 <Tabs animation={false} bsStyle='pills' id="Output Logs" defaultActiveKey={tab} >
                 {Object.keys(files).map( (f) =>
@@ -298,26 +298,33 @@ class BroFileViewer extends Component {
 
 
 var RunButton = ({status, pcap, onClick}) => {
-    if (pcap.too_large)
-        return <Button disabled={true} bsStyle="danger">The selected PCAP is too large to upload</Button>;
+    let disabled = true;
+    let variant = "primary";
+    let label;
 
-    if (pcap.uploading)
-        return <Button disabled={true} bsStyle="primary">Uploading pcap: {pcap.upload_progress}%</Button>;
+    if (pcap.too_large) {
+        variant = "danger";
+        label = "The selected PCAP is too large to upload";
+    } else if (pcap.uploading) {
+        label = "Uploading pcap: {pcap.upload_progress}%";
+    } else if (status) {
+        label = status;
+    } else {
+        disabled = false;
+        label =  <span>Run <FontAwesomeIcon icon={faPlay} /></span>;
+    }
 
-    if (status)
-        return <Button disabled={true} bsStyle="primary">{status}</Button>;
-
-    return <Button bsStyle="primary" onClick={onClick}> <span>Run <FontAwesomeIcon icon={faPlay} /></span> </Button>;
+    return <Button data-testid="run-btn" disabled={disabled} bsStyle={variant} onClick={onClick}>{label}</Button>;
 }
 
-var TextMessage = ({header, text, className}) => {
+var TextMessage = ({header, text, className, testid}) => {
     if(!text) {
         return <div/>;
     }
     return (
         <div>
             <h2> { header } </h2>
-            <pre className={className}>{ text }</pre>
+            <pre data-testid={testid} className={className}>{ text }</pre>
         </div>
     );
 }
@@ -373,9 +380,9 @@ export class App extends Component {
         const { examples } = this.props;
         var showHide = null;
         if ( examples.example && examples.example.html && examples.hidden)
-            showHide = <Button onClick={this.showExample} style={{cursor:'pointer'}}>Show Text <FontAwesomeIcon icon={faEye} /></Button>;
+            showHide = <Button data-testid="toggle-text" onClick={this.showExample} style={{cursor:'pointer'}}>Show Text <FontAwesomeIcon icon={faEye} /></Button>;
         else
-            showHide = <Button onClick={this.hideExample} style={{cursor:'pointer'}}>Hide Text <FontAwesomeIcon icon={faXmark} /></Button>;
+            showHide = <Button data-testid="toggle-text" onClick={this.hideExample} style={{cursor:'pointer'}}>Hide Text <FontAwesomeIcon icon={faXmark} /></Button>;
 
         return (
             <Row> <Col sm={12}>
@@ -397,7 +404,7 @@ export class App extends Component {
             onCodeChanged={this.codeChanged} />
 
 
-        var editorBox = 
+        var editorBox =
             <Container fluid={true}>
                  <Row>
                      {editor}
@@ -407,13 +414,13 @@ export class App extends Component {
                         <Col sm={12} >
                         <BroVersions versions={versions} onVersionChanged={this.versionSelected} />
                         { '  ' }
-                        Use PCAP <DropDown includeBlank={true} options={pcap.available} selected={pcap.pcap} onChange={this.pcapChanged}/>
+                        Use PCAP <DropDown includeBlank={true} options={pcap.available} selected={pcap.pcap} onChange={this.pcapChanged} testid="pcap-select"/>
                         { '  ' }
                         Or { ' ' }
                         <label>
-                            <input type="file" ref="file" onChange={this.fileChanged} />
+                            <input type="file" ref="file" onChange={this.fileChanged} data-testid="pcap-file" />
                         </label>
-                        <Button variant="secondary" onClick={this.formatCode}>Format</Button>
+                        <Button data-testid="format-btn" variant="secondary" onClick={this.formatCode}>Format</Button>
                         { ' ' }
                         <RunButton status={exec.status} pcap={pcap} onClick={this.runCode} />
                         </Col>
@@ -450,8 +457,8 @@ export class App extends Component {
                 {this.renderLoadLine()}
                 <br/>
                 {this.renderCodeRow()}
-                <TextMessage header='Errors' text={exec.stderr} className="alert alert-danger" />
-                <TextMessage header='Output' text={exec.stdout} />
+                <TextMessage header='Errors' text={exec.stderr} className="alert alert-danger" testid="errors" />
+                <TextMessage header='Output' text={exec.stdout} testid="output" />
                 <BroFileViewer job={exec.job} files={exec.files} />
             </Container>
         );
