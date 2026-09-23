@@ -24,7 +24,6 @@ if (process.env.NODE_ENV === `development`) {
 const store = compose(applyMiddleware(...middlewares))(createStore)(tryBroApp);
 
 tbhistory.listen(function (location) {
-    console.log('tbhistory event handler:', location.action, location.location);
     if(location.action !== 'REPLACE')
         handleLocationChange(store.dispatch, location.location, false)
 })
@@ -37,4 +36,3 @@ render(
   </Provider>,
   rootElement
 );
-

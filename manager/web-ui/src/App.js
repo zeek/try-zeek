@@ -331,7 +331,6 @@ var TextMessage = ({header, text, className, testid}) => {
 
 export class App extends Component {
     componentDidMount() {
-        console.log('App mounted!');
         this.props.dispatch(fetchExamples());
         this.props.dispatch(fetchVersions());
         this.props.dispatch(fetchPcaps());
