@@ -1,7 +1,7 @@
 import { tbhistory, setHistoryToExample } from './tbhistory';
 import md5 from 'md5';
 
-const API_HOST = process.env.REACT_APP_TRY_BRO_API_HOST ? process.env.REACT_APP_TRY_BRO_API_HOST : ''; 
+const API_HOST = process.env.REACT_APP_TRY_BRO_API_HOST ? process.env.REACT_APP_TRY_BRO_API_HOST : '';
 
 
 export const VERSIONS_FETCHING  = 'VERSIONS_FETCHING';
@@ -376,7 +376,6 @@ export function formatSubmit() {
 
 
 export function handleLocationChange(dispatch, location, initial=false) {
-    console.log('Location is now', location);
     var match = /\/(?:trybro|tryzeek)\/saved\/([0-9a-f]+)/.exec(location.pathname);
     if (match) {
         var job = match[1];
