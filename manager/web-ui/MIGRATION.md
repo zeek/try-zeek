@@ -100,7 +100,8 @@ Add e2e specs for behavior that isn't covered yet:
       exists on the server, so no upload happens.
 - [x] **Autorun:** a saved-job deep link and `?example=dns&run=1` each trigger a
       `/run` POST.
-- [ ] **Error annotations:** a stderr error appears in Ace's gutter (`.ace_error`).
+- [x] **Error annotations:** a stderr error appears in Ace's gutter (`.ace_error`).
+      This turned up Phase 4 bug 7, which is recorded with `test.fail()`.
 - [ ] **Log tabs:** `conn.log` is the default tab, clicking the `weird` tab shows a
       `<pre>`, and the detail modal closes.
 - [ ] **Run button:** shows "Running..." and is disabled during a run (delay the
@@ -197,6 +198,13 @@ Add e2e specs for behavior that isn't covered yet:
 5. [ ] `?run=0` still triggers autorun because the string `"0"` is truthy.
 6. [ ] md5 is computed with `readAsBinaryString` on files up to 10 MB. Use an
        ArrayBuffer with `spark-md5` instead (WebCrypto has no MD5).
+7. [ ] If a file's tab is hidden when error annotations arrive (for example, you
+       run while another file's tab is open), its gutter isn't redrawn when the
+       tab is shown again, so the error markers are missing until something else
+       forces a redraw. The annotations themselves are stored correctly. The
+       `test.fail()` spec in `e2e/editor.spec.js` records this. A single Ace
+       editor with one `EditSession` per file (Phase 2) may fix it naturally;
+       otherwise call `editor.resize()` when a tab is shown.
 
 ## Phase 5 (optional): Shrink further
 
