@@ -17,7 +17,7 @@ def is_plain_filename(name) -> bool:
     True if name is a single path component, so joining it onto a
     directory can't point anywhere outside that directory.
     """
-    return (isinstance(name, str) and name not in ("", ".", "..")
+    return (isinstance(name, str) and name not in ("", os.curdir, os.pardir)
             and not any(c in name for c in "/\\\0"))
 
 
