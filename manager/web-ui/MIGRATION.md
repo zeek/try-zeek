@@ -102,8 +102,9 @@ Add e2e specs for behavior that isn't covered yet:
       `/run` POST.
 - [x] **Error annotations:** a stderr error appears in Ace's gutter (`.ace_error`).
       This turned up Phase 4 bug 7, which is recorded with `test.fail()`.
-- [ ] **Log tabs:** `conn.log` is the default tab, clicking the `weird` tab shows a
-      `<pre>`, and the detail modal closes.
+- [x] **Log tabs:** `conn.log` is the default tab, clicking the `weird` tab shows a
+      `<pre>`, and the detail modal closes. (This added `data-testid="modal-close"`
+      to the modal's footer button.)
 - [ ] **Run button:** shows "Running..." and is disabled during a run (delay the
       mocked `/run`).
 - [ ] **Old links:** `#/trybro?example=…` still loads the example. `pack.py`

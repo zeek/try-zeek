@@ -108,4 +108,4 @@ async function mockApi(page, overrides = {}) {
   return { requests, EXAMPLES, VERSIONS, PCAPS, FILES, SAVED };
 }
 
-module.exports = { test, expect, mockApi };
+module.exports = { test, expect, mockApi, EXAMPLES, VERSIONS, PCAPS, FILES, SAVED };
