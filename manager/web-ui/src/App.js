@@ -187,7 +187,7 @@ class BroFileViewerModal extends Component {
           <BroFileViewerDetailTable record={record} />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.props.onHide}>Close</Button>
+          <Button data-testid="modal-close" onClick={this.props.onHide}>Close</Button>
         </Modal.Footer>
       </Modal>
     );
