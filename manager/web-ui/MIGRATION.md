@@ -20,7 +20,7 @@ work fine on their own. Each one peer-depends on React's version:
 - `react-redux` wraps Redux. The dependabot bump to `redux@5` conflicts with
   `react-redux@8`, which is why `--legacy-peer-deps` is needed.
 - `react-scripts` (Create React App) is deprecated and pins webpack, Babel, Jest
-  and ESLint all at once. Most of the lockfile's **1,473 packages** come from it.
+  and ESLint all at once. Most of the lockfile's **1,472 packages** come from it.
 
 ## Target stack
 
@@ -35,7 +35,7 @@ work fine on their own. Each one peer-depends on React's version:
 | E2E tests | `@playwright/test` | none |
 
 A scratch install of this stack (including Vitest and jsdom) came to **119
-packages**. Without Vitest and jsdom it's **74**, compared with 1,473 today.
+packages**. Without Vitest and jsdom it's **74**, compared with 1,472 today.
 
 ### Coupling that remains
 
@@ -110,7 +110,8 @@ Add e2e specs for behavior that isn't covered yet:
 - [x] **Old links:** `#/trybro?example=…` still loads the example. `pack.py`
       rewrites tutorial links into this form, so clicking one inside a readme is
       also covered.
-- [ ] Record the baselines (bundle size, load timing) in `e2e/README.md`.
+- [x] Record the baselines (bundle size, load timing) in `e2e/README.md`, using
+      `e2e/measure.js` so the Svelte build can be measured the same way.
 
 ## Phase 1: Framework-free core
 
