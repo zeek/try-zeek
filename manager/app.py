@@ -5,6 +5,7 @@ import hashlib
 import os
 
 import backend
+from common import is_plain_filename, is_valid_pcap
 import metrics
 from format import fmt
 
@@ -44,13 +45,35 @@ def saved(job):
 def run_options_for_cors():
     return cors_jsonify(ok="ok")
 
+def run_request_error(req):
+    """Return why a /run request body is invalid, or None if it's valid."""
+    if not isinstance(req, dict):
+        return "expected a JSON object"
+    sources = req.get('sources')
+    if not isinstance(sources, list) or not sources:
+        return "sources must be a non-empty list"
+    for src in sources:
+        if not isinstance(src, dict) or not isinstance(src.get('content'), str):
+            return "each source needs a name and content"
+        # The worker writes each source to <work dir>/<name>.
+        if not is_plain_filename(src.get('name')):
+            return "invalid source file name: %r" % (src.get('name'),)
+    if not is_valid_pcap(req.get('pcap')):
+        return "invalid pcap: %r" % (req.get('pcap'),)
+    return None
+
 @app.route("/run", methods=['POST'])
 def run():
-    sources = request.json.get('sources', '')
-    pcap = request.json.get('pcap', '')
-    version = request.json.get('version', '')
-    if pcap and '--' in pcap:
-        pcap = None
+    req = request.get_json(silent=True)
+    error = run_request_error(req)
+    if error:
+        response = cors_jsonify(error=error)
+        response.status_code = 400
+        return response
+
+    sources = req['sources']
+    pcap = req.get('pcap', '')
+    version = req.get('version', '')
 
     job_id, stdout = backend.run_code(sources, pcap=pcap, version=version)
     return cors_jsonify(job=job_id, stdout=stdout)
