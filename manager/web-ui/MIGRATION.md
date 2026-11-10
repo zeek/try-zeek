@@ -98,7 +98,7 @@ Add e2e specs for behavior that isn't covered yet:
 - [x] **Pcap upload:** file → `GET /pcap/<md5>` → `POST /pcap/upload/<md5>` →
       `/run` carrying the checksum. Add a fixture variant where the pcap already
       exists on the server, so no upload happens.
-- [ ] **Autorun:** a saved-job deep link and `?example=dns&run=1` each trigger a
+- [x] **Autorun:** a saved-job deep link and `?example=dns&run=1` each trigger a
       `/run` POST.
 - [ ] **Error annotations:** a stderr error appears in Ace's gutter (`.ace_error`).
 - [ ] **Log tabs:** `conn.log` is the default tab, clicking the `weird` tab shows a
