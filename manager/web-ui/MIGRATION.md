@@ -105,7 +105,7 @@ Add e2e specs for behavior that isn't covered yet:
 - [x] **Log tabs:** `conn.log` is the default tab, clicking the `weird` tab shows a
       `<pre>`, and the detail modal closes. (This added `data-testid="modal-close"`
       to the modal's footer button.)
-- [ ] **Run button:** shows "Running..." and is disabled during a run (delay the
+- [x] **Run button:** shows "Running..." and is disabled during a run (delay the
       mocked `/run`).
 - [ ] **Old links:** `#/trybro?example=…` still loads the example. `pack.py`
       rewrites tutorial links into this form.

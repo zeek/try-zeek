@@ -67,8 +67,18 @@ async function json(route, body) {
 
 // Installs all API routes on the page. Returns a small recorder so specs can
 // assert on request payloads (the API contract) when needed.
+//
+// `overrides.hold` lists route names ('run', 'files') whose responses wait
+// until the spec calls `api.release(name)`, so in-progress UI can be checked.
 async function mockApi(page, overrides = {}) {
   const requests = [];
+  const gates = {};
+  for (const name of overrides.hold || []) {
+    let open;
+    gates[name] = { promise: new Promise((resolve) => { open = resolve; }), open };
+  }
+  const gate = (name) => gates[name] && gates[name].promise;
+  const release = (name) => gates[name].open();
 
   // Static JSON GETs.
   await page.route(/versions\.json/, (r) => json(r, overrides.versions || VERSIONS));
@@ -78,9 +88,13 @@ async function mockApi(page, overrides = {}) {
   // POST /run  -> a job id, then GET /files/<job>.json for the logs.
   await page.route(/\/run(\?|$)/, async (route) => {
     requests.push({ name: 'run', body: route.request().postData() });
+    await gate('run');
     await json(route, overrides.run || { job: 'job1', stdout: 'hello world output' });
   });
-  await page.route(/\/files\/[^/]+\.json/, (r) => json(r, overrides.files || FILES));
+  await page.route(/\/files\/[^/]+\.json/, async (route) => {
+    await gate('files');
+    await json(route, overrides.files || FILES);
+  });
 
   // Formatting.
   await page.route(/\/format(\?|$)/, async (route) => {
@@ -105,7 +119,7 @@ async function mockApi(page, overrides = {}) {
     await json(route, { status: true, checksum: 'deadbeef' });
   });
 
-  return { requests, EXAMPLES, VERSIONS, PCAPS, FILES, SAVED };
+  return { requests, release, EXAMPLES, VERSIONS, PCAPS, FILES, SAVED };
 }
 
 module.exports = { test, expect, mockApi, EXAMPLES, VERSIONS, PCAPS, FILES, SAVED };
