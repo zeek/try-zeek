@@ -107,8 +107,9 @@ Add e2e specs for behavior that isn't covered yet:
       to the modal's footer button.)
 - [x] **Run button:** shows "Running..." and is disabled during a run (delay the
       mocked `/run`).
-- [ ] **Old links:** `#/trybro?example=…` still loads the example. `pack.py`
-      rewrites tutorial links into this form.
+- [x] **Old links:** `#/trybro?example=…` still loads the example. `pack.py`
+      rewrites tutorial links into this form, so clicking one inside a readme is
+      also covered.
 - [ ] Record the baselines (bundle size, load timing) in `e2e/README.md`.
 
 ## Phase 1: Framework-free core

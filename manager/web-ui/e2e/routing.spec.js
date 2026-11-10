@@ -23,3 +23,15 @@ test('the ?example= query param loads that example', async ({ page }) => {
   await expect(page.getByTestId('example-readme')).toContainText('DNS example');
   await expect(page.getByTestId('editor')).toContainText('dns_request');
 });
+
+// Old try.bro links, which use /trybro instead of /tryzeek.
+test('a legacy #/trybro?example= link loads that example', async ({ page }) => {
+  await page.goto('/#/trybro?example=dns');
+  await expect(page.getByTestId('example-readme')).toContainText('DNS example');
+  await expect(page.getByTestId('editor')).toContainText('dns_request');
+});
+
+test('a legacy #/trybro/saved/ link loads the saved sources', async ({ page }) => {
+  await page.goto('/#/trybro/saved/abc123');
+  await expect(page.getByTestId('editor')).toContainText('print "saved"');
+});
