@@ -11,7 +11,7 @@ import tempfile
 import traceback
 import rq
 
-from common import get_cache_key, get_redis, get_redis_raw
+from common import get_cache_key, get_redis, get_redis_raw, is_plain_filename
 from version import zeek_versions_from_redis
 
 CACHE_EXPIRE = 60*10
@@ -90,6 +90,12 @@ def _run_code_docker(sources, pcap, version, work_dir):
     if version not in versions:
         print(f"Warning: {version!r} not available, using {default_version!r}")
         version = default_version
+
+    # Source names come from the request and are joined onto work_dir, so
+    # anything but a plain file name could write outside of it.
+    for s in sources:
+        if not is_plain_filename(s['name']):
+            raise ValueError(f"invalid source file name: {s['name']!r}")
 
     for s in sources:
         s['content'] = s['content'].replace("\r\n", "\n")
