@@ -94,10 +94,14 @@ async function mockApi(page, overrides = {}) {
   // Saved jobs.
   await page.route(/\/saved\/[0-9a-f]+/, (r) => json(r, overrides.saved || SAVED));
 
-  // Pcap existence check + upload.
-  await page.route(/\/pcap\/[0-9a-f]+$/, (r) => json(r, { status: false }));
+  // Pcap existence check + upload. `overrides.pcapExists` makes the check
+  // report the pcap as already present on the server, so no upload happens.
+  await page.route(/\/pcap\/[0-9a-f]+$/, async (route) => {
+    requests.push({ name: 'pcap-check', url: route.request().url() });
+    await json(route, { status: !!overrides.pcapExists });
+  });
   await page.route(/\/pcap\/upload\//, async (route) => {
-    requests.push({ name: 'upload', body: '<multipart>' });
+    requests.push({ name: 'upload', url: route.request().url(), body: '<multipart>' });
     await json(route, { status: true, checksum: 'deadbeef' });
   });
 
