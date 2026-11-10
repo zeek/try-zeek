@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import shutil
+import stat
 import time
 import tempfile
 import traceback
@@ -24,8 +25,21 @@ r_raw = get_redis_raw()
 background_tasks = set()
 
 
-def read_fn(fn):
-    with open(fn) as f:
+def read_log(fn):
+    """
+    Read a log written by a job, or return None if it isn't a regular file.
+    The work dir is writable from inside the container, so a job could leave
+    a symlink there (pointing at a file on the worker) or a FIFO (which would
+    block a plain open).
+    """
+    try:
+        fd = os.open(fn, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    except OSError:
+        return None
+    if not stat.S_ISREG(os.fstat(fd).st_mode):
+        os.close(fd)
+        return None
+    with os.fdopen(fd) as f:
         return f.read()
 
 
@@ -168,7 +182,9 @@ def _run_code_docker(sources, pcap, version, work_dir):
     for f in os.listdir(work_dir):
         if not f.endswith(".log"): continue
         full = os.path.join(work_dir, f)
-        txt = read_fn(full)
+        txt = read_log(full)
+        if txt is None:
+            continue
         if txt.strip() or 'stdout' in f:
             files[f] = txt
     return files

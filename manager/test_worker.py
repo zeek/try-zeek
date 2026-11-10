@@ -114,5 +114,43 @@ class TestPcaps(WorkerTestCase):
                 self.docker.api.create_container.assert_not_called()
 
 
+class TestOutputLogs(WorkerTestCase):
+
+    SOURCES = [{"name": "main.zeek", "content": "# ok"}]
+
+    def run_with_output(self, make_output):
+        """Run a job whose container leaves behind what make_output creates."""
+        self.docker.api.start.side_effect = lambda container: make_output(self.work_dir)
+        return self.run_code(self.SOURCES)
+
+    def test_logs_are_returned(self):
+        def make_output(d):
+            for name, txt in [("conn.log", "conn"), ("stdout.log", ""),
+                              ("empty.log", " \n"), ("notes.txt", "not a log")]:
+                with open(os.path.join(d, name), "w") as f:
+                    f.write(txt)
+        files = self.run_with_output(make_output)
+        self.assertEqual(files, {"conn.log": "conn", "stdout.log": ""})
+
+    def test_symlinked_logs_are_not_followed(self):
+        secret = os.path.join(self.parent, "secret")
+        with open(secret, "w") as f:
+            f.write("secret")
+
+        def make_output(d):
+            with open(os.path.join(d, "conn.log"), "w") as f:
+                f.write("conn")
+            os.symlink(secret, os.path.join(d, "leak.log"))
+            os.symlink("../secret", os.path.join(d, "stdout.log"))
+        files = self.run_with_output(make_output)
+        self.assertEqual(files, {"conn.log": "conn"})
+
+    def test_non_regular_logs_are_skipped(self):
+        def make_output(d):
+            os.mkfifo(os.path.join(d, "fifo.log"))
+            os.mkdir(os.path.join(d, "dir.log"))
+        self.assertEqual(self.run_with_output(make_output), {})
+
+
 if __name__ == '__main__':
     unittest.main()
