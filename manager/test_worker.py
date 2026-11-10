@@ -4,6 +4,7 @@ import unittest
 from unittest import mock
 
 import worker
+import common
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -65,6 +66,50 @@ class TestSourceNames(WorkerTestCase):
                 with self.assertRaises(ValueError):
                     self.run_code(sources)
                 self.assertEqual(self.parent_entries(), ["work"])
+                self.assertEqual(os.listdir(self.work_dir), [])
+                self.docker.api.create_container.assert_not_called()
+
+
+class TestPcaps(WorkerTestCase):
+
+    SOURCES = [{"name": "main.zeek", "content": "# ok"}]
+    CHECKSUM = "d41d8cd98f00b204e9800998ecf8427e"
+
+    def setUp(self):
+        super().setUp()
+        pcap_dir = os.path.join(self.parent, "pcaps")
+        os.mkdir(pcap_dir)
+        with open(os.path.join(pcap_dir, "http.pcap"), "wb") as f:
+            f.write(b"bundled pcap")
+        with open(os.path.join(self.parent, "secret"), "wb") as f:
+            f.write(b"secret")
+        patcher = mock.patch.object(worker, "PCAP_DIR", pcap_dir)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def pcap_contents(self):
+        with open(os.path.join(self.work_dir, "file.pcap"), "rb") as f:
+            return f.read()
+
+    def test_the_real_pcap_dir_has_the_bundled_pcaps(self):
+        self.assertTrue(os.path.isfile(os.path.join(common.PCAP_DIR, "http.pcap")))
+
+    def test_bundled_pcap_is_copied(self):
+        self.run_code(self.SOURCES, pcap="http.pcap")
+        self.assertEqual(self.pcap_contents(), b"bundled pcap")
+
+    def test_uploaded_pcap_is_read_from_redis(self):
+        with mock.patch.object(worker, "get_pcap_with_retry", return_value=b"uploaded") as get:
+            self.run_code(self.SOURCES, pcap=self.CHECKSUM)
+        get.assert_called_once_with(self.CHECKSUM)
+        self.assertEqual(self.pcap_contents(), b"uploaded")
+
+    def test_unsafe_pcaps_are_rejected(self):
+        for pcap in ["../secret", os.path.join(self.parent, "secret"),
+                     "missing.pcap", "deadbeef", "--foo"]:
+            with self.subTest(pcap=pcap):
+                with self.assertRaises(ValueError):
+                    self.run_code(self.SOURCES, pcap=pcap)
                 self.assertEqual(os.listdir(self.work_dir), [])
                 self.docker.api.create_container.assert_not_called()
 

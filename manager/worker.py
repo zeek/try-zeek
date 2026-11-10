@@ -11,7 +11,8 @@ import tempfile
 import traceback
 import rq
 
-from common import get_cache_key, get_redis, get_redis_raw, is_plain_filename
+from common import (PCAP_DIR, get_cache_key, get_redis, get_redis_raw,
+                    is_pcap_checksum, is_plain_filename, is_valid_pcap)
 from version import zeek_versions_from_redis
 
 CACHE_EXPIRE = 60*10
@@ -96,6 +97,9 @@ def _run_code_docker(sources, pcap, version, work_dir):
     for s in sources:
         if not is_plain_filename(s['name']):
             raise ValueError(f"invalid source file name: {s['name']!r}")
+    # Likewise, a named pcap is joined onto PCAP_DIR.
+    if not is_valid_pcap(pcap, PCAP_DIR):
+        raise ValueError(f"invalid pcap: {pcap!r}")
 
     for s in sources:
         s['content'] = s['content'].replace("\r\n", "\n")
@@ -119,16 +123,16 @@ def _run_code_docker(sources, pcap, version, work_dir):
 
     if pcap:
         dst = os.path.join(work_dir, "file.pcap")
-        if '.' in pcap:
-            src = os.path.join(os.getcwd(), "static/pcaps", pcap)
-            #FIXME: Work out a better way to share pcaps around
-            #binds[src]={"bind": dst, "ro": True}
-            shutil.copy(src, dst)
-        else:
+        if is_pcap_checksum(pcap):
             contents = get_pcap_with_retry(pcap)
             if contents:
                 with open(dst, 'wb') as f:
                     f.write(contents)
+        else:
+            src = os.path.join(PCAP_DIR, pcap)
+            #FIXME: Work out a better way to share pcaps around
+            #binds[src]={"bind": dst, "ro": True}
+            shutil.copy(src, dst)
 
     #docker run -v /brostuff/tmpWh0k1x:/brostuff/ -n --rm -t -i  bro_worker /bro/bin/bro /brostuff/code.bro
 
