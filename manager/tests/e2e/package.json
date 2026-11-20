@@ -1,0 +1,13 @@
+{
+  "name": "try-zeek-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "End-to-end tests for the try-zeek web UI",
+  "scripts": {
+    "pretest": "playwright install --with-deps chromium",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}

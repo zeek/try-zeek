@@ -1,7 +1,9 @@
 // Measures a production build of the web UI, so the React and Svelte versions
 // can be compared the same way. Not part of the test suite.
 //
-// Usage: node e2e/measure.js [build-dir] [runs]
+// Usage: node measure.js [build-dir] [runs]
+//
+// build-dir defaults to the web UI's build directory (../../web-ui/build).
 //
 // Prints a markdown table with:
 // - the size of each shipped .js/.css file, raw and gzipped (level 9);
@@ -18,7 +20,7 @@ const zlib = require('zlib');
 const { chromium } = require('@playwright/test');
 const { mockApi } = require('./fixtures');
 
-const buildDir = path.resolve(process.argv[2] || 'build');
+const buildDir = path.resolve(process.argv[2] || path.join(__dirname, '..', '..', 'web-ui', 'build'));
 const runs = Number(process.argv[3] || 10);
 
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.ico': 'image/x-icon' };

@@ -5,9 +5,6 @@ node_modules
 
 # testing
 coverage
-test-results
-playwright-report
-.playwright
 
 # production
 build
