@@ -6,7 +6,7 @@ from unittest import mock
 import worker
 import common
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+MANAGER_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 
 class WorkerTestCase(unittest.TestCase):
@@ -24,7 +24,7 @@ class WorkerTestCase(unittest.TestCase):
 
         # _run_code_docker copies ./runbro, relative to the manager directory.
         cwd = os.getcwd()
-        os.chdir(HERE)
+        os.chdir(MANAGER_DIR)
         self.addCleanup(os.chdir, cwd)
 
         patcher = mock.patch.object(worker, "zeek_versions_from_redis",
