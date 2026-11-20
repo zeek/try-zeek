@@ -1,0 +1,45 @@
+name: backend tests
+
+# Unit tests for the Flask app and the worker (manager/*.py). Docker and Redis
+# are mocked, so no Zeek containers or Redis server are needed. Python 3.11
+# matches the debian:bookworm-slim image the backend runs in.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'manager/**'
+      - '!manager/web-ui/**'
+      - '!manager/tests/e2e/**'
+      - '.github/workflows/backend.yml'
+  pull_request:
+    paths:
+      - 'manager/**'
+      - '!manager/web-ui/**'
+      - '!manager/tests/e2e/**'
+      - '.github/workflows/backend.yml'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: manager
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # 7.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # 7.1.0
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: manager/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # Finds the tests wherever they are under manager/ (test discovery
+      # recurses into packages).
+      - name: Run tests
+        run: python -m unittest -v
