@@ -20,23 +20,34 @@ npx playwright test logs.spec.js
 ## Fixture options
 
 `mockApi(page, overrides)` installs the mocked routes and returns
-`{ requests, release, ...fixtureData }`. `requests` records `run`, `format`,
-`pcap-check` and `upload` calls in order, so specs can check the API contract.
+`{ requests, savedFetches, release, JOB, ...fixtureData }`. `requests` records
+`run`, `format`, `pcap-check` and `upload` calls in order, so specs can check
+the API contract. `savedFetches` records the job id of every `/saved/<job>`
+request.
+
+The mock behaves like the real backend after a run: `/run` returns the hex job
+id `JOB` (real ids are `uuid4().hex`), and `/saved/<JOB>` returns what was run,
+normalized the way the worker stores it. The app follows every run by loading
+`#/tryzeek/saved/<job>`, which reloads that job: it switches to the first file
+and applies the saved sources, version and pcap. Any other job id, such as a
+deep link, gets `SAVED`.
 
 | Override | Effect |
 |---|---|
-| `versions`, `pcaps`, `examples`, `run`, `files`, `format`, `saved` | Replace that endpoint's response body |
+| `versions`, `pcaps`, `examples`, `run`, `files`, `format`, `saved` | Replace that endpoint's response body (`saved` only for jobs not run on the page) |
 | `pcapExists: true` | `GET /pcap/<md5>` reports the pcap as already on the server |
-| `hold: ['run', 'files']` | Hold those responses until `release('run')` / `release('files')` |
+| `hold: ['run', 'files', 'saved']` | Hold those responses until `release(name)`, to check in-progress UI or force the order of responses |
 
-The fixture data (`EXAMPLES`, `FILES`, etc.) is also exported, so specs can
-build variants of it.
+The fixture data (`JOB`, `EXAMPLES`, `FILES`, etc.) is also exported, so specs
+can build variants of it.
 
 ## Known bugs recorded as expected failures
 
-Some specs use `test.fail()` to record existing bugs that are kept during the
-port (Phase 4 of `../../web-ui/MIGRATION.md` lists them). When a bug is fixed, its spec
-starts failing; remove the `test.fail()` line.
+A spec that records an existing bug, kept as-is during the port (Phase 4 of
+`../../web-ui/MIGRATION.md` lists them), uses `test.fail()`. When the bug is
+fixed, the spec starts failing; remove the `test.fail()` line. Currently one
+spec does: going back to a different example doesn't clear the output
+(`example-reset.spec.js`).
 
 ## Baselines
 

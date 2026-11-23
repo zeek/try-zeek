@@ -1,4 +1,4 @@
-const { test, expect, mockApi } = require('./fixtures');
+const { test, expect, mockApi, FILES } = require('./fixtures');
 
 test('adds a new file as a new active tab', async ({ page }) => {
   await mockApi(page);
@@ -56,20 +56,38 @@ test('stderr errors for main.zeek are not shown on other files', async ({ page }
   await page.getByRole('tab', { name: /Add File/ }).click();
   await page.getByTestId('run-btn').click();
   await expect(page.getByTestId('errors')).toBeVisible();
-  await expect(visibleErrorCells(page)).toHaveCount(0); // new-1.zeek is active
+  // The post-run reload of the saved job switches back to main.zeek; wait for
+  // it, so the tab switches below can't race it.
+  await expect(page.getByRole('tab', { name: 'main.zeek' })).toHaveAttribute('aria-selected', 'true');
+  await expect(visibleErrorCells(page)).toHaveCount(1);
+
+  await page.getByRole('tab', { name: 'new-1.zeek' }).click();
+  await expect(visibleErrorCells(page)).toHaveCount(0);
+  await page.getByRole('tab', { name: 'main.zeek' }).click();
+  await expect(visibleErrorCells(page)).toHaveCount(1);
 });
 
-// Known bug, kept as-is during the port (see MIGRATION.md, Phase 4): an editor
-// whose tab is hidden when annotations arrive doesn't redraw its gutter when
-// the tab is shown again. Once fixed, this will fail; remove the test.fail().
-test('stderr errors appear after switching back to the file', async ({ page }) => {
-  test.fail();
-  test.setTimeout(10000);
-  await mockApi(page);
-  await page.goto('/');
-  await page.getByRole('tab', { name: /Add File/ }).click();
-  await page.getByTestId('run-btn').click();
-  await expect(page.getByTestId('errors')).toBeVisible();
-  await page.getByRole('tab', { name: 'main.zeek' }).click();
-  await expect(visibleErrorCells(page)).toHaveCount(1, { timeout: 3000 });
-});
+// After a run, the reload of the saved job always shows main.zeek, so errors
+// in any other file arrive while its editor is hidden. Its markers must still
+// appear once it's shown. (With Ace they can take about a second, until Ace
+// redraws after the resize.) The logs and the saved job can arrive in either
+// order, so both are checked.
+for (const order of [['saved', 'files'], ['files', 'saved']]) {
+  test(`errors in a hidden file appear when it is shown (${order.join(' before ')})`, async ({ page }) => {
+    const files = { files: { ...FILES.files, 'stderr.log': 'error in ./new-1.zeek, line 1: bad' } };
+    const api = await mockApi(page, { files, hold: ['files', 'saved'] });
+    await page.goto('/');
+    await page.getByRole('tab', { name: /Add File/ }).click();
+    await page.getByTestId('run-btn').click();
+    await expect.poll(() => api.savedFetches.length).toBe(1);
+
+    for (const name of order) api.release(name);
+    await expect(page.getByTestId('errors')).toContainText('bad');
+    await expect(page.getByRole('tab', { name: 'main.zeek' })).toHaveAttribute('aria-selected', 'true');
+    await expect(visibleErrorCells(page)).toHaveCount(0);
+
+    await page.getByRole('tab', { name: 'new-1.zeek' }).click();
+    await expect(visibleErrorCells(page)).toHaveCount(1);
+    await expect(visibleErrorCells(page)).toHaveText('1');
+  });
+}

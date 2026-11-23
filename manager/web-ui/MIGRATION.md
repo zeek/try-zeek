@@ -20,7 +20,7 @@ work fine on their own. Each one peer-depends on React's version:
 - `react-redux` wraps Redux. The dependabot bump to `redux@5` conflicts with
   `react-redux@8`, which is why `--legacy-peer-deps` is needed.
 - `react-scripts` (Create React App) is deprecated and pins webpack, Babel, Jest
-  and ESLint all at once. Most of the lockfile's **1,472 packages** come from it.
+  and ESLint all at once. Most of the lockfile's **1,469 packages** come from it.
 
 ## Target stack
 
@@ -35,7 +35,7 @@ work fine on their own. Each one peer-depends on React's version:
 | E2E tests | `@playwright/test` | none |
 
 A scratch install of this stack (including Vitest and jsdom) came to **119
-packages**. Without Vitest and jsdom it's **74**, compared with 1,472 today.
+packages**. Without Vitest and jsdom it's **74**, compared with 1,469 today.
 
 ### Coupling that remains
 
@@ -102,7 +102,9 @@ Add e2e specs for behavior that isn't covered yet:
 - [x] **Autorun:** a saved-job deep link and `?example=dns&run=1` each trigger a
       `/run` POST.
 - [x] **Error annotations:** a stderr error appears in Ace's gutter (`.ace_error`).
-      This turned up Phase 4 bug 7, which is recorded with `test.fail()`.
+      This first seemed to turn up a bug where a hidden file's markers were
+      never drawn. With the realistic post-run reload (below), they do appear,
+      about a second late; see Phase 4 bug 7.
 - [x] **Log tabs:** `conn.log` is the default tab, clicking the `weird` tab shows a
       `<pre>`, and the detail modal closes. (This added `data-testid="modal-close"`
       to the modal's footer button.)
@@ -115,28 +117,62 @@ Add e2e specs for behavior that isn't covered yet:
       `../tests/e2e/README.md`, using `../tests/e2e/measure.js` so the Svelte
       build can be measured the same way.
 
+Added after Phase 0, to guard the wiring Phase 1 changes. Each was checked by
+disabling the code it guards:
+
+- [x] **Edits reach `/run`:** typed edits, added and renamed files, and a
+      changed version are in the request body, not just on screen
+      (`run-payload.spec.js`).
+- [x] **Post-run reload:** the mock `/run` returns a hex job id like the real
+      backend, so the reload of `/saved/<job>` that follows every run is
+      exercised (`saved-reload.spec.js`). Before this, the app never matched the
+      mock's `job1` as a saved job, so the reload never happened in tests.
+- [x] **Back and forward** between examples and saved jobs
+      (`navigation.spec.js`).
+- [x] **Changing examples clears the output** (`example-reset.spec.js`). This
+      turned up Phase 4 bug 8, recorded with `test.fail()`.
+
 ## Phase 1: Framework-free core
 
-- [ ] Replace `redux`, `redux-thunk` and `react-redux` with a small `src/store.js`
-      (about 20 lines):
-  - one combined reducer and a `subscribe` method;
-  - a `dispatch` that runs functions as thunks with `(dispatch, getState)`;
+The React UI stays in place during this phase, and the full e2e suite must keep
+passing unchanged.
+
+- [ ] Replace `redux` and `redux-thunk` with a small `src/store.js` (about 20
+      lines):
+  - one combined reducer and a `subscribe` method. `reducers.js` swaps
+    `combineReducers` from `redux` for a local one;
+  - a `dispatch` that runs functions as thunks with `(dispatch, getState)`, and
+    returns what they return (`loadExample` chains on `dispatch(...).then`);
   - it matches the Svelte store contract, so components can use `$store`
     directly.
-- [ ] Leave `reducers.js`, `actions.js`, `broutil.js` and `tbhistory.js` mostly
-      unchanged. That keeps the existing unit tests valid.
-- [ ] Move the network calls into `src/api.js`. Replace
-      `process.env.REACT_APP_TRY_BRO_API_HOST` with
-      `import.meta.env.VITE_TRY_BRO_API_HOST`, or drop it in favor of a Vite dev
-      proxy.
+
+  **Keep `react-redux` until Phase 2.** `App.js` uses `connect`, and
+  `Provider`/`connect` work with any store that has `getState`, `subscribe` and
+  `dispatch`, so they run on the new store unchanged. Drop `redux-logger`
+  (development-only logging in `index.js`).
+- [ ] Leave `actions.js`, `broutil.js` and `tbhistory.js` mostly unchanged. That
+      keeps the existing unit tests valid.
+- [ ] Move the network calls into `src/api.js`. Read the API host in one place,
+      `src/config.js`, still from `process.env.REACT_APP_TRY_BRO_API_HOST`.
+      `import.meta.env` doesn't work while Create React App builds the app, so
+      the switch to `VITE_TRY_BRO_API_HOST` waits for Phase 3.
 - [ ] Port the unit tests from Jest (`react-scripts test`) to `node:test` and
       `node:assert`:
   - `npm test` becomes `node --test src/`;
-  - the source files need to be valid ESM for Node (add `"type": "module"` or
-    use `.mjs`);
-  - stub `fetch`, `window.location` and `FileReader` where the tests need them.
-      Node has a built-in `fetch`, and `tbhistory` tests can use a minimal
-      `window` stub.
+  - the source files need to be valid ESM for Node:
+    - imports need explicit extensions (`./tbhistory.js`), which CRA also
+      accepts;
+    - either add `"type": "module"` to `package.json` (then check that
+      `npm start` and `npm run build` still work under CRA) or use `.mjs`;
+  - `jest.fn` and `jest.spyOn` become `mock.fn` and `mock.method` from
+    `node:test`;
+  - stub `fetch`, `window.location` and `FileReader` where the tests need
+    them. Node has a built-in `fetch`, and the `tbhistory` tests can use a
+    minimal `window` stub;
+  - drop `App.test.js`. It renders the React app, which `node:test` can't do
+    without a DOM and JSX, and the e2e suite covers rendering;
+  - in the same commit, update the "Run Jest tests" step in
+    `.github/workflows/web-ui.yml`.
 
 ## Phase 2: Svelte components (replace `App.js`)
 
@@ -153,6 +189,8 @@ Add e2e specs for behavior that isn't covered yet:
 
 - [ ] Keep Bootstrap's CSS and drop react-bootstrap. Write the Bootstrap markup
       by hand.
+- [ ] Remove `react-redux` along with `App.js`; the Svelte components read the
+      Phase 1 store directly.
 - [ ] Move `public/index.html` to the Vite root (`index.html`) and fix its
       malformed `<div>` nesting.
 - [ ] Ace:
@@ -171,9 +209,9 @@ Add e2e specs for behavior that isn't covered yet:
       already copies and rsyncs (`build/*.*` → `static/`,
       `build/static/` → `static/`), so **the Dockerfile shouldn't need changes**.
 - [ ] Update `package.json`:
-  - remove `react`, `react-dom`, `react-ace`, `react-bootstrap`,
-    `@fortawesome/*`, `redux`, `redux-thunk`, `react-redux`, `redux-logger` and
-    `react-scripts`;
+  - remove what's left of the React stack: `react`, `react-dom`, `react-ace`,
+    `react-bootstrap`, `@fortawesome/*` and `react-scripts` (`redux`,
+    `redux-thunk` and `redux-logger` go in Phase 1, `react-redux` in Phase 2);
   - add the stack listed above.
 
   This also removes the need for `--legacy-peer-deps` and for the explicit
@@ -181,9 +219,13 @@ Add e2e specs for behavior that isn't covered yet:
 - [ ] `../tests/e2e/playwright.config.js`: change the web server command to
       `vite --port 3000 --strictPort`, or switch it to `vite build && vite preview`
       to test the production build.
+- [ ] Switch `src/config.js` from `process.env.REACT_APP_TRY_BRO_API_HOST` to
+      `import.meta.env.VITE_TRY_BRO_API_HOST`, or drop it in favor of a Vite dev
+      proxy.
 - [ ] Update the `Makefile` `dev` target (use the `VITE_` env var).
 - [ ] Update `.github/workflows/web-ui.yml`: remove the stale
-      `--legacy-peer-deps` comment and point the unit-test step at `node:test`.
+      `--legacy-peer-deps` comment. (The unit-test step moves to `node:test` in
+      Phase 1.)
 - [ ] Switch over only when the full e2e suite passes **unchanged** in CI. Then
       check manually against the real Docker stack: an actual Zeek run, a pcap
       upload, and stepping through the tutorial pages.
@@ -203,13 +245,35 @@ Add e2e specs for behavior that isn't covered yet:
 5. [ ] `?run=0` still triggers autorun because the string `"0"` is truthy.
 6. [ ] md5 is computed with `readAsBinaryString` on files up to 10 MB. Use an
        ArrayBuffer with `spark-md5` instead (WebCrypto has no MD5).
-7. [ ] If a file's tab is hidden when error annotations arrive (for example, you
-       run while another file's tab is open), its gutter isn't redrawn when the
-       tab is shown again, so the error markers are missing until something else
-       forces a redraw. The annotations themselves are stored correctly. The
-       `test.fail()` spec in `../tests/e2e/editor.spec.js` records this. A single Ace
+7. [ ] A hidden file's error markers appear about a second late when its tab
+       is shown. After a run, the reload of the saved job always shows
+       `main.zeek`, so errors in any other file arrive while its editor is
+       hidden. The annotations are stored at once, but Ace only redraws the
+       gutter after the resize. `../tests/e2e/editor.spec.js` checks that they
+       do appear, for both orders of the logs and the reload. A single Ace
        editor with one `EditSession` per file (Phase 2) may fix it naturally;
        otherwise call `editor.resize()` when a tab is shown.
+8. [ ] Going back in the browser to a different example doesn't clear the
+       previous run's output, so it stays on screen with the wrong example.
+       Choosing an example in the page calls `execReset`; the hash change path
+       (`handleLocationChange` → `loadExample`) doesn't. Recorded with
+       `test.fail()` in `../tests/e2e/example-reset.spec.js`.
+9. [ ] The post-run reload of the saved job (`setCode`) always switches to the
+       first file, even if you ran from another file's tab or switched tabs
+       while the run was in progress. Decide whether the reload should keep the
+       current tab, or skip replacing sources that haven't changed.
+10. [ ] Failed requests leave the UI stuck. Nothing checks the response
+        status, and no fetch has an error handler:
+    - a `/run` that fails (500, or 502 when gunicorn times out) leaves the
+      button on "Running..." for good;
+    - an upload that fails leaves it on "Uploading" for good. One that
+      returns `status: false` (a checksum mismatch) isn't checked at all: the
+      run goes ahead without the pcap;
+    - `/run` now returns a 400 with an `error` message for invalid requests
+      (for example, a file renamed to `sub/x.zeek`). The UI ignores it and
+      shows an empty result.
+
+    Show the error message, and re-enable Run.
 
 ## Phase 5 (optional): Shrink further
 
@@ -225,7 +289,10 @@ Add e2e specs for behavior that isn't covered yet:
 
 - The Flask backend and API contract: `/run`, `/files/<job>.json`, `/format`,
   `/saved/<job>`, `/pcap/<checksum>`, `/pcap/upload/<checksum>`,
-  `/versions.json`, `/pcaps.json`, `/static/examples/examples.json`.
+  `/versions.json`, `/pcaps.json`, `/static/examples/examples.json`. The one
+  recent change: `/run` returns a 400 with `{"error": "..."}` for invalid
+  requests (unsafe file names or pcaps, malformed bodies). The new UI should
+  show that message (Phase 4 bug 10).
 - Hash URLs: `#/tryzeek/saved/<job>`, `#/?example=…&pcap=…&version=…&run=…`.
 - The examples and tutorial pipeline (`static/examples/pack.py`).
 - The jQuery embed in `client/`, which only calls `/run_simple`.
