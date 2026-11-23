@@ -3,11 +3,18 @@
 These Playwright specs drive the web UI in a real browser, with every backend
 endpoint mocked by `fixtures.js`, so no Zeek backend is needed. They select
 elements only by `data-testid`, ARIA role and visible text, so the same specs
-can run against the React app and its Svelte replacement (see `../MIGRATION.md`).
+can run against the React app and its Svelte replacement (see
+`../../web-ui/MIGRATION.md`).
+
+This directory has its own `package.json`, separate from the web UI's, so the
+suite doesn't change when the web UI's dependencies do. Playwright starts the
+web UI's dev server itself (from `../../web-ui`, see `playwright.config.js`),
+so the web UI's dependencies need to be installed too.
 
 ```sh
-npm run test:e2e              # starts the dev server itself (see playwright.config.js)
-npx playwright test e2e/logs.spec.js
+npm ci                        # once, here and in ../../web-ui
+npm test                      # installs Chromium if needed, then runs every spec
+npx playwright test logs.spec.js
 ```
 
 ## Fixture options
@@ -28,7 +35,7 @@ build variants of it.
 ## Known bugs recorded as expected failures
 
 Some specs use `test.fail()` to record existing bugs that are kept during the
-port (Phase 4 of `../MIGRATION.md` lists them). When a bug is fixed, its spec
+port (Phase 4 of `../../web-ui/MIGRATION.md` lists them). When a bug is fixed, its spec
 starts failing; remove the `test.fail()` line.
 
 ## Baselines
@@ -38,13 +45,13 @@ load times with the API mocked. Run it against each build so the numbers are
 comparable:
 
 ```sh
-npm run build
-node e2e/measure.js build 10
+(cd ../../web-ui && npm run build)
+node measure.js               # defaults to ../../web-ui/build and 10 runs
 ```
 
 ### React (before the migration)
 
-Measured on 2026-11-09 at commit `be916f7`: Apple M4 Pro, Node 26.12.0,
+Measured on 2026-11-09 at commit `7a0610b`: Apple M4 Pro, Node 26.12.0,
 Playwright's Chromium, 10 cold loads per column. The load times are for comparing
 builds on the same machine only; they don't represent real users.
 

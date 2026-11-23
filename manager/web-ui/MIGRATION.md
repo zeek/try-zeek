@@ -80,9 +80,10 @@ Replacing those with Svelte (about 15 kB) should give **about 150 kB, roughly
 
 ## Guiding rules
 
-- **The Playwright suite in `e2e/` is the oracle.** It selects only by
+- **The Playwright suite in `../tests/e2e/` is the oracle.** It selects only by
   `data-testid`, ARIA role and visible text, and must pass *unchanged* against
-  the new app.
+  the new app. It has its own `package.json`, so replacing the web UI's
+  dependencies doesn't touch it.
 - **Port behavior as it is, then fix bugs.** Known bugs (Phase 4) are kept
   during the port, so a failing e2e test always means the port is wrong. Each
   fix goes in its own commit with a test.
@@ -110,8 +111,9 @@ Add e2e specs for behavior that isn't covered yet:
 - [x] **Old links:** `#/trybro?example=…` still loads the example. `pack.py`
       rewrites tutorial links into this form, so clicking one inside a readme is
       also covered.
-- [x] Record the baselines (bundle size, load timing) in `e2e/README.md`, using
-      `e2e/measure.js` so the Svelte build can be measured the same way.
+- [x] Record the baselines (bundle size, load timing) in
+      `../tests/e2e/README.md`, using `../tests/e2e/measure.js` so the Svelte
+      build can be measured the same way.
 
 ## Phase 1: Framework-free core
 
@@ -176,7 +178,7 @@ Add e2e specs for behavior that isn't covered yet:
 
   This also removes the need for `--legacy-peer-deps` and for the explicit
   `fontawesome-svg-core` dependency.
-- [ ] `playwright.config.js`: change the web server command to
+- [ ] `../tests/e2e/playwright.config.js`: change the web server command to
       `vite --port 3000 --strictPort`, or switch it to `vite build && vite preview`
       to test the production build.
 - [ ] Update the `Makefile` `dev` target (use the `VITE_` env var).
@@ -195,7 +197,7 @@ Add e2e specs for behavior that isn't covered yet:
        pill-style log tabs and the compact tables never actually render. Decide
        whether to apply these styles or drop them.
 3. [ ] `VERSIONS_FETCHED` overwrites the version from a saved job. This race is
-       noted in `e2e/routing.spec.js`.
+       noted in `../tests/e2e/routing.spec.js`.
 4. [ ] The `EXEC_FETCHED_FILES` reducer `delete`s keys from `action.files` in
        place, mutating the action.
 5. [ ] `?run=0` still triggers autorun because the string `"0"` is truthy.
@@ -205,7 +207,7 @@ Add e2e specs for behavior that isn't covered yet:
        run while another file's tab is open), its gutter isn't redrawn when the
        tab is shown again, so the error markers are missing until something else
        forces a redraw. The annotations themselves are stored correctly. The
-       `test.fail()` spec in `e2e/editor.spec.js` records this. A single Ace
+       `test.fail()` spec in `../tests/e2e/editor.spec.js` records this. A single Ace
        editor with one `EditSession` per file (Phase 2) may fix it naturally;
        otherwise call `editor.resize()` when a tab is shown.
 
