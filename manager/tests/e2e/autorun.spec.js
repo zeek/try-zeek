@@ -1,4 +1,4 @@
-const { test, expect, mockApi } = require('./fixtures');
+const { test, expect, mockApi, JOB } = require('./fixtures');
 
 const runs = (api) => api.requests.filter((r) => r.name === 'run');
 
@@ -7,8 +7,9 @@ test('a saved-job deep link runs the saved sources once', async ({ page }) => {
   await page.goto('/#/tryzeek/saved/abc123');
   await expect(page.getByTestId('output')).toContainText('hello world output');
 
-  // The run pushes #/tryzeek/saved/job1, which reloads that job without
+  // The run pushes #/tryzeek/saved/<JOB>, which reloads that job without
   // re-running it, so there should be exactly one run.
+  await expect.poll(() => api.savedFetches).toEqual(['abc123', JOB]);
   expect(runs(api)).toHaveLength(1);
   const body = JSON.parse(runs(api)[0].body);
   expect(body.sources[0].content).toContain('print "saved"');
