@@ -45,8 +45,9 @@ can build variants of it.
 
 A spec that records an existing bug, kept as-is during the port (Phase 4 of
 `../../web-ui/MIGRATION.md` lists them), uses `test.fail()`. When the bug is
-fixed, the spec starts failing; remove the `test.fail()` line. No spec does
-this at the moment.
+fixed, the spec starts failing; remove the `test.fail()` line. Currently one
+spec does: going back to a different example doesn't clear the output
+(`example-reset.spec.js`).
 
 ## Baselines
 
